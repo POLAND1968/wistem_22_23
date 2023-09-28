@@ -1,0 +1,1953 @@
+---
+title: "WiENG 2022 - 2023"
+subtitle: "Exit Slip Analyses"
+
+format:
+  html:
+    toc: true
+    embed-resources: true
+    echo: false
+    link-external-newwindow: true
+execute:
+  warning: false
+  message: false
+
+from: markdown+emoji  
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+```{r}
+#| label: load-packages
+
+library(tidyverse)
+library(patchwork)
+library(readr)
+library(kableExtra)
+
+set.seed(1968)
+```
+
+```{r}
+#| label: load-data-set
+
+data <- read_csv(file = "data/processed/wieng_exit_slips_clean.csv") %>%
+  filter(!is.na(interesting), !is.na(included), !is.na(belong))
+
+data$interesting <- factor(data$interesting, levels = c("Somewhat", "Fairly", "Very"))
+data$included <- factor(data$included, levels = c("Neutral", "Agree", "Strongly agree"))
+data$belong <- factor(data$belong, levels = c("Neutral", "Agree", "Strongly agree"))
+```
+
+# Background
+
+**WiENG:** In total, there were _ overall WiENG meetings held throughout the 2022-2023 academic school year. However, there were _ meetings with attendance data and _ meetings with exit slip data. Some of these overlap in missing both attendance and exit slip data.
+
+**Exit Slips Distribution:** Overall, there were 169 total exit slips collected over the course of the 2022-2023 academic school year. The graph and table below show the number of exit slips obtained for each of the _ meetings where exit slips were provided: 
+```{r}
+#| label: exit-slip-per-meeting
+
+# Number per meeting
+date_order <- read_csv(file = "data/processed/wieng_exit_slips_clean.csv") %>%
+  filter(!is.na(date))
+date_order$date <- factor(date_order$date, levels = c("May 12th", "May 5th", "Apr 28th", "Apr 14th", "Mar 10th", "Mar 3rd", "Feb 24th", "Feb 10th", "Feb 3rd", "Jan 27th", "Jan 20th", "Jan 13th", "Dec 16th", "Dec 2nd", "Nov 18th", "Nov 4th", "Oct 28th", "Oct 21st", "Oct 14th"))
+
+# Graph
+ggplot(data = date_order, mapping = aes(y = date)) + 
+  geom_bar(color = "azure4", fill = "gainsboro") + 
+  geom_text(stat='count', aes(label=..count..), position = position_stack(vjust = 0.9)) +
+  labs(title = "Number of Exit Slips Per Meeting")
+
+# Table
+date_order %>%
+  filter(!is.na(date)) %>%
+  count(date) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  kbl(caption = "Number of Exit Slips Per Meeting") %>%
+  kable_styling()
+```
+
+# Completion Rate
+
+**Distribution:** 
+```{r}
+#| label: completion
+
+# Completion Rate
+attendance_data <- read_csv(file = "data/processed/wieng_attendance_clean.csv") %>%
+  filter(!is.na(date))
+attendance_data$date <- factor(attendance_data$date, levels = c("May 12th", "May 9th", "May 5th", "Apr 28th", "Apr 21st", "Apr 14th", "Mar 17th", "Mar 10th", "Mar 3rd", "Feb 24th", "Feb 17th", "Feb 10th", "Feb 3rd", "Jan 27th", "Jan 20th", "Dec 16th", "Dec 2nd", "Nov 18th", "Nov 4th", "Oct 28th", "Oct 21st", "Oct 14th"))
+
+attendance_data <- attendance_data %>%
+  filter(!is.na(date))
+
+# Table
+completion_rate <- data.frame (
+  date  = c("May 12th", "May 5th", "Apr 28th", "Apr 14th", "Mar 10th", "Mar 3rd", "Feb 24th", "Feb 10th", "Feb 3rd", "Jan 27th", "Jan 20th", "Jan 13th", "Dec 16th", "Dec 2nd", "Nov 18th", "Nov 4th", "Oct 28th", "Oct 21st", "Oct 14th"),
+  exit_slips = c(6, 4, 9, 7, 9, 8, 10, 8, 13, 11, 6, 13, 9, 9, 7, 14, 4, 11, 11), 
+  attendance = c(9, 8, 9, 11, 11, 9, 11, 13, 11, 15, 8, NA, 13, 10, 11, 16, 4, 11, 9)
+) %>%
+  mutate(
+    completion_prop = exit_slips / attendance, 
+    completion_percent = completion_prop * 100
+  )
+
+completion_rate %>%
+  kbl(caption = "Exit Slip Completion Rate Per Meeting") %>%
+  kable_styling()
+```
+
+# Overall Distribution Per Category
+## Question 1
+**Question:** How interesting was today's meeting?
+
+**Distribution:** 
+```{r}
+#| label: avg-interesting
+
+# Graph
+interesting_order <- read_csv(file = "data/processed/wieng_exit_slips_clean.csv") %>%
+  filter(!is.na(interesting))
+interesting_order$interesting <- factor(interesting_order$interesting, levels = c("Somewhat", "Fairly", "Very"))
+
+percentage_data <- interesting_order %>%
+  group_by(interesting) %>%
+  summarize(percentage = n() / nrow(interesting_order) * 100)
+
+ggplot(data = interesting_order, mapping = aes(x = interesting)) + 
+  geom_bar(color = "azure4", fill = "gainsboro") + 
+  geom_text(data = percentage_data, aes(x = interesting, y = percentage, label = paste0(round(percentage, 1), "%")),
+            position = position_dodge(width = 0.9), vjust = -1) +
+  labs(title = "Distribution for interesting")
+
+# Table
+data %>%
+  filter(!is.na(interesting)) %>%
+  count(interesting) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Distribution for interesting") %>%
+  kable_styling()
+```
+
+## Question 2
+**Question:** I feel included in WiSTEM. 
+
+**Distribution:**
+```{r}
+#| label: avg-included
+
+# Graph
+included_order <- read_csv(file = "data/processed/wieng_exit_slips_clean.csv") %>%
+  filter(!is.na(included))
+included_order$included <- factor(included_order$included, levels = c("Strongly disagree", "Disagree", "Neutral", "Agree", "Strongly agree"))
+
+percentage_data <- included_order %>%
+  group_by(included) %>%
+  summarize(percentage = n() / nrow(included_order) * 100)
+
+ggplot(data = included_order, mapping = aes(x = included)) + 
+  geom_bar(color = "azure4", fill = "gainsboro") + 
+  geom_text(data = percentage_data, aes(x = included, y = percentage, label = paste0(round(percentage, 1), "%")),
+            position = position_dodge(width = 0.9), vjust = -0.5) + 
+  labs(title = "Distribution for included")
+
+# Table
+data %>%
+  filter(!is.na(included)) %>%
+  count(included) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Distribution for included") %>%
+  kable_styling()
+```
+
+## Question 3
+**Question:** I belong in a STE(A)M community. 
+
+**Distribution:** 
+```{r}
+#| label: avg-belong
+
+# Graph
+belong_order <- read_csv(file = "data/processed/wieng_exit_slips_clean.csv") %>%
+  filter(!is.na(belong))
+belong_order$belong <- factor(belong_order$belong, levels = c("Strongly disagree", "Neutral", "Agree", "Strongly agree"))
+
+percentage_data <- belong_order %>%
+  group_by(belong) %>%
+  summarize(percentage = n() / nrow(belong_order) * 100)
+
+ggplot(data = belong_order, mapping = aes(x = belong)) + 
+  geom_bar(color = "azure4", fill = "gainsboro") + 
+  geom_text(data = percentage_data, aes(x = belong, y = percentage, label = paste0(round(percentage, 1), "%")),
+            position = position_dodge(width = 0.9), vjust = -0.5) +  
+  labs(title = "Distribution for belong")
+
+# Table
+data %>%
+  filter(!is.na(belong)) %>%
+  count(belong) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Distribution for belong") %>%
+  kable_styling()
+```
+
+# Distribution Per Meeting
+
+## October 14, 2022
+**Topic:** 
+
+**Distribution:**   
+```{r}
+#| label: oct-14
+
+oct_14_data <- data %>%
+  filter(date == "Oct 14th")
+
+# interesting
+oct_14_interesting <- oct_14_data %>%
+  group_by(interesting) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = oct_14_interesting, mapping = aes(x = interesting, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Oct 14th Distribution for interesting")
+
+oct_14_data %>%
+  filter(!is.na(interesting)) %>%
+  count(interesting) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Oct 14th Distribution for interesting") %>%
+  kable_styling()
+
+# included
+oct_14_included <- oct_14_data %>%
+  group_by(included) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = oct_14_included, mapping = aes(x = included, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Oct 14th Distribution for included")
+
+oct_14_data %>%
+  filter(!is.na(included)) %>%
+  count(included) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Oct 14th Distribution for included") %>%
+  kable_styling()
+
+# belong
+oct_14_belong <- oct_14_data %>%
+  group_by(belong) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = oct_14_belong, mapping = aes(x = belong, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Oct 14th Distribution for belong")
+
+oct_14_data %>%
+  filter(!is.na(belong)) %>%
+  count(belong) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Oct 14th Distribution for belong") %>%
+  kable_styling()
+```
+
+## October 21, 2022
+**Topic:** 
+
+**Distribution:** 
+```{r}
+#| label: oct-21
+
+oct_21_data <- data %>%
+  filter(date == "Oct 21st")
+
+# interesting
+oct_21_interesting <- oct_21_data %>%
+  group_by(interesting) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = oct_21_interesting, mapping = aes(x = interesting, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Oct 21st Distribution for interesting")
+
+oct_21_data %>%
+  filter(!is.na(interesting)) %>%
+  count(interesting) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Oct 21st Distribution for interesting") %>%
+  kable_styling()
+
+# included
+oct_21_included <- oct_21_data %>%
+  group_by(included) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = oct_21_included, mapping = aes(x = included, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Oct 21st Distribution for included")
+
+oct_21_data %>%
+  filter(!is.na(included)) %>%
+  count(included) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Oct 21st Distribution for included") %>%
+  kable_styling()
+
+# belong
+oct_21_belong <- oct_21_data %>%
+  group_by(belong) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = oct_21_belong, mapping = aes(x = belong, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Oct 21st Distribution for belong")
+
+oct_21_data %>%
+  filter(!is.na(belong)) %>%
+  count(belong) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Oct 21st Distribution for belong") %>%
+  kable_styling()
+```
+
+## October 28, 2022
+**Topic:** 
+
+**Distribution:** 
+```{r}
+#| label: oct-28
+
+oct_28_data <- data %>%
+  filter(date == "Oct 28th")
+
+# interesting
+oct_28_interesting <- oct_28_data %>%
+  group_by(interesting) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = oct_28_interesting, mapping = aes(x = interesting, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Oct 28th Distribution for interesting")
+
+oct_28_data %>%
+  filter(!is.na(interesting)) %>%
+  count(interesting) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Oct 28th Distribution for interesting") %>%
+  kable_styling()
+
+# included
+oct_28_included <- oct_28_data %>%
+  group_by(included) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = oct_28_included, mapping = aes(x = included, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Oct 28th Distribution for included")
+
+oct_28_data %>%
+  filter(!is.na(included)) %>%
+  count(included) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Oct 28th Distribution for included") %>%
+  kable_styling()
+
+# belong
+oct_28_belong <- oct_28_data %>%
+  group_by(belong) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = oct_28_belong, mapping = aes(x = belong, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Oct 28th Distribution for belong")
+
+oct_28_data %>%
+  filter(!is.na(belong)) %>%
+  count(belong) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Oct 28th Distribution for belong") %>%
+  kable_styling()
+```
+
+## November 4, 2022
+**Topic:** 
+
+**Distribution:**    
+```{r}
+#| label: nov-4
+
+nov_4_data <- data %>%
+  filter(date == "Nov 4th")
+
+# interesting
+nov_4_interesting <- nov_4_data %>%
+  group_by(interesting) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = nov_4_interesting, mapping = aes(x = interesting, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Nov 4th Distribution for interesting")
+
+nov_4_data %>%
+  filter(!is.na(interesting)) %>%
+  count(interesting) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Nov 4th Distribution for interesting") %>%
+  kable_styling()
+
+# included
+nov_4_included <- nov_4_data %>%
+  group_by(included) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = nov_4_included, mapping = aes(x = included, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Nov 4th Distribution for included")
+
+nov_4_data %>%
+  filter(!is.na(included)) %>%
+  count(included) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Nov 4th Distribution for included") %>%
+  kable_styling()
+
+# belong
+nov_4_belong <- nov_4_data %>%
+  group_by(belong) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = nov_4_belong, mapping = aes(x = belong, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Nov 4th Distribution for belong")
+
+nov_4_data %>%
+  filter(!is.na(belong)) %>%
+  count(belong) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Nov 4th Distribution for belong") %>%
+  kable_styling()
+```
+
+## November 18, 2022
+**Topic:** 
+
+**Distribution:**    
+```{r}
+#| label: nov-18
+
+nov_18_data <- data %>%
+  filter(date == "Nov 18th")
+
+# interesting
+nov_18_interesting <- nov_18_data %>%
+  group_by(interesting) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = nov_18_interesting, mapping = aes(x = interesting, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Nov 18th Distribution for interesting")
+
+nov_18_data %>%
+  filter(!is.na(interesting)) %>%
+  count(interesting) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Nov 18th Distribution for interesting") %>%
+  kable_styling()
+
+# included
+nov_18_included <- nov_18_data %>%
+  group_by(included) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = nov_18_included, mapping = aes(x = included, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Nov 18th Distribution for included")
+
+nov_18_data %>%
+  filter(!is.na(included)) %>%
+  count(included) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Nov 18th Distribution for included") %>%
+  kable_styling()
+
+# belong
+nov_18_belong <- nov_18_data %>%
+  group_by(belong) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = nov_18_belong, mapping = aes(x = belong, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Nov 18th Distribution for belong")
+
+nov_18_data %>%
+  filter(!is.na(belong)) %>%
+  count(belong) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Nov 18th Distribution for belong") %>%
+  kable_styling()
+```
+
+## December 2, 2022
+**Topic:** 
+
+**Distribution:** 
+```{r}
+#| label: dec-2
+
+dec_2_data <- data %>%
+  filter(date == "Dec 2nd")
+
+# interesting
+dec_2_interesting <- dec_2_data %>%
+  group_by(interesting) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = dec_2_interesting, mapping = aes(x = interesting, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Dec 2nd Distribution for interesting")
+
+dec_2_data %>%
+  filter(!is.na(interesting)) %>%
+  count(interesting) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Dec 2nd Distribution for interesting") %>%
+  kable_styling()
+
+# included
+dec_2_included <- dec_2_data %>%
+  group_by(included) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = dec_2_included, mapping = aes(x = included, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Dec 2nd Distribution for included")
+
+dec_2_data %>%
+  filter(!is.na(included)) %>%
+  count(included) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Dec 2nd Distribution for included") %>%
+  kable_styling()
+
+# belong
+dec_2_belong <- dec_2_data %>%
+  group_by(belong) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = dec_2_belong, mapping = aes(x = belong, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Dec 2nd Distribution for belong")
+
+dec_2_data %>%
+  filter(!is.na(belong)) %>%
+  count(belong) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Dec 2nd Distribution for belong") %>%
+  kable_styling()
+```
+
+## December 16, 2022
+**Topic:** 
+
+**Distribution:** 
+```{r}
+#| label: dec-16
+
+dec_16_data <- data %>%
+  filter(date == "Dec 16th")
+
+# interesting
+dec_16_interesting <- dec_16_data %>%
+  group_by(interesting) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = dec_16_interesting, mapping = aes(x = interesting, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Dec 16th Distribution for interesting")
+
+dec_16_data %>%
+  filter(!is.na(interesting)) %>%
+  count(interesting) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Dec 16th Distribution for interesting") %>%
+  kable_styling()
+
+# included
+dec_16_included <- dec_16_data %>%
+  group_by(included) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = dec_16_included, mapping = aes(x = included, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Dec 16th Distribution for included")
+
+dec_16_data %>%
+  filter(!is.na(included)) %>%
+  count(included) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Dec 16th Distribution for included") %>%
+  kable_styling()
+
+# belong
+dec_16_belong <- dec_16_data %>%
+  group_by(belong) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = dec_16_belong, mapping = aes(x = belong, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Dec 16th Distribution for belong")
+
+dec_16_data %>%
+  filter(!is.na(belong)) %>%
+  count(belong) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Dec 16th Distribution for belong") %>%
+  kable_styling()
+```
+
+## January 13, 2023
+**Topic:** 
+
+**Distribution:** 
+```{r}
+#| label: jan-13
+
+jan_13_data <- data %>%
+  filter(date == "Jan 13th")
+
+# interesting
+jan_13_interesting <- jan_13_data %>%
+  group_by(interesting) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = jan_13_interesting, mapping = aes(x = interesting, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Jan 13th Distribution for interesting")
+
+jan_13_data %>%
+  filter(!is.na(interesting)) %>%
+  count(interesting) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Jan 13th Distribution for interesting") %>%
+  kable_styling()
+
+# included
+jan_13_included <- jan_13_data %>%
+  group_by(included) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = jan_13_included, mapping = aes(x = included, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Jan 13th Distribution for included")
+
+jan_13_data %>%
+  filter(!is.na(included)) %>%
+  count(included) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Jan 13th Distribution for included") %>%
+  kable_styling()
+
+# belong
+jan_13_belong <- jan_13_data %>%
+  group_by(belong) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = jan_13_belong, mapping = aes(x = belong, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Jan 13th Distribution for belong")
+
+jan_13_data %>%
+  filter(!is.na(belong)) %>%
+  count(belong) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Jan 13th Distribution for belong") %>%
+  kable_styling()
+```
+
+## January 20, 2023
+**Topic:** 
+
+**Distribution:** 
+```{r}
+#| label: jan-20
+
+jan_20_data <- data %>%
+  filter(date == "Jan 20th")
+
+# interesting
+jan_20_interesting <- jan_20_data %>%
+  group_by(interesting) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = jan_20_interesting, mapping = aes(x = interesting, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Jan 20th Distribution for interesting")
+
+jan_20_data %>%
+  filter(!is.na(interesting)) %>%
+  count(interesting) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Jan 20th Distribution for interesting") %>%
+  kable_styling()
+
+# included
+jan_20_included <- jan_20_data %>%
+  group_by(included) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = jan_20_included, mapping = aes(x = included, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Jan 20th Distribution for included")
+
+jan_20_data %>%
+  filter(!is.na(included)) %>%
+  count(included) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Jan 20th Distribution for included") %>%
+  kable_styling()
+
+# belong
+jan_20_belong <- jan_20_data %>%
+  group_by(belong) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = jan_20_belong, mapping = aes(x = belong, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Jan 20th Distribution for belong")
+
+jan_20_data %>%
+  filter(!is.na(belong)) %>%
+  count(belong) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Jan 20th Distribution for belong") %>%
+  kable_styling()
+```
+
+## January 27, 2023
+**Topic:** 
+
+**Distribution:** 
+```{r}
+#| label: jan-27
+
+jan_27_data <- data %>%
+  filter(date == "Jan 27th")
+
+# interesting
+jan_27_interesting <- jan_27_data %>%
+  group_by(interesting) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = jan_27_interesting, mapping = aes(x = interesting, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Jan 27th Distribution for interesting")
+
+jan_27_data %>%
+  filter(!is.na(interesting)) %>%
+  count(interesting) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Jan 27th Distribution for interesting") %>%
+  kable_styling()
+
+# included
+jan_27_included <- jan_27_data %>%
+  group_by(included) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = jan_27_included, mapping = aes(x = included, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Jan 27th Distribution for included")
+
+jan_27_data %>%
+  filter(!is.na(included)) %>%
+  count(included) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Jan 27th Distribution for included") %>%
+  kable_styling()
+
+# belong
+jan_27_belong <- jan_27_data %>%
+  group_by(belong) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = jan_27_belong, mapping = aes(x = belong, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Jan 27th Distribution for belong")
+
+jan_27_data %>%
+  filter(!is.na(belong)) %>%
+  count(belong) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Jan 27th Distribution for belong") %>%
+  kable_styling()
+```
+
+## February 3, 2023
+**Topic:** 
+
+**Distribution:** 
+```{r}
+#| label: feb-3
+
+feb_3_data <- data %>%
+  filter(date == "Feb 3rd")
+
+# interesting
+feb_3_interesting <- feb_3_data %>%
+  group_by(interesting) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = feb_3_interesting, mapping = aes(x = interesting, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Feb 3rd Distribution for interesting")
+
+feb_3_data %>%
+  filter(!is.na(interesting)) %>%
+  count(interesting) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Feb 3rd Distribution for interesting") %>%
+  kable_styling()
+
+# included
+feb_3_included <- feb_3_data %>%
+  group_by(included) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = feb_3_included, mapping = aes(x = included, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Feb 3rd Distribution for included")
+
+feb_3_data %>%
+  filter(!is.na(included)) %>%
+  count(included) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Feb 3rd Distribution for included") %>%
+  kable_styling()
+
+# belong
+feb_3_belong <- feb_3_data %>%
+  group_by(belong) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = feb_3_belong, mapping = aes(x = belong, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Feb 3rd Distribution for belong")
+
+feb_3_data %>%
+  filter(!is.na(belong)) %>%
+  count(belong) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Feb 3rd Distribution for belong") %>%
+  kable_styling()
+```
+
+## February 10, 2023
+**Topic:** 
+
+**Distribution:** 
+```{r}
+#| label: feb-10
+
+feb_10_data <- data %>%
+  filter(date == "Feb 10th")
+
+# interesting
+feb_10_interesting <- feb_10_data %>%
+  group_by(interesting) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = feb_10_interesting, mapping = aes(x = interesting, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Feb 10th Distribution for interesting")
+
+feb_10_data %>%
+  filter(!is.na(interesting)) %>%
+  count(interesting) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Feb 10th Distribution for interesting") %>%
+  kable_styling()
+
+# included
+feb_10_included <- feb_10_data %>%
+  group_by(included) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = feb_10_included, mapping = aes(x = included, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Feb 10th Distribution for included")
+
+feb_10_data %>%
+  filter(!is.na(included)) %>%
+  count(included) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Feb 10th Distribution for included") %>%
+  kable_styling()
+
+# belong
+feb_10_belong <- feb_10_data %>%
+  group_by(belong) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = feb_10_belong, mapping = aes(x = belong, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Feb 10th Distribution for belong")
+
+feb_10_data %>%
+  filter(!is.na(belong)) %>%
+  count(belong) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Feb 10th Distribution for belong") %>%
+  kable_styling()
+```
+
+## February 24, 2023
+**Topic:** 
+
+**Distribution:** 
+```{r}
+#| label: feb-24
+
+feb_24_data <- data %>%
+  filter(date == "Feb 24th")
+
+# interesting
+feb_24_interesting <- feb_24_data %>%
+  group_by(interesting) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = feb_24_interesting, mapping = aes(x = interesting, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Feb 24th Distribution for interesting")
+
+feb_24_data %>%
+  filter(!is.na(interesting)) %>%
+  count(interesting) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Feb 24th Distribution for interesting") %>%
+  kable_styling()
+
+# included
+feb_24_included <- feb_24_data %>%
+  group_by(included) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = feb_24_included, mapping = aes(x = included, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Feb 24th Distribution for included")
+
+feb_24_data %>%
+  filter(!is.na(included)) %>%
+  count(included) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Feb 24th Distribution for included") %>%
+  kable_styling()
+
+# belong
+feb_24_belong <- feb_24_data %>%
+  group_by(belong) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = feb_24_belong, mapping = aes(x = belong, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Feb 24th Distribution for belong")
+
+feb_24_data %>%
+  filter(!is.na(belong)) %>%
+  count(belong) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Feb 24th Distribution for belong") %>%
+  kable_styling()
+```
+
+## March 3, 2023
+**Topic:** 
+
+**Distribution:** 
+```{r}
+#| label: mar-3
+
+mar_3_data <- data %>%
+  filter(date == "Mar 3rd")
+
+# interesting
+mar_3_interesting <- mar_3_data %>%
+  group_by(interesting) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = mar_3_interesting, mapping = aes(x = interesting, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Mar 3rd Distribution for interesting")
+
+mar_3_data %>%
+  filter(!is.na(interesting)) %>%
+  count(interesting) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Mar 3rd Distribution for interesting") %>%
+  kable_styling()
+
+# included
+mar_3_included <- mar_3_data %>%
+  group_by(included) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = mar_3_included, mapping = aes(x = included, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Mar 3rd Distribution for included")
+
+mar_3_data %>%
+  filter(!is.na(included)) %>%
+  count(included) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Mar 3rd Distribution for included") %>%
+  kable_styling()
+
+# belong
+mar_3_belong <- mar_3_data %>%
+  group_by(belong) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = mar_3_belong, mapping = aes(x = belong, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Mar 3rd Distribution for belong")
+
+mar_3_data %>%
+  filter(!is.na(belong)) %>%
+  count(belong) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Mar 3rd Distribution for belong") %>%
+  kable_styling()
+```
+
+## March 10, 2023
+**Topic:** 
+
+**Distribution:** 
+```{r}
+#| label: mar-10
+
+mar_10_data <- data %>%
+  filter(date == "Mar 10th")
+
+# interesting
+mar_10_interesting <- mar_10_data %>%
+  group_by(interesting) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = mar_10_interesting, mapping = aes(x = interesting, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Mar 10th Distribution for interesting")
+
+mar_10_data %>%
+  filter(!is.na(interesting)) %>%
+  count(interesting) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Mar 10th Distribution for interesting") %>%
+  kable_styling()
+
+# included
+mar_10_included <- mar_10_data %>%
+  group_by(included) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = mar_10_included, mapping = aes(x = included, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Mar 10th Distribution for included")
+
+mar_10_data %>%
+  filter(!is.na(included)) %>%
+  count(included) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Mar 10th Distribution for included") %>%
+  kable_styling()
+
+# belong
+mar_10_belong <- mar_10_data %>%
+  group_by(belong) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = mar_10_belong, mapping = aes(x = belong, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Mar 10th Distribution for belong")
+
+mar_10_data %>%
+  filter(!is.na(belong)) %>%
+  count(belong) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Mar 10th Distribution for belong") %>%
+  kable_styling()
+```
+
+## April 14, 2023
+**Topic:** 
+
+**Distribution:**  
+```{r}
+#| label: apr-14
+
+apr_14_data <- data %>%
+  filter(date == "Apr 14th")
+
+# interesting
+apr_14_interesting <- apr_14_data %>%
+  group_by(interesting) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = apr_14_interesting, mapping = aes(x = interesting, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Apr 14th Distribution for interesting")
+
+apr_14_data %>%
+  filter(!is.na(interesting)) %>%
+  count(interesting) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Apr 14th Distribution for interesting") %>%
+  kable_styling()
+
+# included
+apr_14_included <- apr_14_data %>%
+  group_by(included) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = apr_14_included, mapping = aes(x = included, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Apr 14th Distribution for included")
+
+apr_14_data %>%
+  filter(!is.na(included)) %>%
+  count(included) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Apr 14th Distribution for included") %>%
+  kable_styling()
+
+# belong
+apr_14_belong <- apr_14_data %>%
+  group_by(belong) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = apr_14_belong, mapping = aes(x = belong, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Apr 14th Distribution for belong")
+
+apr_14_data %>%
+  filter(!is.na(belong)) %>%
+  count(belong) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Apr 14th Distribution for belong") %>%
+  kable_styling()
+```
+
+## April 28, 2023
+**Topic:** 
+
+**Distribution:**  
+```{r}
+#| label: apr-28
+
+apr_28_data <- data %>%
+  filter(date == "Apr 28th")
+
+# interesting
+apr_28_interesting <- apr_28_data %>%
+  group_by(interesting) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = apr_28_interesting, mapping = aes(x = interesting, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Apr 28th Distribution for interesting")
+
+apr_28_data %>%
+  filter(!is.na(interesting)) %>%
+  count(interesting) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Apr 28th Distribution for interesting") %>%
+  kable_styling()
+
+# included
+apr_28_included <- apr_28_data %>%
+  group_by(included) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = apr_28_included, mapping = aes(x = included, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Apr 28th Distribution for included")
+
+apr_28_data %>%
+  filter(!is.na(included)) %>%
+  count(included) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Apr 28th Distribution for included") %>%
+  kable_styling()
+
+# belong
+apr_28_belong <- apr_28_data %>%
+  group_by(belong) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = apr_28_belong, mapping = aes(x = belong, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Apr 28th Distribution for belong")
+
+apr_28_data %>%
+  filter(!is.na(belong)) %>%
+  count(belong) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Apr 28th Distribution for belong") %>%
+  kable_styling()
+```
+
+## May 5, 2023
+**Topic:** 
+
+**Distribution:** 
+```{r}
+#| label: may-5
+
+may_5_data <- data %>%
+  filter(date == "May 5th")
+
+# interesting
+may_5_interesting <- may_5_data %>%
+  group_by(interesting) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = may_5_interesting, mapping = aes(x = interesting, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "May 5th Distribution for interesting")
+
+may_5_data %>%
+  filter(!is.na(interesting)) %>%
+  count(interesting) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "May 5th Distribution for interesting") %>%
+  kable_styling()
+
+# included
+may_5_included <- may_5_data %>%
+  group_by(included) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = may_5_included, mapping = aes(x = included, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "May 5th Distribution for included")
+
+may_5_data %>%
+  filter(!is.na(included)) %>%
+  count(included) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "May 5th Distribution for included") %>%
+  kable_styling()
+
+# belong
+may_5_belong <- may_5_data %>%
+  group_by(belong) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = may_5_belong, mapping = aes(x = belong, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "May 5th Distribution for belong")
+
+may_5_data %>%
+  filter(!is.na(belong)) %>%
+  count(belong) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "May 5th Distribution for belong") %>%
+  kable_styling()
+```
+
+## May 12, 2023
+**Topic:** 
+
+**Distribution:** 
+```{r}
+#| label: may-12
+
+may_12_data <- data %>%
+  filter(date == "May 12th")
+
+# interesting
+may_12_interesting <- may_12_data %>%
+  group_by(interesting) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = may_12_interesting, mapping = aes(x = interesting, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "May 12th Distribution for interesting")
+
+may_12_data %>%
+  filter(!is.na(interesting)) %>%
+  count(interesting) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "May 12th Distribution for interesting") %>%
+  kable_styling()
+
+# included
+may_12_included <- may_12_data %>%
+  group_by(included) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = may_12_included, mapping = aes(x = included, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "May 12th Distribution for included")
+
+may_12_data %>%
+  filter(!is.na(included)) %>%
+  count(included) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "May 12th Distribution for included") %>%
+  kable_styling()
+
+# belong
+may_12_belong <- may_12_data %>%
+  group_by(belong) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = may_12_belong, mapping = aes(x = belong, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "May 12th Distribution for belong")
+
+may_12_data %>%
+  filter(!is.na(belong)) %>%
+  count(belong) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "May 12th Distribution for belong") %>%
+  kable_styling()
+```
+
+# Distribution Per Topic
+
+## Activity
+**Distribution:**  
+```{r}
+#| label: activity-distribution
+
+activity_data <- data %>%
+  filter(topic == "Activity")
+
+# interesting
+activity_interesting <- activity_data %>%
+  group_by(interesting) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = activity_interesting, mapping = aes(x = interesting, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Activity Distribution for interesting")
+
+activity_data %>%
+  filter(!is.na(interesting)) %>%
+  count(interesting) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Activity Distribution for interesting") %>%
+  kable_styling()
+
+# included
+activity_included <- activity_data %>%
+  group_by(included) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = activity_included, mapping = aes(x = included, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Activity Distribution for included")
+
+activity_data %>%
+  filter(!is.na(included)) %>%
+  count(included) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Activity Distribution for included") %>%
+  kable_styling()
+
+# belong
+activity_belong <- activity_data %>%
+  group_by(belong) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = activity_belong, mapping = aes(x = belong, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Activity Distribution for belong")
+
+activity_data %>%
+  filter(!is.na(belong)) %>%
+  count(belong) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Activity Distribution for belong") %>%
+  kable_styling()
+```
+
+
+## Guest Speaker
+
+**Distribution:**  
+```{r}
+#| label: guest-distribution
+
+guest_data <- data %>%
+  filter(topic == "Guest Speaker")
+
+# interesting
+guest_interesting <- guest_data %>%
+  group_by(interesting) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = guest_interesting, mapping = aes(x = interesting, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Guest Speaker Distribution for interesting")
+
+guest_data %>%
+  filter(!is.na(interesting)) %>%
+  count(interesting) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Guest Speaker Distribution for interesting") %>%
+  kable_styling()
+
+# included
+guest_included <- guest_data %>%
+  group_by(included) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = guest_included, mapping = aes(x = included, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Guest Speaker Distribution for included")
+
+guest_data %>%
+  filter(!is.na(included)) %>%
+  count(included) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Guest Speaker Distribution for included") %>%
+  kable_styling()
+
+# belong
+guest_belong <- guest_data %>%
+  group_by(belong) %>%
+  summarise(count = n()) %>%
+  mutate(percentage = count / sum(count) * 100)
+
+ggplot(data = guest_belong, mapping = aes(x = belong, y = count)) + 
+  geom_bar(color = "azure4", fill = "gainsboro", stat="identity") + 
+  geom_text(aes(label = paste0(round(percentage, 1), "%")), 
+            position = position_stack(vjust = 0.5), 
+            color = "black", size = 4) +
+  labs(title = "Guest Speaker Distribution for belong")
+
+guest_data %>%
+  filter(!is.na(belong)) %>%
+  count(belong) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  arrange(desc(n)) %>%
+  kbl(caption = "Guest Speaker Distribution for belong") %>%
+  kable_styling()
+```
