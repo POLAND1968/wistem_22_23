@@ -1,0 +1,787 @@
+student_id,student_name,grade,graduation_year,federal_race,iep,program_504,esl,gender
+823640,"Hansen, Eva Catherine",9,2026,White,N,N,N,female
+748699,"Reel, Sofia Lin",9,2026,LatinX,N,N,N,female
+996071,"Cohen, Wren Hopewell",10,2025,White,N,N,N,female
+997985,"Catayong, Olivia Perry",11,2024,LatinX,N,Y,N,female
+965831,"Salzinski, Delilah Rosalie",12,2023,White,N,N,N,female
+789212,"Gass, Margaret Cecilia",12,2023,White,N,Y,N,female
+118665,"Gallo, Josephine Margaret",10,2025,White,Y,N,N,female
+999008,"Carlisle, Lucy Pearl",10,2025,White,N,N,N,female
+936210,"Spalding, Joy Marie",10,2025,LatinX,N,N,N,female
+791665,"Joseph, Samantha Grace",10,2025,Asian,N,N,N,female
+999096,"Irons-Rosin, Pasha Lura",10,2025,White,N,N,N,female
+785994,"Ubersox, Marin Sidney",10,2025,White,N,N,N,female
+707657,"Hutchinson, Eleanor Grace Hoisington",12,2023,White,N,N,N,female
+957611,"Myers, Amelia Grace",12,2023,White,N,N,N,female
+795427,"Foster-Loyd, Serenah Storm",11,2024,Black,N,N,N,female
+845730,"Daly-Short, Samantha Elizabeth",11,2024,White,N,Y,N,female
+627165,"Banks, Madeline Daisy",11,2024,White,N,N,N,female
+996148,"Goel, Saheli Sanghavi",10,2025,Asian,N,N,N,female
+830634,"Zdawczyk, Larkin Isabelle",10,2025,White,N,N,N,female
+627052,"Shah, Wafa Ahmad",12,2023,Asian,N,Y,N,female
+921352,"Ahmed, Sabrina Fatima",12,2023,Asian,N,N,N,female
+118619,"Guiden, Mary Natalya",10,2025,Black,N,Y,N,female
+999318,"Kiedrowski, Sophia Martin",10,2025,White,N,N,N,female
+999310,"Siddiqui, Sophia Farzana",10,2025,T.M.O.,N,N,N,female
+996160,"McDonald, Mary Elizabeth",10,2025,White,N,N,N,female
+999609,"Shepherd, Daniela Elsa",10,2025,LatinX,N,N,N,female
+118723,"Velasco, Kimberly Samantha",11,2024,LatinX,N,N,Y,female
+118225,"Solis, Charlene Theresa Hernandez",11,2024,Asian,N,N,N,female
+723403,"Grill, Amy Brooke",11,2024,White,N,N,N,female
+827073,"Rutstein, Sidra Abigail",11,2024,White,N,N,N,female
+808220,"Hammond, Nahrain Salome",10,2025,Black,N,N,N,female
+788039,"Martin, Janiya Chanel",10,2025,Black,N,N,N,female
+840189,"Stringer, Amiah Celise",10,2025,Black,N,N,N,female
+984566,"Walsh, Mireya Leyana",9,2026,LatinX,N,N,N,female
+984096,"Ejiofor, Kofoworola Dianne",9,2026,Black,N,N,N,female
+885762,"Radhakrishnan, Anika",11,2024,Asian,N,N,N,female
+880933,"Maji, Katalin Lee",11,2024,T.M.O.,N,N,N,female
+903101,"Hammett, Madeline Elizabeth",12,2023,White,N,Y,N,female
+857052,"Pepsnik, Ellen Mary",9,2026,White,Y,N,N,female
+118366,"Golemis, Viki",10,2025,White,N,N,N,female
+118818,"Velasco, Johanna Sarai",9,2026,LatinX,N,N,N,female
+999744,"Varela, Madeline Lewis",10,2025,LatinX,N,N,N,female
+988063,"Newbold, Julia Shen",11,2024,T.M.O.,N,N,N,female
+823691,"Barker, Emma Lily",12,2023,White,N,N,N,female
+974414,"Levy, Elise Sydney",9,2026,White,N,N,N,female
+999168,"Schober, Katherine Nora",10,2025,White,N,N,N,female
+856677,"Needlman, Mira Beatrice",11,2024,White,N,N,N,female
+828254,"Stoolmaker, Georgia Harper",9,2026,White,N,N,N,female
+746782,"Rene, Isabella Margaret",12,2023,Black,N,N,N,female
+119019,"Freeman-Lucas, Sadiya Elizabeth",9,2026,Black,N,Y,N,female
+926641,"Lippke, Stephanie Sofia",9,2026,LatinX,N,N,N,female
+856677,"Needlman, Mira Beatrice",11,2024,White,N,N,N,female
+988063,"Newbold, Julia Shen",11,2024,T.M.O.,N,N,N,female
+999168,"Schober, Katherine Nora",10,2025,White,N,N,N,female
+763865,"Durango-Cohen, Rachel Rae",10,2025,LatinX,N,N,N,female
+999072,"Barton, Beri Ann",10,2025,White,N,N,N,female
+118366,"Golemis, Viki",10,2025,White,N,N,N,female
+758715,"Hasiba, Mira Tarik",10,2025,White,N,N,N,female
+828254,"Stoolmaker, Georgia Harper",9,2026,White,N,N,N,female
+857052,"Pepsnik, Ellen Mary",9,2026,White,Y,N,N,female
+974414,"Levy, Elise Sydney",9,2026,White,N,N,N,female
+771944,"Harris, Annabelle Claire",11,2024,White,N,N,N,female
+759300,"Yao, Nicole Xinyue",11,2024,Asian,N,N,N,female
+118700,"Adeosun, Toluwanimi Oluwabisoye Taiwo",11,2024,Black,N,N,Y,female
+903101,"Hammett, Madeline Elizabeth",12,2023,White,N,Y,N,female
+880933,"Maji, Katalin Lee",11,2024,T.M.O.,N,N,N,female
+885762,"Radhakrishnan, Anika",11,2024,Asian,N,N,N,female
+880933,"Maji, Katalin Lee",11,2024,T.M.O.,N,N,N,female
+885762,"Radhakrishnan, Anika",11,2024,Asian,N,N,N,female
+996071,"Cohen, Wren Hopewell",10,2025,White,N,N,N,female
+118619,"Guiden, Mary Natalya",10,2025,Black,N,Y,N,female
+627052,"Shah, Wafa Ahmad",12,2023,Asian,N,Y,N,female
+921352,"Ahmed, Sabrina Fatima",12,2023,Asian,N,N,N,female
+118700,"Adeosun, Toluwanimi Oluwabisoye Taiwo",11,2024,Black,N,N,Y,female
+896589,"Di Gioia, Johanna Isabella",11,2024,White,N,N,N,female
+118699,"Adeosun, Monijesu Oluwadotun",11,2024,Black,N,N,Y,female
+807322,"Hicks, Hannah Rachel",12,2023,White,Y,N,N,female
+845730,"Daly-Short, Samantha Elizabeth",11,2024,White,N,Y,N,female
+118723,"Velasco, Kimberly Samantha",11,2024,LatinX,N,N,Y,female
+627052,"Shah, Wafa Ahmad",12,2023,Asian,N,Y,N,female
+887090,"Sumi, Liviani Joy",9,2026,Asian,N,N,N,female
+118980,"Rotundo, Laura",12,2023,White,N,N,Y,female
+780664,"Parker, Zoe Adina",12,2023,White,N,Y,N,female
+954593,"Malhotra, Naina Penelope",10,2025,T.M.O.,N,Y,N,female
+118225,"Solis, Charlene Theresa Hernandez",11,2024,Asian,N,N,N,female
+704613,"Breen, Una Eleri",10,2025,White,N,N,N,female
+963532,"Bahar, Talia Saltzman",10,2025,White,N,N,N,female
+795427,"Foster-Loyd, Serenah Storm",11,2024,Black,N,N,N,female
+789212,"Gass, Margaret Cecilia",12,2023,White,N,Y,N,female
+707657,"Hutchinson, Eleanor Grace Hoisington",12,2023,White,N,N,N,female
+921352,"Ahmed, Sabrina Fatima",12,2023,Asian,N,N,N,female
+880933,"Maji, Katalin Lee",11,2024,T.M.O.,N,N,N,female
+821644,"Uzma, Sayyeda Amina",12,2023,Asian,N,N,N,female
+118619,"Guiden, Mary Natalya",10,2025,Black,N,Y,N,female
+996071,"Cohen, Wren Hopewell",10,2025,White,N,N,N,female
+627052,"Shah, Wafa Ahmad",12,2023,Asian,N,Y,N,female
+921352,"Ahmed, Sabrina Fatima",12,2023,Asian,N,N,N,female
+996106,"Batza, Sabine Ruth",10,2025,White,N,N,N,female
+118980,"Rotundo, Laura",12,2023,White,N,N,Y,female
+896589,"Di Gioia, Johanna Isabella",11,2024,White,N,N,N,female
+118700,"Adeosun, Toluwanimi Oluwabisoye Taiwo",11,2024,Black,N,N,Y,female
+118699,"Adeosun, Monijesu Oluwadotun",11,2024,Black,N,N,Y,female
+885762,"Radhakrishnan, Anika",11,2024,Asian,N,N,N,female
+746782,"Rene, Isabella Margaret",12,2023,Black,N,N,N,female
+880933,"Maji, Katalin Lee",11,2024,T.M.O.,N,N,N,female
+926641,"Lippke, Stephanie Sofia",9,2026,LatinX,N,N,N,female
+119019,"Freeman-Lucas, Sadiya Elizabeth",9,2026,Black,N,Y,N,female
+999072,"Barton, Beri Ann",10,2025,White,N,N,N,female
+763865,"Durango-Cohen, Rachel Rae",10,2025,LatinX,N,N,N,female
+118366,"Golemis, Viki",10,2025,White,N,N,N,female
+823691,"Barker, Emma Lily",12,2023,White,N,N,N,female
+999744,"Varela, Madeline Lewis",10,2025,LatinX,N,N,N,female
+804730,"Varela, Sofia Lewis",12,2023,LatinX,N,N,N,female
+771944,"Harris, Annabelle Claire",11,2024,White,N,N,N,female
+747606,"Carrasco, Kathleen Solaar",11,2024,LatinX,N,N,N,female
+730411,"Fredrickson, Lucy Rose",11,2024,White,N,Y,N,female
+988063,"Newbold, Julia Shen",11,2024,T.M.O.,N,N,N,female
+856677,"Needlman, Mira Beatrice",11,2024,White,N,N,N,female
+886147,"Streicker, Caroline Dougherty",11,2024,White,N,N,N,female
+759300,"Yao, Nicole Xinyue",11,2024,Asian,N,N,N,female
+118700,"Adeosun, Toluwanimi Oluwabisoye Taiwo",11,2024,Black,N,N,Y,female
+118699,"Adeosun, Monijesu Oluwadotun",11,2024,Black,N,N,Y,female
+999292,"Ansari, Saliha Omar",11,2024,Asian,N,Y,N,female
+743339,"Papa, Magdalena Louisa",12,2023,White,N,N,N,female
+828254,"Stoolmaker, Georgia Harper",9,2026,White,N,N,N,female
+974414,"Levy, Elise Sydney",9,2026,White,N,N,N,female
+758715,"Hasiba, Mira Tarik",10,2025,White,N,N,N,female
+885762,"Radhakrishnan, Anika",11,2024,Asian,N,N,N,female
+857052,"Pepsnik, Ellen Mary",9,2026,White,Y,N,N,female
+118699,"Adeosun, Monijesu Oluwadotun",11,2024,Black,N,N,Y,female
+821644,"Uzma, Sayyeda Amina",12,2023,Asian,N,N,N,female
+885762,"Radhakrishnan, Anika",11,2024,Asian,N,N,N,female
+848995,"Zahra, Sayyeda Fatima",9,2026,Asian,N,N,N,female
+999725,"Rubin, Rachael Dorothy",10,2025,White,N,N,N,female
+996106,"Batza, Sabine Ruth",10,2025,White,N,N,N,female
+944436,"Miller, Satthapi Rende Hasati",9,2026,Black,N,N,N,female
+118619,"Guiden, Mary Natalya",10,2025,Black,N,Y,N,female
+921352,"Ahmed, Sabrina Fatima",12,2023,Asian,N,N,N,female
+118700,"Adeosun, Toluwanimi Oluwabisoye Taiwo",11,2024,Black,N,N,Y,female
+880933,"Maji, Katalin Lee",11,2024,T.M.O.,N,N,N,female
+940804,"Sevilla, Tahryll Yee",11,2024,Asian,N,N,N,female
+821644,"Uzma, Sayyeda Amina",12,2023,Asian,N,N,N,female
+896589,"Di Gioia, Johanna Isabella",11,2024,White,N,N,N,female
+885762,"Radhakrishnan, Anika",11,2024,Asian,N,N,N,female
+880933,"Maji, Katalin Lee",11,2024,T.M.O.,N,N,N,female
+885762,"Radhakrishnan, Anika",11,2024,Asian,N,N,N,female
+903101,"Hammett, Madeline Elizabeth",12,2023,White,N,Y,N,female
+999072,"Barton, Beri Ann",10,2025,White,N,N,N,female
+118366,"Golemis, Viki",10,2025,White,N,N,N,female
+763865,"Durango-Cohen, Rachel Rae",10,2025,LatinX,N,N,N,female
+926641,"Lippke, Stephanie Sofia",9,2026,LatinX,N,N,N,female
+119019,"Freeman-Lucas, Sadiya Elizabeth",9,2026,Black,N,Y,N,female
+804730,"Varela, Sofia Lewis",12,2023,LatinX,N,N,N,female
+999744,"Varela, Madeline Lewis",10,2025,LatinX,N,N,N,female
+746782,"Rene, Isabella Margaret",12,2023,Black,N,N,N,female
+725670,"Coleman, Blythe Mary",12,2023,White,N,N,N,female
+759300,"Yao, Nicole Xinyue",11,2024,Asian,N,N,N,female
+988063,"Newbold, Julia Shen",11,2024,T.M.O.,N,N,N,female
+771944,"Harris, Annabelle Claire",11,2024,White,N,N,N,female
+856677,"Needlman, Mira Beatrice",11,2024,White,N,N,N,female
+118700,"Adeosun, Toluwanimi Oluwabisoye Taiwo",11,2024,Black,N,N,Y,female
+743339,"Papa, Magdalena Louisa",12,2023,White,N,N,N,female
+999168,"Schober, Katherine Nora",10,2025,White,N,N,N,female
+758715,"Hasiba, Mira Tarik",10,2025,White,N,N,N,female
+200901,"Vig, Vanisha",9,2026,Asian,N,N,N,female
+118699,"Adeosun, Monijesu Oluwadotun",11,2024,Black,N,N,Y,female
+999292,"Ansari, Saliha Omar",11,2024,Asian,N,Y,N,female
+974414,"Levy, Elise Sydney",9,2026,White,N,N,N,female
+828254,"Stoolmaker, Georgia Harper",9,2026,White,N,N,N,female
+857052,"Pepsnik, Ellen Mary",9,2026,White,Y,N,N,female
+807322,"Hicks, Hannah Rachel",12,2023,White,Y,N,N,female
+791665,"Joseph, Samantha Grace",10,2025,Asian,N,N,N,female
+999096,"Irons-Rosin, Pasha Lura",10,2025,White,N,N,N,female
+845730,"Daly-Short, Samantha Elizabeth",11,2024,White,N,Y,N,female
+748699,"Reel, Sofia Lin",9,2026,LatinX,N,N,N,female
+823640,"Hansen, Eva Catherine",9,2026,White,N,N,N,female
+707657,"Hutchinson, Eleanor Grace Hoisington",12,2023,White,N,N,N,female
+840189,"Stringer, Amiah Celise",10,2025,Black,N,N,N,female
+788039,"Martin, Janiya Chanel",10,2025,Black,N,N,N,female
+795427,"Foster-Loyd, Serenah Storm",11,2024,Black,N,N,N,female
+963532,"Bahar, Talia Saltzman",10,2025,White,N,N,N,female
+704613,"Breen, Una Eleri",10,2025,White,N,N,N,female
+984566,"Walsh, Mireya Leyana",9,2026,LatinX,N,N,N,female
+997985,"Catayong, Olivia Perry",11,2024,LatinX,N,Y,N,female
+936210,"Spalding, Joy Marie",10,2025,LatinX,N,N,N,female
+996041,"Kenney, Teagan Ella",10,2025,White,N,N,N,female
+996071,"Cohen, Wren Hopewell",10,2025,White,N,N,N,female
+921352,"Ahmed, Sabrina Fatima",12,2023,Asian,N,N,N,female
+996148,"Goel, Saheli Sanghavi",10,2025,Asian,N,N,N,female
+830634,"Zdawczyk, Larkin Isabelle",10,2025,White,N,N,N,female
+894955,"Forrest, Janya Raje",10,2025,Black,N,N,N,female
+707003,"Sylvestre, Corinne",10,2025,Black,N,N,Y,female
+785994,"Ubersox, Marin Sidney",10,2025,White,N,N,N,female
+999725,"Rubin, Rachael Dorothy",10,2025,White,N,N,N,female
+873056,"Owomoyela-Olusesi, Abigael Oluwadamiyato",10,2025,Black,N,Y,N,female
+118619,"Guiden, Mary Natalya",10,2025,Black,N,Y,N,female
+880933,"Maji, Katalin Lee",11,2024,T.M.O.,N,N,N,female
+200901,"Vig, Vanisha",9,2026,Asian,N,N,N,female
+830932,"Hurd, Audrey Shakman",9,2026,White,N,N,N,female
+911310,"Bowen, Siena Etsuko Sato",9,2026,T.M.O.,N,N,N,female
+857052,"Pepsnik, Ellen Mary",9,2026,White,Y,N,N,female
+856677,"Needlman, Mira Beatrice",11,2024,White,N,N,N,female
+988063,"Newbold, Julia Shen",11,2024,T.M.O.,N,N,N,female
+877080,"Mann, Emersen Grace Browning",11,2024,White,N,Y,N,female
+948486,"Chow, Sydney Helena",11,2024,Asian,N,N,N,female
+118366,"Golemis, Viki",10,2025,White,N,N,N,female
+828254,"Stoolmaker, Georgia Harper",9,2026,White,N,N,N,female
+999072,"Barton, Beri Ann",10,2025,White,N,N,N,female
+759300,"Yao, Nicole Xinyue",11,2024,Asian,N,N,N,female
+974414,"Levy, Elise Sydney",9,2026,White,N,N,N,female
+926641,"Lippke, Stephanie Sofia",9,2026,LatinX,N,N,N,female
+119019,"Freeman-Lucas, Sadiya Elizabeth",9,2026,Black,N,Y,N,female
+763865,"Durango-Cohen, Rachel Rae",10,2025,LatinX,N,N,N,female
+885762,"Radhakrishnan, Anika",11,2024,Asian,N,N,N,female
+758715,"Hasiba, Mira Tarik",10,2025,White,N,N,N,female
+999168,"Schober, Katherine Nora",10,2025,White,N,N,N,female
+747606,"Carrasco, Kathleen Solaar",11,2024,LatinX,N,N,N,female
+730411,"Fredrickson, Lucy Rose",11,2024,White,N,Y,N,female
+118699,"Adeosun, Monijesu Oluwadotun",11,2024,Black,N,N,Y,female
+118700,"Adeosun, Toluwanimi Oluwabisoye Taiwo",11,2024,Black,N,N,Y,female
+743339,"Papa, Magdalena Louisa",12,2023,White,N,N,N,female
+723403,"Grill, Amy Brooke",11,2024,White,N,N,N,female
+999096,"Irons-Rosin, Pasha Lura",10,2025,White,N,N,N,female
+827073,"Rutstein, Sidra Abigail",11,2024,White,N,N,N,female
+118619,"Guiden, Mary Natalya",10,2025,Black,N,Y,N,female
+791665,"Joseph, Samantha Grace",10,2025,Asian,N,N,N,female
+704613,"Breen, Una Eleri",10,2025,White,N,N,N,female
+963532,"Bahar, Talia Saltzman",10,2025,White,N,N,N,female
+823640,"Hansen, Eva Catherine",9,2026,White,N,N,N,female
+748699,"Reel, Sofia Lin",9,2026,LatinX,N,N,N,female
+625597,"Owens, Abigail Christine",12,2023,White,N,Y,N,female
+707657,"Hutchinson, Eleanor Grace Hoisington",12,2023,White,N,N,N,female
+807322,"Hicks, Hannah Rachel",12,2023,White,Y,N,N,female
+840189,"Stringer, Amiah Celise",10,2025,Black,N,N,N,female
+808220,"Hammond, Nahrain Salome",10,2025,Black,N,N,N,female
+965831,"Salzinski, Delilah Rosalie",12,2023,White,N,N,N,female
+785994,"Ubersox, Marin Sidney",10,2025,White,N,N,N,female
+944436,"Miller, Satthapi Rende Hasati",9,2026,Black,N,N,N,female
+942548,"Nagatani-beyers, Isabella Jane",9,2026,T.M.O.,N,N,N,female
+792695,"Satut, Naomi Lynn",9,2026,White,N,N,N,female
+887090,"Sumi, Liviani Joy",9,2026,Asian,N,N,N,female
+957925,"Geyer, Tinsae Hilary",9,2026,Black,N,N,N,female
+997985,"Catayong, Olivia Perry",11,2024,LatinX,N,Y,N,female
+709065,"Moulinier, Sarah Catherine",12,2023,White,N,N,N,female
+885762,"Radhakrishnan, Anika",11,2024,Asian,N,N,N,female
+999725,"Rubin, Rachael Dorothy",10,2025,White,N,N,N,female
+996106,"Batza, Sabine Ruth",10,2025,White,N,N,N,female
+944436,"Miller, Satthapi Rende Hasati",9,2026,Black,N,N,N,female
+892396,"Benz, Addison Elizabeth",11,2024,White,N,Y,N,female
+880933,"Maji, Katalin Lee",11,2024,T.M.O.,N,N,N,female
+738826,"Sumi, Kupunoli Faith",11,2024,Asian,N,N,N,female
+118700,"Adeosun, Toluwanimi Oluwabisoye Taiwo",11,2024,Black,N,N,Y,female
+759300,"Yao, Nicole Xinyue",11,2024,Asian,N,N,N,female
+118699,"Adeosun, Monijesu Oluwadotun",11,2024,Black,N,N,Y,female
+118619,"Guiden, Mary Natalya",10,2025,Black,N,Y,N,female
+880933,"Maji, Katalin Lee",11,2024,T.M.O.,N,N,N,female
+885762,"Radhakrishnan, Anika",11,2024,Asian,N,N,N,female
+911310,"Bowen, Siena Etsuko Sato",9,2026,T.M.O.,N,N,N,female
+830932,"Hurd, Audrey Shakman",9,2026,White,N,N,N,female
+828254,"Stoolmaker, Georgia Harper",9,2026,White,N,N,N,female
+926641,"Lippke, Stephanie Sofia",9,2026,LatinX,N,N,N,female
+948486,"Chow, Sydney Helena",11,2024,Asian,N,N,N,female
+886147,"Streicker, Caroline Dougherty",11,2024,White,N,N,N,female
+751099,"Moseley, Ava Lorielle",12,2023,T.M.O.,N,N,N,female
+856677,"Needlman, Mira Beatrice",11,2024,White,N,N,N,female
+988063,"Newbold, Julia Shen",11,2024,T.M.O.,N,N,N,female
+200901,"Vig, Vanisha",9,2026,Asian,N,N,N,female
+759300,"Yao, Nicole Xinyue",11,2024,Asian,N,N,N,female
+118366,"Golemis, Viki",10,2025,White,N,N,N,female
+763865,"Durango-Cohen, Rachel Rae",10,2025,LatinX,N,N,N,female
+999072,"Barton, Beri Ann",10,2025,White,N,N,N,female
+999168,"Schober, Katherine Nora",10,2025,White,N,N,N,female
+118699,"Adeosun, Monijesu Oluwadotun",11,2024,Black,N,N,Y,female
+999292,"Ansari, Saliha Omar",11,2024,Asian,N,Y,N,female
+117955,"Cochrane, Ashley Zipporah",12,2023,Black,N,N,N,female
+863517,"Vezner, Maya Josephine",12,2023,White,N,N,N,female
+746782,"Rene, Isabella Margaret",12,2023,Black,N,N,N,female
+743339,"Papa, Magdalena Louisa",12,2023,White,N,N,N,female
+807322,"Hicks, Hannah Rachel",12,2023,White,Y,N,N,female
+791665,"Joseph, Samantha Grace",10,2025,Asian,N,N,N,female
+827073,"Rutstein, Sidra Abigail",11,2024,White,N,N,N,female
+723403,"Grill, Amy Brooke",11,2024,White,N,N,N,female
+957925,"Geyer, Tinsae Hilary",9,2026,Black,N,N,N,female
+792695,"Satut, Naomi Lynn",9,2026,White,N,N,N,female
+885497,"Etyem, Kayjah Anelia",10,2025,Black,N,N,N,female
+887090,"Sumi, Liviani Joy",9,2026,Asian,N,N,N,female
+999250,"Stewart, Grace Kathleen",10,2025,White,N,N,N,female
+840189,"Stringer, Amiah Celise",10,2025,Black,N,N,N,female
+788039,"Martin, Janiya Chanel",10,2025,Black,N,N,N,female
+625597,"Owens, Abigail Christine",12,2023,White,N,Y,N,female
+922663,"Palacios, Alexandra",12,2023,LatinX,N,N,N,female
+996041,"Kenney, Teagan Ella",10,2025,White,N,N,N,female
+942548,"Nagatani-beyers, Isabella Jane",9,2026,T.M.O.,N,N,N,female
+118619,"Guiden, Mary Natalya",10,2025,Black,N,Y,N,female
+921352,"Ahmed, Sabrina Fatima",12,2023,Asian,N,N,N,female
+963532,"Bahar, Talia Saltzman",10,2025,White,N,N,N,female
+118002,"Durkin, Anna Marie",12,2023,White,N,N,N,female
+954593,"Malhotra, Naina Penelope",10,2025,T.M.O.,N,Y,N,female
+999080,"Machut, Ella Marie",10,2025,White,N,N,N,female
+823640,"Hansen, Eva Catherine",9,2026,White,N,N,N,female
+748699,"Reel, Sofia Lin",9,2026,LatinX,N,N,N,female
+996148,"Goel, Saheli Sanghavi",10,2025,Asian,N,N,N,female
+830634,"Zdawczyk, Larkin Isabelle",10,2025,White,N,N,N,female
+999096,"Irons-Rosin, Pasha Lura",10,2025,White,N,N,N,female
+625702,"Juarez-Jamaica, Jessica Xitlali",12,2023,LatinX,N,N,N,female
+785994,"Ubersox, Marin Sidney",10,2025,White,N,N,N,female
+709065,"Moulinier, Sarah Catherine",12,2023,White,N,N,N,female
+943294,"Milner-Gorvine, Sophia Esther",12,2023,White,N,N,N,female
+808220,"Hammond, Nahrain Salome",10,2025,Black,N,N,N,female
+885762,"Radhakrishnan, Anika",11,2024,Asian,N,N,N,female
+118699,"Adeosun, Monijesu Oluwadotun",11,2024,Black,N,N,Y,female
+880933,"Maji, Katalin Lee",11,2024,T.M.O.,N,N,N,female
+118700,"Adeosun, Toluwanimi Oluwabisoye Taiwo",11,2024,Black,N,N,Y,female
+896589,"Di Gioia, Johanna Isabella",11,2024,White,N,N,N,female
+940804,"Sevilla, Tahryll Yee",11,2024,Asian,N,N,N,female
+751099,"Moseley, Ava Lorielle",12,2023,T.M.O.,N,N,N,female
+118980,"Rotundo, Laura",12,2023,White,N,N,Y,female
+944436,"Miller, Satthapi Rende Hasati",9,2026,Black,N,N,N,female
+999725,"Rubin, Rachael Dorothy",10,2025,White,N,N,N,female
+996106,"Batza, Sabine Ruth",10,2025,White,N,N,N,female
+996084,"Takloobighash, Shalizeh Parmeeda",10,2025,White,N,N,N,female
+118619,"Guiden, Mary Natalya",10,2025,Black,N,Y,N,female
+996106,"Batza, Sabine Ruth",10,2025,White,N,N,N,female
+999725,"Rubin, Rachael Dorothy",10,2025,White,N,N,N,female
+118699,"Adeosun, Monijesu Oluwadotun",11,2024,Black,N,N,Y,female
+823640,"Hansen, Eva Catherine",9,2026,White,N,N,N,female
+847590,"Jefferson, Celia Ann",9,2026,White,N,N,N,female
+940804,"Sevilla, Tahryll Yee",11,2024,Asian,N,N,N,female
+896589,"Di Gioia, Johanna Isabella",11,2024,White,N,N,N,female
+118700,"Adeosun, Toluwanimi Oluwabisoye Taiwo",11,2024,Black,N,N,Y,female
+892396,"Benz, Addison Elizabeth",11,2024,White,N,Y,N,female
+627275,"Slack, Angel Anika",11,2024,Black,N,N,N,female
+880933,"Maji, Katalin Lee",11,2024,T.M.O.,N,N,N,female
+944436,"Miller, Satthapi Rende Hasati",9,2026,Black,N,N,N,female
+821644,"Uzma, Sayyeda Amina",12,2023,Asian,N,N,N,female
+885762,"Radhakrishnan, Anika",11,2024,Asian,N,N,N,female
+118699,"Adeosun, Monijesu Oluwadotun",11,2024,Black,N,N,Y,female
+896589,"Di Gioia, Johanna Isabella",11,2024,White,N,N,N,female
+940804,"Sevilla, Tahryll Yee",11,2024,Asian,N,N,N,female
+118700,"Adeosun, Toluwanimi Oluwabisoye Taiwo",11,2024,Black,N,N,Y,female
+885762,"Radhakrishnan, Anika",11,2024,Asian,N,N,N,female
+944436,"Miller, Satthapi Rende Hasati",9,2026,Black,N,N,N,female
+821644,"Uzma, Sayyeda Amina",12,2023,Asian,N,N,N,female
+880933,"Maji, Katalin Lee",11,2024,T.M.O.,N,N,N,female
+880933,"Maji, Katalin Lee",11,2024,T.M.O.,N,N,N,female
+885762,"Radhakrishnan, Anika",11,2024,Asian,N,N,N,female
+948486,"Chow, Sydney Helena",11,2024,Asian,N,N,N,female
+118700,"Adeosun, Toluwanimi Oluwabisoye Taiwo",11,2024,Black,N,N,Y,female
+999168,"Schober, Katherine Nora",10,2025,White,N,N,N,female
+926641,"Lippke, Stephanie Sofia",9,2026,LatinX,N,N,N,female
+200901,"Vig, Vanisha",9,2026,Asian,N,N,N,female
+999072,"Barton, Beri Ann",10,2025,White,N,N,N,female
+746782,"Rene, Isabella Margaret",12,2023,Black,N,N,N,female
+988063,"Newbold, Julia Shen",11,2024,T.M.O.,N,N,N,female
+856677,"Needlman, Mira Beatrice",11,2024,White,N,N,N,female
+759300,"Yao, Nicole Xinyue",11,2024,Asian,N,N,N,female
+828254,"Stoolmaker, Georgia Harper",9,2026,White,N,N,N,female
+974414,"Levy, Elise Sydney",9,2026,White,N,N,N,female
+118366,"Golemis, Viki",10,2025,White,N,N,N,female
+873352,"Nimrod, Madeline Jane",11,2024,White,N,N,N,female
+863517,"Vezner, Maya Josephine",12,2023,White,N,N,N,female
+999292,"Ansari, Saliha Omar",11,2024,Asian,N,Y,N,female
+854208,"Centofanti, Sophie Emily",11,2024,White,N,N,N,female
+857052,"Pepsnik, Ellen Mary",9,2026,White,Y,N,N,female
+747606,"Carrasco, Kathleen Solaar",11,2024,LatinX,N,N,N,female
+830932,"Hurd, Audrey Shakman",9,2026,White,N,N,N,female
+954593,"Malhotra, Naina Penelope",10,2025,T.M.O.,N,Y,N,female
+625597,"Owens, Abigail Christine",12,2023,White,N,Y,N,female
+996148,"Goel, Saheli Sanghavi",10,2025,Asian,N,N,N,female
+887090,"Sumi, Liviani Joy",9,2026,Asian,N,N,N,female
+999250,"Stewart, Grace Kathleen",10,2025,White,N,N,N,female
+763865,"Durango-Cohen, Rachel Rae",10,2025,LatinX,N,N,N,female
+118633,"Rodriguez, Kayla Marie Rosero",11,2024,LatinX,Y,N,N,female
+999080,"Machut, Ella Marie",10,2025,White,N,N,N,female
+792695,"Satut, Naomi Lynn",9,2026,White,N,N,N,female
+957925,"Geyer, Tinsae Hilary",9,2026,Black,N,N,N,female
+119023,"Flint, Kate Elizabeth",9,2026,White,N,N,N,female
+942548,"Nagatani-beyers, Isabella Jane",9,2026,T.M.O.,N,N,N,female
+707657,"Hutchinson, Eleanor Grace Hoisington",12,2023,White,N,N,N,female
+118619,"Guiden, Mary Natalya",10,2025,Black,N,Y,N,female
+830634,"Zdawczyk, Larkin Isabelle",10,2025,White,N,N,N,female
+996041,"Kenney, Teagan Ella",10,2025,White,N,N,N,female
+936210,"Spalding, Joy Marie",10,2025,LatinX,N,N,N,female
+997985,"Catayong, Olivia Perry",11,2024,LatinX,N,Y,N,female
+885497,"Etyem, Kayjah Anelia",10,2025,Black,N,N,N,female
+999725,"Rubin, Rachael Dorothy",10,2025,White,N,N,N,female
+118699,"Adeosun, Monijesu Oluwadotun",11,2024,Black,N,N,Y,female
+921352,"Ahmed, Sabrina Fatima",12,2023,Asian,N,N,N,female
+823640,"Hansen, Eva Catherine",9,2026,White,N,N,N,female
+748699,"Reel, Sofia Lin",9,2026,LatinX,N,N,N,female
+892396,"Benz, Addison Elizabeth",11,2024,White,N,Y,N,female
+996106,"Batza, Sabine Ruth",10,2025,White,N,N,N,female
+118627,"Anderson, Allison Olivia",10,2025,Black,N,N,N,female
+118619,"Guiden, Mary Natalya",10,2025,Black,N,Y,N,female
+627052,"Shah, Wafa Ahmad",12,2023,Asian,N,Y,N,female
+821644,"Uzma, Sayyeda Amina",12,2023,Asian,N,N,N,female
+118700,"Adeosun, Toluwanimi Oluwabisoye Taiwo",11,2024,Black,N,N,Y,female
+759300,"Yao, Nicole Xinyue",11,2024,Asian,N,N,N,female
+118699,"Adeosun, Monijesu Oluwadotun",11,2024,Black,N,N,Y,female
+880933,"Maji, Katalin Lee",11,2024,T.M.O.,N,N,N,female
+940804,"Sevilla, Tahryll Yee",11,2024,Asian,N,N,N,female
+885762,"Radhakrishnan, Anika",11,2024,Asian,N,N,N,female
+944436,"Miller, Satthapi Rende Hasati",9,2026,Black,N,N,N,female
+921352,"Ahmed, Sabrina Fatima",12,2023,Asian,N,N,N,female
+627275,"Slack, Angel Anika",11,2024,Black,N,N,N,female
+996106,"Batza, Sabine Ruth",10,2025,White,N,N,N,female
+944436,"Miller, Satthapi Rende Hasati",9,2026,Black,N,N,N,female
+885762,"Radhakrishnan, Anika",11,2024,Asian,N,N,N,female
+627275,"Slack, Angel Anika",11,2024,Black,N,N,N,female
+999725,"Rubin, Rachael Dorothy",10,2025,White,N,N,N,female
+880933,"Maji, Katalin Lee",11,2024,T.M.O.,N,N,N,female
+118627,"Anderson, Allison Olivia",10,2025,Black,N,N,N,female
+118699,"Adeosun, Monijesu Oluwadotun",11,2024,Black,N,N,Y,female
+892396,"Benz, Addison Elizabeth",11,2024,White,N,Y,N,female
+896589,"Di Gioia, Johanna Isabella",11,2024,White,N,N,N,female
+118619,"Guiden, Mary Natalya",10,2025,Black,N,Y,N,female
+880933,"Maji, Katalin Lee",11,2024,T.M.O.,N,N,N,female
+885762,"Radhakrishnan, Anika",11,2024,Asian,N,N,N,female
+926641,"Lippke, Stephanie Sofia",9,2026,LatinX,N,N,N,female
+759300,"Yao, Nicole Xinyue",11,2024,Asian,N,N,N,female
+118700,"Adeosun, Toluwanimi Oluwabisoye Taiwo",11,2024,Black,N,N,Y,female
+117955,"Cochrane, Ashley Zipporah",12,2023,Black,N,N,N,female
+863517,"Vezner, Maya Josephine",12,2023,White,N,N,N,female
+118146,"Svolos, Natalie Rita",12,2023,White,N,N,N,female
+746782,"Rene, Isabella Margaret",12,2023,Black,N,N,N,female
+999292,"Ansari, Saliha Omar",11,2024,Asian,N,Y,N,female
+854208,"Centofanti, Sophie Emily",11,2024,White,N,N,N,female
+857052,"Pepsnik, Ellen Mary",9,2026,White,Y,N,N,female
+743339,"Papa, Magdalena Louisa",12,2023,White,N,N,N,female
+819084,"Liang, Irys Ching-Tzu",10,2025,Asian,N,N,N,female
+711315,"Johansen, Aden Sophia",10,2025,White,N,N,N,female
+999595,"Ross, Madeline Dorothy",10,2025,White,N,N,N,female
+999168,"Schober, Katherine Nora",10,2025,White,N,N,N,female
+758715,"Hasiba, Mira Tarik",10,2025,White,N,N,N,female
+974414,"Levy, Elise Sydney",9,2026,White,N,N,N,female
+828254,"Stoolmaker, Georgia Harper",9,2026,White,N,N,N,female
+965831,"Salzinski, Delilah Rosalie",12,2023,White,N,N,N,female
+870748,"Perez, Frida",11,2024,LatinX,N,N,N,female
+887955,"Martin, Karis Alexandria",11,2024,Black,N,N,N,female
+118699,"Adeosun, Monijesu Oluwadotun",11,2024,Black,N,N,Y,female
+963532,"Bahar, Talia Saltzman",10,2025,White,N,N,N,female
+704613,"Breen, Una Eleri",10,2025,White,N,N,N,female
+830634,"Zdawczyk, Larkin Isabelle",10,2025,White,N,N,N,female
+954593,"Malhotra, Naina Penelope",10,2025,T.M.O.,N,Y,N,female
+996148,"Goel, Saheli Sanghavi",10,2025,Asian,N,N,N,female
+118528,"Cummins, Grace Lin",10,2025,Asian,N,Y,N,female
+999725,"Rubin, Rachael Dorothy",10,2025,White,N,N,N,female
+999660,"Eccleston, Rose Wyndham",10,2025,White,N,Y,N,female
+995225,"Polley, Sarah Marie",11,2024,White,N,N,N,female
+957925,"Geyer, Tinsae Hilary",9,2026,Black,N,N,N,female
+119002,"Crouse, Caitlin Rae",9,2026,LatinX,N,Y,N,female
+119023,"Flint, Kate Elizabeth",9,2026,White,N,N,N,female
+887090,"Sumi, Liviani Joy",9,2026,Asian,N,N,N,female
+792695,"Satut, Naomi Lynn",9,2026,White,N,N,N,female
+911310,"Bowen, Siena Etsuko Sato",9,2026,T.M.O.,N,N,N,female
+999250,"Stewart, Grace Kathleen",10,2025,White,N,N,N,female
+936210,"Spalding, Joy Marie",10,2025,LatinX,N,N,N,female
+803773,"Serpa, Abigail Rose",10,2025,White,N,N,N,female
+996041,"Kenney, Teagan Ella",10,2025,White,N,N,N,female
+997985,"Catayong, Olivia Perry",11,2024,LatinX,N,Y,N,female
+625597,"Owens, Abigail Christine",12,2023,White,N,Y,N,female
+885497,"Etyem, Kayjah Anelia",10,2025,Black,N,N,N,female
+840189,"Stringer, Amiah Celise",10,2025,Black,N,N,N,female
+808220,"Hammond, Nahrain Salome",10,2025,Black,N,N,N,female
+999017,"Belgrad, Jamie Hoi",10,2025,Asian,N,N,N,female
+707657,"Hutchinson, Eleanor Grace Hoisington",12,2023,White,N,N,N,female
+759300,"Yao, Nicole Xinyue",11,2024,Asian,N,N,N,female
+118619,"Guiden, Mary Natalya",10,2025,Black,N,Y,N,female
+885762,"Radhakrishnan, Anika",11,2024,Asian,N,N,N,female
+996106,"Batza, Sabine Ruth",10,2025,White,N,N,N,female
+996084,"Takloobighash, Shalizeh Parmeeda",10,2025,White,N,N,N,female
+118699,"Adeosun, Monijesu Oluwadotun",11,2024,Black,N,N,Y,female
+999725,"Rubin, Rachael Dorothy",10,2025,White,N,N,N,female
+118700,"Adeosun, Toluwanimi Oluwabisoye Taiwo",11,2024,Black,N,N,Y,female
+880933,"Maji, Katalin Lee",11,2024,T.M.O.,N,N,N,female
+896589,"Di Gioia, Johanna Isabella",11,2024,White,N,N,N,female
+944436,"Miller, Satthapi Rende Hasati",9,2026,Black,N,N,N,female
+627275,"Slack, Angel Anika",11,2024,Black,N,N,N,female
+940804,"Sevilla, Tahryll Yee",11,2024,Asian,N,N,N,female
+118700,"Adeosun, Toluwanimi Oluwabisoye Taiwo",11,2024,Black,N,N,Y,female
+743339,"Papa, Magdalena Louisa",12,2023,White,N,N,N,female
+746782,"Rene, Isabella Margaret",12,2023,Black,N,N,N,female
+721490,"Hogan, Genevieve Christine",11,2024,White,N,N,N,female
+988063,"Newbold, Julia Shen",11,2024,T.M.O.,N,N,N,female
+853505,"Lennon, Alexia Katz",11,2024,White,N,N,N,female
+771944,"Harris, Annabelle Claire",11,2024,White,N,N,N,female
+759300,"Yao, Nicole Xinyue",11,2024,Asian,N,N,N,female
+948486,"Chow, Sydney Helena",11,2024,Asian,N,N,N,female
+200901,"Vig, Vanisha",9,2026,Asian,N,N,N,female
+830932,"Hurd, Audrey Shakman",9,2026,White,N,N,N,female
+857052,"Pepsnik, Ellen Mary",9,2026,White,Y,N,N,female
+981754,"Schirer, Emily Mano",10,2025,T.M.O.,Y,N,Y,female
+996076,"Warren, Eleanor Josephine",10,2025,White,N,Y,N,female
+855217,"Esionye, Yolanda Nne",10,2025,Black,N,N,N,female
+999168,"Schober, Katherine Nora",10,2025,White,N,N,N,female
+819084,"Liang, Irys Ching-Tzu",10,2025,Asian,N,N,N,female
+999595,"Ross, Madeline Dorothy",10,2025,White,N,N,N,female
+711315,"Johansen, Aden Sophia",10,2025,White,N,N,N,female
+118088,"Kerr, Kathleen Anne",11,2024,White,N,N,N,female
+730411,"Fredrickson, Lucy Rose",11,2024,White,N,Y,N,female
+747606,"Carrasco, Kathleen Solaar",11,2024,LatinX,N,N,N,female
+828254,"Stoolmaker, Georgia Harper",9,2026,White,N,N,N,female
+974414,"Levy, Elise Sydney",9,2026,White,N,N,N,female
+880933,"Maji, Katalin Lee",11,2024,T.M.O.,N,N,N,female
+885762,"Radhakrishnan, Anika",11,2024,Asian,N,N,N,female
+887090,"Sumi, Liviani Joy",9,2026,Asian,N,N,N,female
+911310,"Bowen, Siena Etsuko Sato",9,2026,T.M.O.,N,N,N,female
+999080,"Machut, Ella Marie",10,2025,White,N,N,N,female
+885497,"Etyem, Kayjah Anelia",10,2025,Black,N,N,N,female
+996148,"Goel, Saheli Sanghavi",10,2025,Asian,N,N,N,female
+808220,"Hammond, Nahrain Salome",10,2025,Black,N,N,N,female
+792695,"Satut, Naomi Lynn",9,2026,White,N,N,N,female
+803773,"Serpa, Abigail Rose",10,2025,White,N,N,N,female
+997985,"Catayong, Olivia Perry",11,2024,LatinX,N,Y,N,female
+977329,"Renfro-Legghette, Ife Khamilah",11,2024,Black,N,N,N,female
+830634,"Zdawczyk, Larkin Isabelle",10,2025,White,N,N,N,female
+827073,"Rutstein, Sidra Abigail",11,2024,White,N,N,N,female
+723403,"Grill, Amy Brooke",11,2024,White,N,N,N,female
+979957,"Ward, Amelia Maeve",12,2023,White,N,N,N,female
+709065,"Moulinier, Sarah Catherine",12,2023,White,N,N,N,female
+840189,"Stringer, Amiah Celise",10,2025,Black,N,N,N,female
+823640,"Hansen, Eva Catherine",9,2026,White,N,N,N,female
+748699,"Reel, Sofia Lin",9,2026,LatinX,N,N,N,female
+954593,"Malhotra, Naina Penelope",10,2025,T.M.O.,N,Y,N,female
+936210,"Spalding, Joy Marie",10,2025,LatinX,N,N,N,female
+996041,"Kenney, Teagan Ella",10,2025,White,N,N,N,female
+625597,"Owens, Abigail Christine",12,2023,White,N,Y,N,female
+118619,"Guiden, Mary Natalya",10,2025,Black,N,Y,N,female
+999725,"Rubin, Rachael Dorothy",10,2025,White,N,N,N,female
+996106,"Batza, Sabine Ruth",10,2025,White,N,N,N,female
+118700,"Adeosun, Toluwanimi Oluwabisoye Taiwo",11,2024,Black,N,N,Y,female
+759300,"Yao, Nicole Xinyue",11,2024,Asian,N,N,N,female
+880933,"Maji, Katalin Lee",11,2024,T.M.O.,N,N,N,female
+940804,"Sevilla, Tahryll Yee",11,2024,Asian,N,N,N,female
+885762,"Radhakrishnan, Anika",11,2024,Asian,N,N,N,female
+118699,"Adeosun, Monijesu Oluwadotun",11,2024,Black,N,N,Y,female
+896589,"Di Gioia, Johanna Isabella",11,2024,White,N,N,N,female
+892396,"Benz, Addison Elizabeth",11,2024,White,N,Y,N,female
+880933,"Maji, Katalin Lee",11,2024,T.M.O.,N,N,N,female
+885762,"Radhakrishnan, Anika",11,2024,Asian,N,N,N,female
+117955,"Cochrane, Ashley Zipporah",12,2023,Black,N,N,N,female
+863517,"Vezner, Maya Josephine",12,2023,White,N,N,N,female
+974414,"Levy, Elise Sydney",9,2026,White,N,N,N,female
+828254,"Stoolmaker, Georgia Harper",9,2026,White,N,N,N,female
+743339,"Papa, Magdalena Louisa",12,2023,White,N,N,N,female
+118366,"Golemis, Viki",10,2025,White,N,N,N,female
+999168,"Schober, Katherine Nora",10,2025,White,N,N,N,female
+711315,"Johansen, Aden Sophia",10,2025,White,N,N,N,female
+999054,"Thibodeaux, Amalia Sanaiche",10,2025,Black,N,N,N,female
+999595,"Ross, Madeline Dorothy",10,2025,White,N,N,N,female
+981754,"Schirer, Emily Mano",10,2025,T.M.O.,Y,N,Y,female
+996076,"Warren, Eleanor Josephine",10,2025,White,N,Y,N,female
+854208,"Centofanti, Sophie Emily",11,2024,White,N,N,N,female
+830932,"Hurd, Audrey Shakman",9,2026,White,N,N,N,female
+200901,"Vig, Vanisha",9,2026,Asian,N,N,N,female
+118088,"Kerr, Kathleen Anne",11,2024,White,N,N,N,female
+730411,"Fredrickson, Lucy Rose",11,2024,White,N,Y,N,female
+988063,"Newbold, Julia Shen",11,2024,T.M.O.,N,N,N,female
+853505,"Lennon, Alexia Katz",11,2024,White,N,N,N,female
+948486,"Chow, Sydney Helena",11,2024,Asian,N,N,N,female
+926641,"Lippke, Stephanie Sofia",9,2026,LatinX,N,N,N,female
+118700,"Adeosun, Toluwanimi Oluwabisoye Taiwo",11,2024,Black,N,N,Y,female
+999080,"Machut, Ella Marie",10,2025,White,N,N,N,female
+996148,"Goel, Saheli Sanghavi",10,2025,Asian,N,N,N,female
+887090,"Sumi, Liviani Joy",9,2026,Asian,N,N,N,female
+911310,"Bowen, Siena Etsuko Sato",9,2026,T.M.O.,N,N,N,female
+119023,"Flint, Kate Elizabeth",9,2026,White,N,N,N,female
+118814,"Charles, Ainsley Rebecca",9,2026,White,N,Y,N,female
+118619,"Guiden, Mary Natalya",10,2025,Black,N,Y,N,female
+957925,"Geyer, Tinsae Hilary",9,2026,Black,N,N,N,female
+792695,"Satut, Naomi Lynn",9,2026,White,N,N,N,female
+803773,"Serpa, Abigail Rose",10,2025,White,N,N,N,female
+942548,"Nagatani-beyers, Isabella Jane",9,2026,T.M.O.,N,N,N,female
+996041,"Kenney, Teagan Ella",10,2025,White,N,N,N,female
+999250,"Stewart, Grace Kathleen",10,2025,White,N,N,N,female
+936210,"Spalding, Joy Marie",10,2025,LatinX,N,N,N,female
+808220,"Hammond, Nahrain Salome",10,2025,Black,N,N,N,female
+840189,"Stringer, Amiah Celise",10,2025,Black,N,N,N,female
+788039,"Martin, Janiya Chanel",10,2025,Black,N,N,N,female
+979957,"Ward, Amelia Maeve",12,2023,White,N,N,N,female
+709065,"Moulinier, Sarah Catherine",12,2023,White,N,N,N,female
+823640,"Hansen, Eva Catherine",9,2026,White,N,N,N,female
+748699,"Reel, Sofia Lin",9,2026,LatinX,N,N,N,female
+963532,"Bahar, Talia Saltzman",10,2025,White,N,N,N,female
+827073,"Rutstein, Sidra Abigail",11,2024,White,N,N,N,female
+723403,"Grill, Amy Brooke",11,2024,White,N,N,N,female
+997985,"Catayong, Olivia Perry",11,2024,LatinX,N,Y,N,female
+977329,"Renfro-Legghette, Ife Khamilah",11,2024,Black,N,N,N,female
+892396,"Benz, Addison Elizabeth",11,2024,White,N,Y,N,female
+996106,"Batza, Sabine Ruth",10,2025,White,N,N,N,female
+896589,"Di Gioia, Johanna Isabella",11,2024,White,N,N,N,female
+999725,"Rubin, Rachael Dorothy",10,2025,White,N,N,N,female
+118700,"Adeosun, Toluwanimi Oluwabisoye Taiwo",11,2024,Black,N,N,Y,female
+880933,"Maji, Katalin Lee",11,2024,T.M.O.,N,N,N,female
+885762,"Radhakrishnan, Anika",11,2024,Asian,N,N,N,female
+627275,"Slack, Angel Anika",11,2024,Black,N,N,N,female
+118619,"Guiden, Mary Natalya",10,2025,Black,N,Y,N,female
+118700,"Adeosun, Toluwanimi Oluwabisoye Taiwo",11,2024,Black,N,N,Y,female
+996106,"Batza, Sabine Ruth",10,2025,White,N,N,N,female
+627275,"Slack, Angel Anika",11,2024,Black,N,N,N,female
+118619,"Guiden, Mary Natalya",10,2025,Black,N,Y,N,female
+880933,"Maji, Katalin Lee",11,2024,T.M.O.,N,N,N,female
+940804,"Sevilla, Tahryll Yee",11,2024,Asian,N,N,N,female
+944436,"Miller, Satthapi Rende Hasati",9,2026,Black,N,N,N,female
+896589,"Di Gioia, Johanna Isabella",11,2024,White,N,N,N,female
+892396,"Benz, Addison Elizabeth",11,2024,White,N,Y,N,female
+885762,"Radhakrishnan, Anika",11,2024,Asian,N,N,N,female
+999725,"Rubin, Rachael Dorothy",10,2025,White,N,N,N,female
+736834,"Ong, Alyssa Isabella",12,2023,Asian,N,N,N,female
+759300,"Yao, Nicole Xinyue",11,2024,Asian,N,N,N,female
+853505,"Lennon, Alexia Katz",11,2024,White,N,N,N,female
+856677,"Needlman, Mira Beatrice",11,2024,White,N,N,N,female
+988063,"Newbold, Julia Shen",11,2024,T.M.O.,N,N,N,female
+981754,"Schirer, Emily Mano",10,2025,T.M.O.,Y,N,Y,female
+996076,"Warren, Eleanor Josephine",10,2025,White,N,Y,N,female
+857052,"Pepsnik, Ellen Mary",9,2026,White,Y,N,N,female
+830932,"Hurd, Audrey Shakman",9,2026,White,N,N,N,female
+854208,"Centofanti, Sophie Emily",11,2024,White,N,N,N,female
+723838,"Capiz, Adrianna Beatrix",11,2024,White,N,N,N,female
+743339,"Papa, Magdalena Louisa",12,2023,White,N,N,N,female
+863517,"Vezner, Maya Josephine",12,2023,White,N,N,N,female
+117955,"Cochrane, Ashley Zipporah",12,2023,Black,N,N,N,female
+118700,"Adeosun, Toluwanimi Oluwabisoye Taiwo",11,2024,Black,N,N,Y,female
+999168,"Schober, Katherine Nora",10,2025,White,N,N,N,female
+711315,"Johansen, Aden Sophia",10,2025,White,N,N,N,female
+999054,"Thibodeaux, Amalia Sanaiche",10,2025,Black,N,N,N,female
+118366,"Golemis, Viki",10,2025,White,N,N,N,female
+819084,"Liang, Irys Ching-Tzu",10,2025,Asian,N,N,N,female
+855217,"Esionye, Yolanda Nne",10,2025,Black,N,N,N,female
+999618,"Valenti Arenas, Sofia Antoinette",10,2025,LatinX,N,N,N,female
+926641,"Lippke, Stephanie Sofia",9,2026,LatinX,N,N,N,female
+880933,"Maji, Katalin Lee",11,2024,T.M.O.,N,N,N,female
+885762,"Radhakrishnan, Anika",11,2024,Asian,N,N,N,female
+758207,"Southard, Lola Camille",10,2025,White,N,Y,N,female
+830634,"Zdawczyk, Larkin Isabelle",10,2025,White,N,N,N,female
+999080,"Machut, Ella Marie",10,2025,White,N,N,N,female
+885497,"Etyem, Kayjah Anelia",10,2025,Black,N,N,N,female
+995225,"Polley, Sarah Marie",11,2024,White,N,N,N,female
+118814,"Charles, Ainsley Rebecca",9,2026,White,N,Y,N,female
+999725,"Rubin, Rachael Dorothy",10,2025,White,N,N,N,female
+763865,"Durango-Cohen, Rachel Rae",10,2025,LatinX,N,N,N,female
+887090,"Sumi, Liviani Joy",9,2026,Asian,N,N,N,female
+996148,"Goel, Saheli Sanghavi",10,2025,Asian,N,N,N,female
+771294,"Borro, Lillian Jaye",9,2026,White,N,N,N,female
+957925,"Geyer, Tinsae Hilary",9,2026,Black,N,N,N,female
+911310,"Bowen, Siena Etsuko Sato",9,2026,T.M.O.,N,N,N,female
+942548,"Nagatani-beyers, Isabella Jane",9,2026,T.M.O.,N,N,N,female
+823640,"Hansen, Eva Catherine",9,2026,White,N,N,N,female
+748699,"Reel, Sofia Lin",9,2026,LatinX,N,N,N,female
+723403,"Grill, Amy Brooke",11,2024,White,N,N,N,female
+827073,"Rutstein, Sidra Abigail",11,2024,White,N,N,N,female
+999017,"Belgrad, Jamie Hoi",10,2025,Asian,N,N,N,female
+707657,"Hutchinson, Eleanor Grace Hoisington",12,2023,White,N,N,N,female
+625597,"Owens, Abigail Christine",12,2023,White,N,Y,N,female
+738826,"Sumi, Kupunoli Faith",11,2024,Asian,N,N,N,female
+996041,"Kenney, Teagan Ella",10,2025,White,N,N,N,female
+936210,"Spalding, Joy Marie",10,2025,LatinX,N,N,N,female
+997985,"Catayong, Olivia Perry",11,2024,LatinX,N,Y,N,female
+709065,"Moulinier, Sarah Catherine",12,2023,White,N,N,N,female
+979957,"Ward, Amelia Maeve",12,2023,White,N,N,N,female
+792695,"Satut, Naomi Lynn",9,2026,White,N,N,N,female
+903149,"Centofanti, Zoe Ann",9,2026,White,N,N,N,female
+996076,"Warren, Eleanor Josephine",10,2025,White,N,Y,N,female
+200901,"Vig, Vanisha",9,2026,Asian,N,N,N,female
+828254,"Stoolmaker, Georgia Harper",9,2026,White,N,N,N,female
+118700,"Adeosun, Toluwanimi Oluwabisoye Taiwo",11,2024,Black,N,N,Y,female
+830932,"Hurd, Audrey Shakman",9,2026,White,N,N,N,female
+711315,"Johansen, Aden Sophia",10,2025,White,N,N,N,female
+974414,"Levy, Elise Sydney",9,2026,White,N,N,N,female
+819084,"Liang, Irys Ching-Tzu",10,2025,Asian,N,N,N,female
+926641,"Lippke, Stephanie Sofia",9,2026,LatinX,N,N,N,female
+880933,"Maji, Katalin Lee",11,2024,T.M.O.,N,N,N,female
+856677,"Needlman, Mira Beatrice",11,2024,White,N,N,N,female
+988063,"Newbold, Julia Shen",11,2024,T.M.O.,N,N,N,female
+857052,"Pepsnik, Ellen Mary",9,2026,White,Y,N,N,female
+885762,"Radhakrishnan, Anika",11,2024,Asian,N,N,N,female
+981754,"Schirer, Emily Mano",10,2025,T.M.O.,Y,N,Y,female
+999168,"Schober, Katherine Nora",10,2025,White,N,N,N,female
+828254,"Stoolmaker, Georgia Harper",9,2026,White,N,N,N,female
+999054,"Thibodeaux, Amalia Sanaiche",10,2025,Black,N,N,N,female
+200901,"Vig, Vanisha",9,2026,Asian,N,N,N,female
+118546,"Styslinger, Clare Rose",10,2025,White,N,Y,N,female
+970098,"Salmon, Chrystal Britanya",11,2024,Black,N,N,N,female
+919106,"Lundgren, Natalie Rose",11,2024,LatinX,N,N,N,female
+744218,"Walkden, Keira Keenan",11,2024,White,N,N,N,female
+963532,"Bahar, Talia Saltzman",10,2025,White,N,N,N,female
+911310,"Bowen, Siena Etsuko Sato",9,2026,T.M.O.,N,N,N,female
+704613,"Breen, Una Eleri",10,2025,White,N,N,N,female
+999008,"Carlisle, Lucy Pearl",10,2025,White,N,N,N,female
+997985,"Catayong, Olivia Perry",11,2024,LatinX,N,Y,N,female
+903149,"Centofanti, Zoe Ann",9,2026,White,N,N,N,female
+118814,"Charles, Ainsley Rebecca",9,2026,White,N,Y,N,female
+763865,"Durango-Cohen, Rachel Rae",10,2025,LatinX,N,N,N,female
+119023,"Flint, Kate Elizabeth",9,2026,White,N,N,N,female
+957925,"Geyer, Tinsae Hilary",9,2026,Black,N,N,N,female
+996148,"Goel, Saheli Sanghavi",10,2025,Asian,N,N,N,female
+823640,"Hansen, Eva Catherine",9,2026,White,N,N,N,female
+996041,"Kenney, Teagan Ella",10,2025,White,N,N,N,female
+954593,"Malhotra, Naina Penelope",10,2025,T.M.O.,N,Y,N,female
+748699,"Reel, Sofia Lin",9,2026,LatinX,N,N,N,female
+803773,"Serpa, Abigail Rose",10,2025,White,N,N,N,female
+936210,"Spalding, Joy Marie",10,2025,LatinX,N,N,N,female
+999250,"Stewart, Grace Kathleen",10,2025,White,N,N,N,female
+738826,"Sumi, Kupunoli Faith",11,2024,Asian,N,N,N,female
+887090,"Sumi, Liviani Joy",9,2026,Asian,N,N,N,female
+830634,"Zdawczyk, Larkin Isabelle",10,2025,White,N,N,N,female
+118700,"Adeosun, Toluwanimi Oluwabisoye Taiwo",11,2024,Black,N,N,Y,female
+996106,"Batza, Sabine Ruth",10,2025,White,N,N,N,female
+944436,"Miller, Satthapi Rende Hasati",9,2026,Black,N,N,N,female
+627275,"Slack, Angel Anika",11,2024,Black,N,N,N,female
+118619,"Guiden, Mary Natalya",10,2025,Black,N,Y,N,female
+880933,"Maji, Katalin Lee",11,2024,T.M.O.,N,N,N,female
+940804,"Sevilla, Tahryll Yee",11,2024,Asian,N,N,N,female
+896589,"Di Gioia, Johanna Isabella",11,2024,White,N,N,N,female
+892396,"Benz, Addison Elizabeth",11,2024,White,N,Y,N,female
+885762,"Radhakrishnan, Anika",11,2024,Asian,N,N,N,female
+999725,"Rubin, Rachael Dorothy",10,2025,White,N,N,N,female
+118699,"Adeosun, Monijesu Oluwadotun",11,2024,Black,N,N,Y,female
+759300,"Yao, Nicole Xinyue",11,2024,Asian,N,N,N,female
+118700,"Adeosun, Toluwanimi Oluwabisoye Taiwo",11,2024,Black,N,N,Y,female
+944436,"Miller, Satthapi Rende Hasati",9,2026,Black,N,N,N,female
+880933,"Maji, Katalin Lee",11,2024,T.M.O.,N,N,N,female
+940804,"Sevilla, Tahryll Yee",11,2024,Asian,N,N,N,female
+896589,"Di Gioia, Johanna Isabella",11,2024,White,N,N,N,female
+885762,"Radhakrishnan, Anika",11,2024,Asian,N,N,N,female
+999725,"Rubin, Rachael Dorothy",10,2025,White,N,N,N,female
+996148,"Goel, Saheli Sanghavi",10,2025,Asian,N,N,N,female
+830634,"Zdawczyk, Larkin Isabelle",10,2025,White,N,N,N,female
+118700,"Adeosun, Toluwanimi Oluwabisoye Taiwo",11,2024,Black,N,N,Y,female
+999072,"Barton, Beri Ann",10,2025,White,N,N,N,female
+118366,"Golemis, Viki",10,2025,White,N,N,N,female
+711315,"Johansen, Aden Sophia",10,2025,White,N,N,N,female
+974414,"Levy, Elise Sydney",9,2026,White,N,N,N,female
+819084,"Liang, Irys Ching-Tzu",10,2025,Asian,N,N,N,female
+877080,"Mann, Emersen Grace Browning",11,2024,White,N,Y,N,female
+856677,"Needlman, Mira Beatrice",11,2024,White,N,N,N,female
+988063,"Newbold, Julia Shen",11,2024,T.M.O.,N,N,N,female
+857052,"Pepsnik, Ellen Mary",9,2026,White,Y,N,N,female
+885762,"Radhakrishnan, Anika",11,2024,Asian,N,N,N,female
+999595,"Ross, Madeline Dorothy",10,2025,White,N,N,N,female
+981754,"Schirer, Emily Mano",10,2025,T.M.O.,Y,N,Y,female
+999168,"Schober, Katherine Nora",10,2025,White,N,N,N,female
+828254,"Stoolmaker, Georgia Harper",9,2026,White,N,N,N,female
+999054,"Thibodeaux, Amalia Sanaiche",10,2025,Black,N,N,N,female
+759300,"Yao, Nicole Xinyue",11,2024,Asian,N,N,N,female
+118546,"Styslinger, Clare Rose",10,2025,White,N,Y,N,female
+970098,"Salmon, Chrystal Britanya",11,2024,Black,N,N,N,female
+919106,"Lundgren, Natalie Rose",11,2024,LatinX,N,N,N,female
+999017,"Belgrad, Jamie Hoi",10,2025,Asian,N,N,N,female
+911310,"Bowen, Siena Etsuko Sato",9,2026,T.M.O.,N,N,N,female
+999008,"Carlisle, Lucy Pearl",10,2025,White,N,N,N,female
+997985,"Catayong, Olivia Perry",11,2024,LatinX,N,Y,N,female
+118814,"Charles, Ainsley Rebecca",9,2026,White,N,Y,N,female
+885497,"Etyem, Kayjah Anelia",10,2025,Black,N,N,N,female
+119023,"Flint, Kate Elizabeth",9,2026,White,N,N,N,female
+996148,"Goel, Saheli Sanghavi",10,2025,Asian,N,N,N,female
+118619,"Guiden, Mary Natalya",10,2025,Black,N,Y,N,female
+808220,"Hammond, Nahrain Salome",10,2025,Black,N,N,N,female
+823640,"Hansen, Eva Catherine",9,2026,White,N,N,N,female
+996041,"Kenney, Teagan Ella",10,2025,White,N,N,N,female
+999080,"Machut, Ella Marie",10,2025,White,N,N,N,female
+954593,"Malhotra, Naina Penelope",10,2025,T.M.O.,N,Y,N,female
+788039,"Martin, Janiya Chanel",10,2025,Black,N,N,N,female
+977329,"Renfro-Legghette, Ife Khamilah",11,2024,Black,N,N,N,female
+792695,"Satut, Naomi Lynn",9,2026,White,N,N,N,female
+803773,"Serpa, Abigail Rose",10,2025,White,N,N,N,female
+936210,"Spalding, Joy Marie",10,2025,LatinX,N,N,N,female
+999250,"Stewart, Grace Kathleen",10,2025,White,N,N,N,female
+840189,"Stringer, Amiah Celise",10,2025,Black,N,N,N,female
+738826,"Sumi, Kupunoli Faith",11,2024,Asian,N,N,N,female
+887090,"Sumi, Liviani Joy",9,2026,Asian,N,N,N,female
+830634,"Zdawczyk, Larkin Isabelle",10,2025,White,N,N,N,female
+118546,"Styslinger, Clare Rose",10,2025,White,N,Y,N,female
+970098,"Salmon, Chrystal Britanya",11,2024,Black,N,N,N,female
+118750,"Malcolm, Deja Marie",10,2025,Black,N,N,N,female
+118700,"Adeosun, Toluwanimi Oluwabisoye Taiwo",11,2024,Black,N,N,Y,female
+118699,"Adeosun, Monijesu Oluwadotun",11,2024,Black,N,N,Y,female
+996106,"Batza, Sabine Ruth",10,2025,White,N,N,N,female
+996148,"Goel, Saheli Sanghavi",10,2025,Asian,N,N,N,female
+118619,"Guiden, Mary Natalya",10,2025,Black,N,Y,N,female
+885762,"Radhakrishnan, Anika",11,2024,Asian,N,N,N,female
+940804,"Sevilla, Tahryll Yee",11,2024,Asian,N,N,N,female
+830634,"Zdawczyk, Larkin Isabelle",10,2025,White,N,N,N,female
+954593,"Malhotra, Naina Penelope",10,2025,T.M.O.,N,Y,N,female
+861324,"Khatoon, Ramsha Fatima",11,2025,Asian,N,N,N,female
+118843,"Reichlin, Talia Sophie",10,2026,White,Y,N,N,female
