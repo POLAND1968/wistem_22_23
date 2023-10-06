@@ -1,0 +1,4763 @@
+---
+title: "WiENG 2022 - 2023"
+subtitle: "Attendance Analysis"
+
+format:
+  html:
+    toc: true
+    embed-resources: true
+    echo: false
+    link-external-newwindow: true
+execute:
+  warning: false
+  message: false
+
+from: markdown+emoji  
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+```{r}
+#| label: load-packages
+
+library(tidyverse)
+library(patchwork)
+library(readr)
+library(kableExtra)
+
+set.seed(1968)
+```
+
+```{r}
+#| label: load-data-sets
+
+data <- read_csv(file = "data/processed/wieng_attendance_clean.csv")
+
+data$date <- factor(data$date, levels = c("May 12th", "May 9th", "May 5th", "Apr 28th", "Apr 21st", "Apr 14th", "Mar 17th", "Mar 10th", "Mar 3rd", "Feb 24th", "Feb 17th", "Feb 10th", "Feb 3rd", "Jan 27th", "Jan 20th", "Dec 16th", "Dec 2nd", "Nov 18th", "Nov 4th", "Oct 28th", "Oct 21st", "Oct 14th")) 
+```
+
+# Background
+
+**WiENG:** In total, there were 25 overall WiENG meetings held throughout the 2022-2023 academic school year. However, there were 21 meetings with attendance data while there were 18 meetings with exit slip data. Some of these overlap in missing both attendance and exit slip data. 
+
+## Students Also in WiSTEM
+
+```{r}
+#| label: overlap-students
+
+# Load Data
+wieng_data <- read_csv(file = "data/processed/wieng_attendance_clean.csv")
+wistem_data <- read_csv(file = "data/processed/wistem_attendance_clean.csv")
+
+# WiENG 
+wieng_names <- wieng_data %>% # 32 unique students
+  select(name, student_id) %>%
+  unique()
+
+wieng_unique_students <- wieng_names %>%
+  nrow()
+
+# WiSTEM
+wistem_names <- wistem_data %>% # 138 unique students
+  select(name, student_id) %>%
+  unique()
+
+wistem_unique_students <- wistem_names %>%
+  nrow()
+
+# Overlapping
+overalping_students <- dplyr::semi_join(wieng_names, wistem_names, "student_id")
+num_overlap_student <- overalping_students %>%
+  nrow()
+
+## Percentage
+wieng_overlap_percent <- round((num_overlap_student / wieng_unique_students) * 100, 2)
+wistem_overlap_percent <- round((num_overlap_student / wistem_unique_students) * 100, 2)
+```
+
+WiENG was a program created after the start of WiSTEM with a focus on engineering. Therefore, some students started to go to both WiSTEM and WiENG meetings. Overall, in the 2022 - 2023 academic school year, `r num_overlap_student` unique students attended both meetings. There were `r wieng_unique_students` total unique WiENG students, meaning `r wieng_overlap_percent` percent of the total population. Meanwhile, there were `r wistem_unique_students` total unique WiENG students, meaning `r wistem_overlap_percent` percent of the total population.
+
+## Attendance Per Meeting
+ 
+```{r}
+#| label: attnd-per-meeting
+
+# Graph
+ggplot(data = data, mapping = aes(y = date)) + 
+  geom_bar(color = "azure4", fill = "lightcyan2") + 
+  geom_text(stat='count', aes(label=..count..), position = position_stack(vjust = 0.9)) +
+  labs(
+    title = "Number of Attendance Per Meeting", 
+    subtitle = "With Repeats",
+    caption = "Source: WiENG 2022-2023",
+    x = "Number of Students", 
+    y = "Meeting Date"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Attendance Per Meeting
+```{r}
+# Table
+data %>%
+  count(date) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  rename(num_students = n) %>%
+  kbl(caption = "Number of Attendance Per Meeting") %>%
+  kable_styling()
+```
+:::
+
+## Attendance Per Month
+ 
+```{r}
+#| label: attnd-per-month
+
+data_split_date <- data[c('month', 'day')] <- str_split_fixed(data$date, ' ', 2) %>%
+  as_tibble() %>%
+  rename(month = V1, day = V2) %>%
+  mutate(day = substr(day, 1, 2))
+
+data_split_date$month <- factor(data_split_date$month, levels = c("May", "Apr", "Mar", "Feb", "Jan", "Dec", "Nov", "Oct")) 
+
+# Graph
+ggplot(data = data_split_date, mapping = aes(y = month)) + 
+  geom_bar(color = "azure4", fill = "lightcyan2") + 
+  geom_text(stat='count', aes(label=..count..), position = position_stack(vjust = 0.9)) +
+  labs(
+    title = "Number of Attendance In Each Month", 
+    subtitle = "With Repeats",
+    x = "Number of Students", 
+    y = "Month"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Attendance Per Month
+```{r}
+# Table
+data_split_date %>%
+  count(month) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = (n / sum(n)) * 100 
+  ) %>%
+  rename(num_students = n) %>%
+  kbl(caption = "Number of Attedance In Each Month") %>%
+  kable_styling()
+```
+:::
+
+## Attendance Per Topic
+ 
+```{r}
+#| label: attnd-per-topic
+
+# Graph
+ggplot(data = data, mapping = aes(x = topic)) + 
+  geom_bar(color = "azure4", fill = "lightcyan2") + 
+  geom_text(stat='count', aes(label=..count..), position = position_stack(vjust = 0.5)) +
+  labs(
+    title = "Total Attendance Per Topic Type", 
+    subtitle = "With Repeats",
+    caption = "Source: WiENG 2022-2023",
+    x = "Meeting Topic", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Attendance Per Topic
+```{r}
+# Table
+topic_attn_total <- data %>%
+  count(topic) %>%
+  rename(total = n)
+
+topic_attn_total %>%
+  mutate(
+    proportion = total / sum(total), 
+    percent = (total / sum(total)) * 100 
+  ) %>%
+  kbl(caption = "Total Attendance Per Topic Type") %>%
+  kable_styling()
+```
+:::
+
+## Average Attendance Per Topic
+ 
+```{r}
+#| label: avg-attnd-per-topic
+
+topic_meeting_total <- data %>%
+  select(date, topic) %>%
+  unique() %>%
+  count(topic) %>%
+  rename(meeting_count = n)
+
+avg_topic_data <- full_join(topic_meeting_total, topic_attn_total) %>%
+  mutate(
+    meeting_avg = total / meeting_count, 
+    total_avg = 229 / 22
+    )
+
+# Graph
+ggplot(data = avg_topic_data, mapping = aes(x = topic, y = meeting_avg)) + 
+  geom_col(color = "azure4", fill = "lightcyan2") + 
+  labs(
+    title = "Average Attendance per Meeting Topic Compared to Overall Average", 
+    subtitle = "With Repeats",
+    caption = "Source: WiENG 2022-2023",
+    x = "Meeting Topic", 
+    y = "Average Number of Students"
+    ) + 
+  geom_hline(yintercept = 229 / 22) +
+  geom_text(aes(label = meeting_avg), position = position_stack(vjust = 0.5)) +
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Average Attendance Per Topic
+```{r}
+# Table
+mutate_better_than <- function(avg_topic_data) {
+  avg_topic_data %>%
+    mutate(benchmark = ifelse(meeting_avg > total_avg, "yes", "no"))
+}
+
+avg_topic_data <- mutate_better_than(avg_topic_data)
+
+avg_topic_data %>%
+  kbl(caption = "Average Attendance Per Meeting Topic") %>%
+  kable_styling()
+```
+:::
+
+# Individual Attendance
+
+## Number of Meetings Attended
+ 
+```{r}
+#| label: num-meetings
+
+indiv_atten <- data %>%
+  count(name) %>%
+  mutate(
+    proportion = n / sum(n), 
+    percent = proportion * 100
+  ) %>% 
+  arrange(desc(percent))
+
+cat_indiv_atten <- indiv_atten %>%
+  count(n) %>%
+  rename(num_meetings = n, num_students = nn) %>%
+  mutate(
+    proportion = num_students / sum(num_students), 
+    percent = proportion * 100
+  ) %>%
+  mutate(
+    num_meetings = as_factor(num_meetings), 
+    num_students = as_factor(num_students)
+    )
+
+# Graph
+ggplot(data = cat_indiv_atten, mapping = aes(x = num_meetings, y = num_students)) + 
+  geom_col(color = "azure4", fill = "lightcyan2") + 
+  geom_text(aes(label = num_students), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Number of Meetings Attended by Unique Students", 
+    subtitle = "Unique",
+    caption = "Source: WiENG 2022-2023",
+    x = "Number of Meetings Attended", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+
+# Average Number
+indiv_atten %>%
+  rename(num_students = n) %>%
+  summarize(
+    min = min(num_students), 
+    median = median(num_students), 
+    mean = mean(num_students), 
+    std_dev = sd(num_students),
+    max = max(num_students), 
+    range = max - min
+  ) %>%
+  kbl(caption = "Summary of Number of Meetings Attended") %>%
+  kable_styling()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Number of Meetings Attended
+```{r}
+# Table
+cat_indiv_atten %>% 
+  arrange(desc(percent)) %>%
+  kbl(caption = "Number of Meetings Attended by Unique Students") %>%
+  kable_styling()
+```
+:::
+
+## Only One Meeting Attended
+ 
+```{r}
+#| label: one-meeting-attnd
+
+meeting_one_attend <- data %>%
+  filter(num_meetings == 1) %>%
+  select(date, topic, num_meetings) %>%
+  count(date) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  )
+
+# Graph
+ggplot(data = meeting_one_attend, mapping = aes(x = date, y = num_students)) + 
+  geom_col(color = "azure4", fill = "lightcyan2") + 
+  labs(
+    title = "Number of Students Per Meeting Who Attended One Meeting", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Meeting Date", 
+    y = "Number of Students"
+    ) + 
+  geom_text(aes(label = num_students), position = position_stack(vjust = 0.5)) +
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Only One Meeting Attended
+```{r}
+# Table
+meeting_one_attend %>%
+  kbl(caption = "Number of Student Per Meetings Who Only Attended Once") %>%
+  kable_styling()
+```
+:::
+
+## One Meeting and Federal Race
+ 
+```{r}
+#| label: fed-race-one-meeting-attnd
+
+one_meeting_fed_race <- data %>%
+  filter(num_meetings == 1) %>%
+  select(num_meetings, federal_race) %>%
+  mutate(num_meetings = as_factor(num_meetings)) %>%
+  count(federal_race) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  )
+
+# Graph for All
+unique_colors <- c("lightpink2", "darkseagreen2", "lavender", "khaki", "lightcyan2")
+
+ggplot(data = one_meeting_fed_race, mapping = aes(x = federal_race, y = num_students, fill = federal_race)) +
+  geom_col() + 
+  scale_fill_manual(values = unique_colors) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), position = position_stack(vjust = 0.5)) +
+  labs(
+    title = "Number of Students Per Meeting Who Attended One Meeting", 
+    subtitle = "By All Federal Race Categories (Unique Students)",
+    caption = "Source: WiENG 2022-2023",
+    x = "Federal Race", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+
+# Considering White and Non-White
+one_meeting_fed_race_two <- data %>%
+  filter(num_meetings == 1) %>%
+  select(num_meetings, federal_race) %>%
+  mutate(num_meetings = as_factor(num_meetings))
+
+one_meeting_fed_race_two$federal_race <- recode(one_meeting_fed_race_two$federal_race, "Asian" = "Non-White")
+one_meeting_fed_race_two$federal_race <- recode(one_meeting_fed_race_two$federal_race, "Black" = "Non-White")
+one_meeting_fed_race_two$federal_race <- recode(one_meeting_fed_race_two$federal_race, "LatinX" = "Non-White")
+one_meeting_fed_race_two$federal_race <- recode(one_meeting_fed_race_two$federal_race, "T.M.O." = "Non-White")
+
+one_meeting_fed_race_two <- one_meeting_fed_race_two %>%
+  count(federal_race) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  )
+
+## Graph
+ggplot(data = one_meeting_fed_race_two, mapping = aes(x = federal_race, y = num_students, fill = federal_race)) +
+  geom_col() + 
+  scale_fill_manual(values = unique_colors) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), position = position_stack(vjust = 0.5)) +
+  labs(
+    title = "Number of Students Per Meeting Who Attended One Meeting",
+    subtitle = "By White and Non-White Students (Unique Students)",
+    caption = "Source: WiENG 2022-2023",
+    x = "Federal Race", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Federal Race and Only One Meeting Attended
+```{r}
+# Table
+one_meeting_fed_race %>%
+  kbl(caption = "Federal Race and Students Who Attended One Meeting") %>%
+  kable_styling()
+
+one_meeting_fed_race_two %>%
+  kbl(caption = "White & Non-White and Students Who Attended One Meeting") %>%
+  kable_styling()
+```
+:::
+
+## One Meeting and Graduation Year
+
+```{r}
+#| label: grad-year-one-meeting-attnd
+
+one_meeting_grad_year <- data %>%
+  filter(num_meetings == 1) %>%
+  select(num_meetings, graduation_year) %>%
+  mutate(graduation_year = as_factor(graduation_year)) %>%
+  count(graduation_year) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  )
+
+# Graph
+ggplot(data = one_meeting_grad_year, mapping = aes(x = graduation_year, y = num_students, fill = graduation_year)) +
+  geom_col() + 
+  scale_fill_manual(values = unique_colors) +
+  geom_text(aes(label = num_students), position = position_stack(vjust = 0.5)) +
+  labs(
+    title = "Number of Students Per Meeting Who Attended One Meeting", 
+    subtitle = "By Graduation Year (Unique Students)",
+    caption = "Source: WiENG 2022-2023",
+    x = "Graduation Year", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Graduation Year and Only One Meeting Attended
+```{r}
+# Table
+one_meeting_grad_year %>%
+  kbl(caption = "Graduation Year and Students Who Attended One Meeting") %>%
+  kable_styling()
+```
+:::
+
+## One Meeting and Topic
+
+```{r}
+#| label: topic-one-meeting-attnd
+
+one_meeting_topic <- data %>%
+  filter(num_meetings == 1) %>%
+  select(num_meetings, topic) %>%
+  mutate(topic = as_factor(topic)) %>%
+  count(topic) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  )
+
+# Graph
+ggplot(data = one_meeting_topic, mapping = aes(x = topic, y = num_students, fill = topic)) +
+  geom_col() + 
+  scale_fill_manual(values = unique_colors) +
+  geom_text(aes(label = num_students), position = position_stack(vjust = 0.5)) +
+  labs(
+    title = "Number of Students Per Meeting Who Attended One Meeting", 
+    subtitle = "By Topic (Unique Students)",
+    caption = "Source: WiENG 2022-2023",
+    x = "Topic", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Topic and Only One Meeting Attended
+```{r}
+# Table
+one_meeting_grad_year %>%
+  kbl(caption = "Topic and Students Who Attended One Meeting") %>%
+  kable_styling()
+```
+:::
+
+# Distribution Per Meeting
+
+## October 14, 2022
+```{r}
+#| label: oct-14-dist
+
+oct_14_data <- data %>%
+  filter(date == "Oct 14th") %>%
+  select(date, topic, num_meetings, graduation_year, federal_race, iep, program_504, esl) %>%
+  mutate(
+    num_meetings = as_factor(num_meetings), 
+    graduation_year = as_factor(graduation_year), 
+    federal_race = as_factor(federal_race)
+    )
+```
+
+```{r}
+#| label: oct-14-num-meetings
+
+# Graph
+ggplot(data = oct_14_data, mapping = aes(x = num_meetings)) + 
+  geom_bar(color = "azure4", fill = "lightcyan2") + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Attendance Distribution By Number of Meetings Attended", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Number of Meetings Attended", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Number of Meetings Attended for October 14th
+```{r}
+# Table
+oct_14_data %>%
+  select(date, num_meetings) %>%
+  count(num_meetings) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Number of Meetings Attended") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: oct-14-grad-year
+
+# Graph
+oct_14_grad <- ggplot(data = oct_14_data, mapping = aes(x = graduation_year, fill = graduation_year)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Graduation Year", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Graduation Year", 
+    y = "Number of Students"
+    ) + 
+  scale_x_discrete(guide = guide_axis(angle = 90)) + 
+  theme_minimal()
+```
+
+```{r}
+#| label: oct-14-race
+
+# Graph
+oct_14_race <- ggplot(data = oct_14_data, mapping = aes(x = federal_race, fill = federal_race)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Race", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Federal Race", 
+    y = "Number of Students"
+    ) + 
+  scale_x_discrete(guide = guide_axis(angle = 90)) + 
+  theme_minimal()
+
+oct_14_grad + oct_14_race
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Graduation Race for October 14th
+```{r}
+# Table
+oct_14_data %>%
+  select(date, graduation_year) %>%
+  count(graduation_year) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Graduation Year") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Federal Race for October 14th
+```{r}
+# Table
+oct_14_data %>%
+  select(date, federal_race) %>%
+  count(federal_race) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Distribution By Federal Race") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: oct-14-extra-charac
+
+oct_14_charac_table <- tibble(
+  characteristic = c("IEP", "IEP", "504 Plan", "504 Plan", "ESL", "ESL"), 
+  applicable = c("Yes", "No", "Yes", "No", "Yes", "No"), 
+  num_students = c(2, 46, 6, 42, 1, 47)
+)
+
+# Graph
+ggplot(data = oct_14_charac_table, mapping = aes(x = applicable, y = num_students, fill = characteristic)) + 
+  geom_col(position = "dodge") + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Extra Characteristics of Attending Students", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "If It Applies to a Student", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Additional Characteristics for October 14th
+```{r}
+# Table
+oct_14_charac_table %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
+  kable_styling()
+```
+:::
+
+## October 21, 2022
+```{r}
+#| label: oct-21-dist
+
+oct_21_data <- data %>%
+  filter(date == "Oct 21st") %>%
+  select(date, topic, num_meetings, graduation_year, federal_race, iep, program_504, esl) %>%
+  mutate(
+    num_meetings = as_factor(num_meetings), 
+    graduation_year = as_factor(graduation_year), 
+    federal_race = as_factor(federal_race)
+    ) %>%
+  filter(!is.na(federal_race), !is.na(graduation_year), !is.na(iep), !is.na(program_504), !is.na(esl))
+```
+
+```{r}
+#| label: oct-21-num-meetings
+
+# Graph
+ggplot(data = oct_21_data, mapping = aes(x = num_meetings)) + 
+  geom_bar(color = "azure4", fill = "lightcyan2") + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Attendance Distribution By Number of Meetings Attended", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Number of Meetings Attended", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Number of Meetings Attended for October 21st
+```{r}
+# Table
+oct_21_data %>%
+  select(date, num_meetings) %>%
+  count(num_meetings) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Number of Meetings Attended") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: oct-21-grad-year
+
+# Graph
+oct_21_grad <- ggplot(data = oct_21_data, mapping = aes(x = graduation_year, fill = graduation_year)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Graduation Year", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Graduation Year", 
+    y = "Number of Students"
+    ) + 
+  scale_x_discrete(guide = guide_axis(angle = 90)) + 
+  theme_minimal()
+```
+
+```{r}
+#| label: oct-21-race
+
+# Graph
+oct_21_race <- ggplot(data = oct_21_data, mapping = aes(x = federal_race, fill = federal_race)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Race", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Federal Race", 
+    y = "Number of Students"
+    ) + 
+  scale_x_discrete(guide = guide_axis(angle = 90)) + 
+  theme_minimal()
+
+oct_21_grad + oct_21_race
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Graduation Race for October 14th
+```{r}
+# Table
+oct_21_data %>%
+  select(date, graduation_year) %>%
+  count(graduation_year) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Graduation Year") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Federal Race for October 21st
+```{r}
+# Table
+oct_21_data %>%
+  select(date, federal_race) %>%
+  count(federal_race) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Federal Race") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: oct-21-extra-charac
+
+oct_21_charac_table <- tibble(
+  characteristic = c("IEP", "IEP", "504 Plan", "504 Plan", "ESL", "ESL"), 
+  applicable = c("Yes", "No", "Yes", "No", "Yes", "No"), 
+  num_students = c(2, 32, 7, 27, 3, 31)
+)
+
+# Graph
+ggplot(data = oct_21_charac_table, mapping = aes(x = applicable, y = num_students, fill = characteristic)) + 
+  geom_col(position = "dodge") + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Extra Characteristics of Attending Students", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "If It Applies to a Student", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Additional Characteristics for October 21st
+```{r}
+# Table
+oct_21_charac_table %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
+  kable_styling()
+```
+:::
+
+## October 28, 2022
+```{r}
+#| label: oct-28-dist
+
+oct_28_data <- data %>%
+  filter(date == "Oct 28th") %>%
+  select(date, topic, num_meetings, graduation_year, federal_race, iep, program_504, esl) %>%
+  mutate(
+    num_meetings = as_factor(num_meetings), 
+    graduation_year = as_factor(graduation_year), 
+    federal_race = as_factor(federal_race)
+    ) %>%
+  filter(!is.na(federal_race), !is.na(graduation_year), !is.na(iep), !is.na(program_504), !is.na(esl))
+```
+
+```{r}
+#| label: oct-28-num-meetings
+
+# Graph
+ggplot(data = oct_28_data, mapping = aes(x = num_meetings)) + 
+  geom_bar(color = "azure4", fill = "lightcyan2") + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Number of Meetings Attended", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Number of Meetings Attended", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Number of Meetings Attended for October 28th
+```{r}
+# Table
+oct_28_data %>%
+  select(date, num_meetings) %>%
+  count(num_meetings) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Number of Meetings Attended") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: oct-28-grad-year
+
+# Graph
+oct_28_grad <- ggplot(data = oct_28_data, mapping = aes(x = graduation_year, fill = graduation_year)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Graduation Year", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Graduation Year", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+```{r}
+#| label: oct-28-race
+
+# Graph
+oct_28_race <- ggplot(data = oct_28_data, mapping = aes(x = federal_race, fill = federal_race)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Race", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Federal Race", 
+    y = "Number of Students"
+    ) + 
+  scale_x_discrete(guide = guide_axis(angle = 90)) + 
+  theme_minimal()
+
+oct_28_grad + oct_28_race
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Graduation Race for October 28th
+```{r}
+# Table
+oct_28_data %>%
+  select(date, graduation_year) %>%
+  count(graduation_year) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Graduation Year") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Federal Race for October 28th
+```{r}
+# Table
+oct_28_data %>%
+  select(date, federal_race) %>%
+  count(federal_race) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Federal Race") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: oct-28-extra-charac
+
+oct_28_charac_table <- tibble(
+  characteristic = c("IEP", "IEP", "504 Plan", "504 Plan", "ESL", "ESL"), 
+  applicable = c("Yes", "No", "Yes", "No", "Yes", "No"), 
+  num_students = c(3, 44, 8, 39, 2, 45)
+)
+
+# Graph
+ggplot(data = oct_28_charac_table, mapping = aes(x = applicable, y = num_students, fill = characteristic)) + 
+  geom_col(position = "dodge") + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Extra Characteristics of Attending Students", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "If It Applies to a Student", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Additional Characteristics for October 28th
+```{r}
+# Table
+oct_28_charac_table %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
+  kable_styling()
+```
+:::
+
+## November 4, 2022
+```{r}
+#| label: nov-4-dist
+
+nov_4_data <- data %>%
+  filter(date == "Nov 4th") %>%
+  select(date, topic, num_meetings, graduation_year, federal_race, iep, program_504, esl) %>%
+  mutate(
+    num_meetings = as_factor(num_meetings), 
+    graduation_year = as_factor(graduation_year), 
+    federal_race = as_factor(federal_race)
+    ) %>%
+  filter(!is.na(federal_race), !is.na(graduation_year), !is.na(iep), !is.na(program_504), !is.na(esl))
+```
+
+```{r}
+#| label: nov-4-num-meetings
+
+# Graph
+ggplot(data = nov_4_data, mapping = aes(x = num_meetings)) + 
+  geom_bar(color = "azure4", fill = "lightcyan2") + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Number of Meetings Attended", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Number of Meetings Attended", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Number of Meetings Attended for November 4th
+```{r}
+# Table
+nov_4_data %>%
+  select(date, num_meetings) %>%
+  count(num_meetings) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Number of Meetings Attended") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: nov-4-grad-year
+
+# Graph
+nov_4_grad <- ggplot(data = nov_4_data, mapping = aes(x = graduation_year, fill = graduation_year)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Graduation Year", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Graduation Year", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+```{r}
+#| label: nov-4-race
+
+# Graph
+nov_4_race <- ggplot(data = nov_4_data, mapping = aes(x = federal_race, fill = federal_race)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Race", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Federal Race", 
+    y = "Number of Students"
+    ) + 
+  scale_x_discrete(guide = guide_axis(angle = 90)) + 
+  theme_minimal()
+
+nov_4_grad + nov_4_race
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Graduation Race for November 4th
+```{r}
+# Table
+nov_4_data %>%
+  select(date, graduation_year) %>%
+  count(graduation_year) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Graduation Year") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Federal Race for November 4th
+```{r}
+# Table
+nov_4_data %>%
+  select(date, federal_race) %>%
+  count(federal_race) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Federal Race") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: nov-4-extra-charac
+
+nov_4_charac_table <- tibble(
+  characteristic = c("IEP", "IEP", "504 Plan", "504 Plan", "ESL", "ESL"), 
+  applicable = c("Yes", "No", "Yes", "No", "Yes", "No"), 
+  num_students = c(2, 49, 7, 44, 3, 48)
+)
+
+# Graph
+ggplot(data = nov_4_charac_table, mapping = aes(x = applicable, y = num_students, fill = characteristic)) + 
+  geom_col(position = "dodge") + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Extra Characteristics of Attending Students", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "If It Applies to a Student", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Additional Characteristics for Novmber 4th
+```{r}
+# Table
+nov_4_charac_table %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
+  kable_styling()
+```
+:::
+
+## November 18, 2022
+```{r}
+#| label: nov-18-dist
+
+nov_18_data <- data %>%
+  filter(date == "Nov 18th") %>%
+  select(date, topic, num_meetings, graduation_year, federal_race, iep, program_504, esl) %>%
+  mutate(
+    num_meetings = as_factor(num_meetings), 
+    graduation_year = as_factor(graduation_year), 
+    federal_race = as_factor(federal_race)
+    ) %>%
+  filter(!is.na(federal_race), !is.na(graduation_year), !is.na(iep), !is.na(program_504), !is.na(esl))
+```
+
+```{r}
+#| label: nov-18-num-meetings
+
+# Graph
+ggplot(data = nov_18_data, mapping = aes(x = num_meetings)) + 
+  geom_bar(color = "azure4", fill = "lightcyan2") + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Number of Meetings Attended", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Number of Meetings Attended", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Number of Meetings Attended for November 18th
+```{r}
+# Table
+nov_18_data %>%
+  select(date, num_meetings) %>%
+  count(num_meetings) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Number of Meetings Attended") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: nov-18-grad-year
+
+# Graph
+nov_18_grad <- ggplot(data = nov_18_data, mapping = aes(x = graduation_year, fill = graduation_year)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Graduation Year", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Graduation Year", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+```{r}
+#| label: nov-18-race
+
+# Graph
+nov_18_race <- ggplot(data = nov_18_data, mapping = aes(x = federal_race, fill = federal_race)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Race", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Federal Race", 
+    y = "Number of Students"
+    ) + 
+  scale_x_discrete(guide = guide_axis(angle = 90)) + 
+  theme_minimal()
+
+nov_18_grad + nov_18_race
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Graduation Race for November 18th
+```{r}
+# Table
+nov_18_data %>%
+  select(date, graduation_year) %>%
+  count(graduation_year) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Graduation Year") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Federal Race for November 18th
+```{r}
+# Table
+nov_18_data %>%
+  select(date, federal_race) %>%
+  count(federal_race) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Federal Race") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: nov-18-extra-charac
+
+nov_18_charac_table <- tibble(
+  characteristic = c("IEP", "IEP", "504 Plan", "504 Plan", "ESL", "ESL"), 
+  applicable = c("Yes", "No", "Yes", "No", "Yes", "No"), 
+  num_students = c(2, 49, 7, 44, 3, 48)
+)
+
+# Graph
+ggplot(data = nov_18_charac_table, mapping = aes(x = applicable, y = num_students, fill = characteristic)) + 
+  geom_col(position = "dodge") + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Extra Characteristics of Attending Students", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "If It Applies to a Student", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Additional Characteristics for Novmber 18th
+```{r}
+# Table
+nov_18_charac_table %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
+  kable_styling()
+```
+:::
+
+## December 2, 2022
+```{r}
+#| label: dec-2-dist
+
+dec_2_data <- data %>%
+  filter(date == "Dec 2nd") %>%
+  select(date, topic, num_meetings, graduation_year, federal_race, iep, program_504, esl) %>%
+  mutate(
+    num_meetings = as_factor(num_meetings), 
+    graduation_year = as_factor(graduation_year), 
+    federal_race = as_factor(federal_race)
+    ) %>%
+  filter(!is.na(federal_race), !is.na(graduation_year), !is.na(iep), !is.na(program_504), !is.na(esl))
+```
+
+```{r}
+#| label: dec-2-num-meetings
+
+# Graph
+ggplot(data = dec_2_data, mapping = aes(x = num_meetings)) + 
+  geom_bar(color = "azure4", fill = "lightcyan2") + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Number of Meetings Attended", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Number of Meetings Attended", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Number of Meetings Attended for December 2nd
+```{r}
+# Table
+dec_2_data %>%
+  select(date, num_meetings) %>%
+  count(num_meetings) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Number of Meetings Attended") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: dec-2-grad-year
+
+# Graph
+dec_2_grad <- ggplot(data = dec_2_data, mapping = aes(x = graduation_year, fill = graduation_year)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Graduation Year", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Graduation Year", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+```{r}
+#| label: dec-2-race
+
+# Graph
+dec_2_race <- ggplot(data = dec_2_data, mapping = aes(x = federal_race, fill = federal_race)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Race", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Federal Race", 
+    y = "Number of Students"
+    ) + 
+  scale_x_discrete(guide = guide_axis(angle = 90)) + 
+  theme_minimal()
+
+dec_2_grad + dec_2_race
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Graduation Race for December 2nd
+```{r}
+# Table
+dec_2_data %>%
+  select(date, graduation_year) %>%
+  count(graduation_year) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Graduation Year") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Federal Race for December 2nd
+```{r}
+# Table
+dec_2_data %>%
+  select(date, federal_race) %>%
+  count(federal_race) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Federal Race") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: dec-2-extra-charac
+
+dec_2_charac_table <- tibble(
+  characteristic = c("IEP", "IEP", "504 Plan", "504 Plan", "ESL", "ESL"), 
+  applicable = c("Yes", "No", "Yes", "No", "Yes", "No"), 
+  num_students = c(2, 46, 6, 42, 2, 46)
+)
+
+# Graph
+ggplot(data = dec_2_charac_table, mapping = aes(x = applicable, y = num_students, fill = characteristic)) + 
+  geom_col(position = "dodge") + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Extra Characteristics of Attending Students", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "If It Applies to a Student", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Additional Characteristics for December 2nd
+```{r}
+# Table
+dec_2_charac_table %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
+  kable_styling()
+```
+:::
+
+## December 16, 2022
+```{r}
+#| label: dec-16-dist
+
+dec_16_data <- data %>%
+  filter(date == "Dec 16th") %>%
+  select(date, topic, num_meetings, graduation_year, federal_race, iep, program_504, esl) %>%
+  mutate(
+    num_meetings = as_factor(num_meetings), 
+    graduation_year = as_factor(graduation_year), 
+    federal_race = as_factor(federal_race)
+    ) %>%
+  filter(!is.na(federal_race), !is.na(graduation_year), !is.na(iep), !is.na(program_504), !is.na(esl))
+```
+
+```{r}
+#| label: dec-16-num-meetings
+
+# Graph
+ggplot(data = dec_16_data, mapping = aes(x = num_meetings)) + 
+  geom_bar(color = "azure4", fill = "lightcyan2") + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Number of Meetings Attended", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Number of Meetings Attended", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Number of Meetings Attended for December 16th
+```{r}
+# Table
+dec_16_data %>%
+  select(date, num_meetings) %>%
+  count(num_meetings) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Number of Meetings Attended") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: dec-16-grad-year
+
+# Graph
+dec_16_grad <- ggplot(data = dec_16_data, mapping = aes(x = graduation_year, fill = graduation_year)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Graduation Year", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Graduation Year", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+```{r}
+#| label: dec-16-race
+
+# Graph
+dec_16_race <- ggplot(data = dec_16_data, mapping = aes(x = federal_race, fill = federal_race)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Race", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Federal Race", 
+    y = "Number of Students"
+    ) + 
+  scale_x_discrete(guide = guide_axis(angle = 90)) + 
+  theme_minimal()
+
+dec_16_grad + dec_16_race
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Graduation Race for December 16th
+```{r}
+# Table
+dec_16_data %>%
+  select(date, graduation_year) %>%
+  count(graduation_year) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Graduation Year") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Federal Race for December 16th
+```{r}
+# Table
+dec_16_data %>%
+  select(date, federal_race) %>%
+  count(federal_race) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Federal Race") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: dec-16-extra-charac
+
+dec_16_charac_table <- tibble(
+  characteristic = c("IEP", "IEP", "504 Plan", "504 Plan", "ESL", "ESL"), 
+  applicable = c("Yes", "No", "Yes", "No", "Yes", "No"), 
+  num_students = c(2, 46, 6, 42, 2, 46)
+)
+
+# Graph
+ggplot(data = dec_16_charac_table, mapping = aes(x = applicable, y = num_students, fill = characteristic)) + 
+  geom_col(position = "dodge") + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Extra Characteristics of Attending Students", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "If It Applies to a Student", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Additional Characteristics for December 16th
+```{r}
+# Table
+dec_16_charac_table %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
+  kable_styling()
+```
+:::
+
+## January 20, 2023
+```{r}
+#| label: jan-20-dist
+
+jan_20_data <- data %>%
+  filter(date == "Jan 20th") %>%
+  select(date, topic, num_meetings, graduation_year, federal_race, iep, program_504, esl) %>%
+  mutate(
+    num_meetings = as_factor(num_meetings), 
+    graduation_year = as_factor(graduation_year), 
+    federal_race = as_factor(federal_race)
+    ) %>%
+  filter(!is.na(federal_race), !is.na(graduation_year), !is.na(iep), !is.na(program_504), !is.na(esl))
+```
+
+```{r}
+#| label: jan-20-num-meetings
+
+# Graph
+ggplot(data = jan_20_data, mapping = aes(x = num_meetings)) + 
+  geom_bar(color = "azure4", fill = "lightcyan2") + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Number of Meetings Attended", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Number of Meetings Attended", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Number of Meetings Attended for January 20th
+```{r}
+# Table
+jan_20_data %>%
+  select(date, num_meetings) %>%
+  count(num_meetings) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Number of Meetings Attended") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: jan-20-grad-year
+
+# Graph
+jan_20_grad <- ggplot(data = jan_20_data, mapping = aes(x = graduation_year, fill = graduation_year)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Graduation Year", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Graduation Year", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+```{r}
+#| label: jan-20-race
+
+# Graph
+jan_20_race <- ggplot(data = jan_20_data, mapping = aes(x = federal_race, fill = federal_race)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Race", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Federal Race", 
+    y = "Number of Students"
+    ) + 
+  scale_x_discrete(guide = guide_axis(angle = 90)) + 
+  theme_minimal()
+
+jan_20_grad + jan_20_race
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Graduation Race for January 20th
+```{r}
+# Table
+jan_20_data %>%
+  select(date, graduation_year) %>%
+  count(graduation_year) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Graduation Year") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Federal Race for January 20th
+```{r}
+# Table
+jan_20_data %>%
+  select(date, federal_race) %>%
+  count(federal_race) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Federal Race") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: jan-20-extra-charac
+
+jan_20_charac_table <- tibble(
+  characteristic = c("IEP", "IEP", "504 Plan", "504 Plan", "ESL", "ESL"), 
+  applicable = c("Yes", "No", "Yes", "No", "Yes", "No"), 
+  num_students = c(2, 42, 5, 39, 2, 42)
+)
+
+# Graph
+ggplot(data = jan_20_charac_table, mapping = aes(x = applicable, y = num_students, fill = characteristic)) + 
+  geom_col(position = "dodge") + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Extra Characteristics of Attending Students", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "If It Applies to a Student", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Additional Characteristics for January 20th
+```{r}
+# Table
+jan_20_charac_table %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
+  kable_styling()
+```
+:::
+
+## January 27, 2023
+```{r}
+#| label: jan-27-dist
+
+jan_27_data <- data %>%
+  filter(date == "Jan 27th") %>%
+  select(date, topic, num_meetings, graduation_year, federal_race, iep, program_504, esl) %>%
+  mutate(
+    num_meetings = as_factor(num_meetings), 
+    graduation_year = as_factor(graduation_year), 
+    federal_race = as_factor(federal_race)
+    ) %>%
+  filter(!is.na(federal_race), !is.na(graduation_year), !is.na(iep), !is.na(program_504), !is.na(esl))
+```
+
+```{r}
+#| label: jan-27-num-meetings
+
+# Graph
+ggplot(data = jan_27_data, mapping = aes(x = num_meetings)) + 
+  geom_bar(color = "azure4", fill = "lightcyan2") + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Number of Meetings Attended", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Number of Meetings Attended", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Number of Meetings Attended for January 27th
+```{r}
+# Table
+jan_27_data %>%
+  select(date, num_meetings) %>%
+  count(num_meetings) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Number of Meetings Attended") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: jan-27-grad-year
+
+# Graph
+jan_27_grad <- ggplot(data = jan_27_data, mapping = aes(x = graduation_year, fill = graduation_year)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Graduation Year", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Graduation Year", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+```{r}
+#| label: jan-27-race
+
+# Graph
+jan_27_race <- ggplot(data = jan_27_data, mapping = aes(x = federal_race, fill = federal_race)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Race", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Federal Race", 
+    y = "Number of Students"
+    ) + 
+  scale_x_discrete(guide = guide_axis(angle = 90)) + 
+  theme_minimal()
+
+jan_27_grad + jan_27_race
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Graduation Race for January 27th
+```{r}
+# Table
+jan_27_data %>%
+  select(date, graduation_year) %>%
+  count(graduation_year) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Graduation Year") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Federal Race for January 27th
+```{r}
+# Table
+jan_27_data %>%
+  select(date, federal_race) %>%
+  count(federal_race) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Federal Race") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: jan-27-extra-charac
+
+jan_27_charac_table <- tibble(
+  characteristic = c("IEP", "IEP", "504 Plan", "504 Plan", "ESL", "ESL"), 
+  applicable = c("Yes", "No", "Yes", "No", "Yes", "No"), 
+  num_students = c(2, 42, 5, 39, 2, 42)
+)
+
+# Graph
+ggplot(data = jan_27_charac_table, mapping = aes(x = applicable, y = num_students, fill = characteristic)) + 
+  geom_col(position = "dodge") + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Extra Characteristics of Attending Students", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "If It Applies to a Student", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Additional Characteristics for January 27th
+```{r}
+# Table
+jan_27_charac_table %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
+  kable_styling()
+```
+:::
+
+## February 3, 2023
+```{r}
+#| label: feb-3-dist
+
+feb_3_data <- data %>%
+  filter(date == "Feb 3rd") %>%
+  select(date, topic, num_meetings, graduation_year, federal_race, iep, program_504, esl) %>%
+  mutate(
+    num_meetings = as_factor(num_meetings), 
+    graduation_year = as_factor(graduation_year), 
+    federal_race = as_factor(federal_race)
+    ) %>%
+  filter(!is.na(federal_race), !is.na(graduation_year), !is.na(iep), !is.na(program_504), !is.na(esl))
+```
+
+```{r}
+#| label: feb-3-num-meetings
+
+# Graph
+ggplot(data = feb_3_data, mapping = aes(x = num_meetings)) + 
+  geom_bar(color = "azure4", fill = "lightcyan2") + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Number of Meetings Attended", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Number of Meetings Attended", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Number of Meetings Attended for February 3rd
+```{r}
+# Table
+feb_3_data %>%
+  select(date, num_meetings) %>%
+  count(num_meetings) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Number of Meetings Attended") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: feb-3-grad-year
+
+# Graph
+feb_3_grad <- ggplot(data = feb_3_data, mapping = aes(x = graduation_year, fill = graduation_year)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Graduation Year", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Graduation Year", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+```{r}
+#| label: feb-3-race
+
+# Graph
+feb_3_race <- ggplot(data = feb_3_data, mapping = aes(x = federal_race, fill = federal_race)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Race", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Federal Race", 
+    y = "Number of Students"
+    ) + 
+  scale_x_discrete(guide = guide_axis(angle = 90)) + 
+  theme_minimal()
+
+feb_3_grad + feb_3_race
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Graduation Race for February 3rd
+```{r}
+# Table
+feb_3_data %>%
+  select(date, graduation_year) %>%
+  count(graduation_year) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Graduation Year") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Federal Race for February 3rd
+```{r}
+# Table
+feb_3_data %>%
+  select(date, federal_race) %>%
+  count(federal_race) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Federal Race") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: feb-3-extra-charac
+
+feb_3_charac_table <- tibble(
+  characteristic = c("IEP", "IEP", "504 Plan", "504 Plan", "ESL", "ESL"), 
+  applicable = c("Yes", "No", "Yes", "No", "Yes", "No"), 
+  num_students = c(1, 50, 6, 45, 2, 49)
+)
+
+# Graph
+ggplot(data = feb_3_charac_table, mapping = aes(x = applicable, y = num_students, fill = characteristic)) + 
+  geom_col(position = "dodge") + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Extra Characteristics of Attending Students", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "If It Applies to a Student", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Additional Characteristics for February 3rd
+```{r}
+# Table
+feb_3_charac_table %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
+  kable_styling()
+```
+:::
+
+## February 10, 2023
+```{r}
+#| label: feb-10-dist
+
+feb_10_data <- data %>%
+  filter(date == "Feb 10th") %>%
+  select(date, topic, num_meetings, graduation_year, federal_race, iep, program_504, esl) %>%
+  mutate(
+    num_meetings = as_factor(num_meetings), 
+    graduation_year = as_factor(graduation_year), 
+    federal_race = as_factor(federal_race)
+    ) %>%
+  filter(!is.na(federal_race), !is.na(graduation_year), !is.na(iep), !is.na(program_504), !is.na(esl))
+```
+
+```{r}
+#| label: feb-10-num-meetings
+
+# Graph
+ggplot(data = feb_10_data, mapping = aes(x = num_meetings)) + 
+  geom_bar(color = "azure4", fill = "lightcyan2") + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Number of Meetings Attended", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Number of Meetings Attended", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Number of Meetings Attended for February 10th
+```{r}
+# Table
+feb_10_data %>%
+  select(date, num_meetings) %>%
+  count(num_meetings) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Number of Meetings Attended") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: feb-10-grad-year
+
+# Graph
+feb_10_grad <- ggplot(data = feb_10_data, mapping = aes(x = graduation_year, fill = graduation_year)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Graduation Year", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Graduation Year", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+```{r}
+#| label: feb-10-race
+
+# Graph
+feb_10_race <- ggplot(data = feb_10_data, mapping = aes(x = federal_race, fill = federal_race)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Race", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Federal Race", 
+    y = "Number of Students"
+    ) + 
+  scale_x_discrete(guide = guide_axis(angle = 90)) + 
+  theme_minimal()
+
+feb_10_grad + feb_10_race
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Graduation Race for February 10th
+```{r}
+# Table
+feb_10_data %>%
+  select(date, graduation_year) %>%
+  count(graduation_year) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Graduation Year") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Federal Race for February 10th
+```{r}
+# Table
+feb_10_data %>%
+  select(date, federal_race) %>%
+  count(federal_race) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Federal Race") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: feb-10-extra-charac
+
+feb_10_charac_table <- tibble(
+  characteristic = c("IEP", "IEP", "504 Plan", "504 Plan", "ESL", "ESL"), 
+  applicable = c("Yes", "No", "Yes", "No", "Yes", "No"), 
+  num_students = c(1, 50, 6, 45, 2, 49)
+)
+
+# Graph
+ggplot(data = feb_10_charac_table, mapping = aes(x = applicable, y = num_students, fill = characteristic)) + 
+  geom_col(position = "dodge") + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Extra Characteristics of Attending Students", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "If It Applies to a Student", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Additional Characteristics for February 10th
+```{r}
+# Table
+feb_10_charac_table %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
+  kable_styling()
+```
+:::
+
+## February 17, 2023
+```{r}
+#| label: feb-17-dist
+
+feb_17_data <- data %>%
+  filter(date == "Feb 17th") %>%
+  select(date, topic, num_meetings, graduation_year, federal_race, iep, program_504, esl) %>%
+  mutate(
+    num_meetings = as_factor(num_meetings), 
+    graduation_year = as_factor(graduation_year), 
+    federal_race = as_factor(federal_race)
+    ) %>%
+  filter(!is.na(federal_race), !is.na(graduation_year), !is.na(iep), !is.na(program_504), !is.na(esl))
+```
+
+```{r}
+#| label: feb-17-num-meetings
+
+# Graph
+ggplot(data = feb_17_data, mapping = aes(x = num_meetings)) + 
+  geom_bar(color = "azure4", fill = "lightcyan2") + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Number of Meetings Attended", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Number of Meetings Attended", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Number of Meetings Attended for February 17th
+```{r}
+# Table
+feb_17_data %>%
+  select(date, num_meetings) %>%
+  count(num_meetings) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Number of Meetings Attended") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: feb-17-grad-year
+
+# Graph
+feb_17_grad <- ggplot(data = feb_17_data, mapping = aes(x = graduation_year, fill = graduation_year)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Graduation Year", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Graduation Year", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+```{r}
+#| label: feb-17-race
+
+# Graph
+feb_17_race <- ggplot(data = feb_17_data, mapping = aes(x = federal_race, fill = federal_race)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Race", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Federal Race", 
+    y = "Number of Students"
+    ) + 
+  scale_x_discrete(guide = guide_axis(angle = 90)) + 
+  theme_minimal()
+
+feb_17_grad + feb_17_race
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Graduation Race for February 17th
+```{r}
+# Table
+feb_17_data %>%
+  select(date, graduation_year) %>%
+  count(graduation_year) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Graduation Year") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Federal Race for February 17th
+```{r}
+# Table
+feb_17_data %>%
+  select(date, federal_race) %>%
+  count(federal_race) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Federal Race") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: feb-17-extra-charac
+
+feb_17_charac_table <- tibble(
+  characteristic = c("IEP", "IEP", "504 Plan", "504 Plan", "ESL", "ESL"), 
+  applicable = c("Yes", "No", "Yes", "No", "Yes", "No"), 
+  num_students = c(1, 50, 6, 45, 2, 49)
+)
+
+# Graph
+ggplot(data = feb_17_charac_table, mapping = aes(x = applicable, y = num_students, fill = characteristic)) + 
+  geom_col(position = "dodge") + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Extra Characteristics of Attending Students", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "If It Applies to a Student", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Additional Characteristics for February 17th
+```{r}
+# Table
+feb_17_charac_table %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
+  kable_styling()
+```
+:::
+
+## February 24, 2023
+```{r}
+#| label: feb-24-dist
+
+feb_24_data <- data %>%
+  filter(date == "Feb 24th") %>%
+  select(date, topic, num_meetings, graduation_year, federal_race, iep, program_504, esl) %>%
+  mutate(
+    num_meetings = as_factor(num_meetings), 
+    graduation_year = as_factor(graduation_year), 
+    federal_race = as_factor(federal_race)
+    ) %>%
+  filter(!is.na(federal_race), !is.na(graduation_year), !is.na(iep), !is.na(program_504), !is.na(esl))
+```
+
+```{r}
+#| label: feb-24-num-meetings
+
+# Graph
+ggplot(data = feb_24_data, mapping = aes(x = num_meetings)) + 
+  geom_bar(color = "azure4", fill = "lightcyan2") + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Number of Meetings Attended", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Number of Meetings Attended", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Number of Meetings Attended for February 24th
+```{r}
+# Table
+feb_24_data %>%
+  select(date, num_meetings) %>%
+  count(num_meetings) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Number of Meetings Attended") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: feb-24-grad-year
+
+# Graph
+feb_24_grad <- ggplot(data = feb_24_data, mapping = aes(x = graduation_year, fill = graduation_year)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Graduation Year", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Graduation Year", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+```{r}
+#| label: feb-24-race
+
+# Graph
+feb_24_race <- ggplot(data = feb_24_data, mapping = aes(x = federal_race, fill = federal_race)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Race", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Federal Race", 
+    y = "Number of Students"
+    ) + 
+  scale_x_discrete(guide = guide_axis(angle = 90)) + 
+  theme_minimal()
+
+feb_24_grad + feb_24_race
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Graduation Race for February 24th
+```{r}
+# Table
+feb_24_data %>%
+  select(date, graduation_year) %>%
+  count(graduation_year) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Graduation Year") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Federal Race for February 24th
+```{r}
+# Table
+feb_24_data %>%
+  select(date, federal_race) %>%
+  count(federal_race) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Federal Race") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: feb-24-extra-charac
+
+feb_24_charac_table <- tibble(
+  characteristic = c("IEP", "IEP", "504 Plan", "504 Plan", "ESL", "ESL"), 
+  applicable = c("Yes", "No", "Yes", "No", "Yes", "No"), 
+  num_students = c(2, 46, 5, 43, 2, 46)
+)
+
+# Graph
+ggplot(data = feb_24_charac_table, mapping = aes(x = applicable, y = num_students, fill = characteristic)) + 
+  geom_col(position = "dodge") + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Extra Characteristics of Attending Students", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "If It Applies to a Student", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Additional Characteristics for February 24th
+```{r}
+# Table
+feb_24_charac_table %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
+  kable_styling()
+```
+:::
+
+## March 3, 2023
+```{r}
+#| label: mar-3-dist
+
+mar_3_data <- data %>%
+  filter(date == "Mar 3rd") %>%
+  select(date, topic, num_meetings, graduation_year, federal_race, iep, program_504, esl) %>%
+  mutate(
+    num_meetings = as_factor(num_meetings), 
+    graduation_year = as_factor(graduation_year), 
+    federal_race = as_factor(federal_race)
+    ) %>%
+  filter(!is.na(federal_race), !is.na(graduation_year), !is.na(iep), !is.na(program_504), !is.na(esl))
+```
+
+```{r}
+#| label: mar-3-num-meetings
+
+# Graph
+ggplot(data = mar_3_data, mapping = aes(x = num_meetings)) + 
+  geom_bar(color = "azure4", fill = "lightcyan2") + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Number of Meetings Attended", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Number of Meetings Attended", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Number of Meetings Attended for March 3rd
+```{r}
+# Table
+mar_3_data %>%
+  select(date, num_meetings) %>%
+  count(num_meetings) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Number of Meetings Attended") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: mar-3-grad-year
+
+# Graph
+mar_3_grad <- ggplot(data = mar_3_data, mapping = aes(x = graduation_year, fill = graduation_year)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Graduation Year", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Graduation Year", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+```{r}
+#| label: mar-3-race
+
+# Graph
+mar_3_race <- ggplot(data = mar_3_data, mapping = aes(x = federal_race, fill = federal_race)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Race", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Federal Race", 
+    y = "Number of Students"
+    ) + 
+  scale_x_discrete(guide = guide_axis(angle = 90)) + 
+  theme_minimal()
+
+mar_3_grad + mar_3_race
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Graduation Race for March 3rd
+```{r}
+# Table
+mar_3_data %>%
+  select(date, graduation_year) %>%
+  count(graduation_year) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Graduation Year") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Federal Race for March 3rd
+```{r}
+# Table
+mar_3_data %>%
+  select(date, federal_race) %>%
+  count(federal_race) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Federal Race") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: mar-3-extra-charac
+
+mar_3_charac_table <- tibble(
+  characteristic = c("IEP", "IEP", "504 Plan", "504 Plan", "ESL", "ESL"), 
+  applicable = c("Yes", "No", "Yes", "No", "Yes", "No"), 
+  num_students = c(2, 55, 5, 52, 2, 55)
+)
+
+# Graph
+ggplot(data = mar_3_charac_table, mapping = aes(x = applicable, y = num_students, fill = characteristic)) + 
+  geom_col(position = "dodge") + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Extra Characteristics of Attending Students", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "If It Applies to a Student", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Additional Characteristics for March 3rd
+```{r}
+# Table
+mar_3_charac_table %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
+  kable_styling()
+```
+:::
+
+## March 10, 2023
+```{r}
+#| label: mar-10-dist
+
+mar_10_data <- data %>%
+  filter(date == "Mar 10th") %>%
+  select(date, topic, num_meetings, graduation_year, federal_race, iep, program_504, esl) %>%
+  mutate(
+    num_meetings = as_factor(num_meetings), 
+    graduation_year = as_factor(graduation_year), 
+    federal_race = as_factor(federal_race)
+    ) %>%
+  filter(!is.na(federal_race), !is.na(graduation_year), !is.na(iep), !is.na(program_504), !is.na(esl))
+```
+
+```{r}
+#| label: mar-10-num-meetings
+
+# Graph
+ggplot(data = mar_10_data, mapping = aes(x = num_meetings)) + 
+  geom_bar(color = "azure4", fill = "lightcyan2") + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Number of Meetings Attended", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Number of Meetings Attended", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Number of Meetings Attended for March 10th
+```{r}
+# Table
+mar_10_data %>%
+  select(date, num_meetings) %>%
+  count(num_meetings) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Number of Meetings Attended") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: mar-10-grad-year
+
+# Graph
+mar_10_grad <- ggplot(data = mar_10_data, mapping = aes(x = graduation_year, fill = graduation_year)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Graduation Year", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Graduation Year", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+```{r}
+#| label: mar-10-race
+
+# Graph
+mar_10_race <- ggplot(data = mar_10_data, mapping = aes(x = federal_race, fill = federal_race)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Race", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Federal Race", 
+    y = "Number of Students"
+    ) + 
+  scale_x_discrete(guide = guide_axis(angle = 90)) + 
+  theme_minimal()
+
+mar_10_grad + mar_10_race
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Graduation Race for March 10th
+```{r}
+# Table
+mar_10_data %>%
+  select(date, graduation_year) %>%
+  count(graduation_year) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Graduation Year") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Federal Race for March 10th
+```{r}
+# Table
+mar_10_data %>%
+  select(date, federal_race) %>%
+  count(federal_race) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Federal Race") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: mar-10-extra-charac
+
+mar_10_charac_table <- tibble(
+  characteristic = c("IEP", "IEP", "504 Plan", "504 Plan", "ESL", "ESL"), 
+  applicable = c("Yes", "No", "Yes", "No", "Yes", "No"), 
+  num_students = c(2, 55, 5, 52, 2, 55)
+)
+
+# Graph
+ggplot(data = mar_10_charac_table, mapping = aes(x = applicable, y = num_students, fill = characteristic)) + 
+  geom_col(position = "dodge") + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Extra Characteristics of Attending Students", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "If It Applies to a Student", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Additional Characteristics for March 10th
+```{r}
+# Table
+mar_10_charac_table %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
+  kable_styling()
+```
+:::
+
+## March 17, 2023
+```{r}
+#| label: mar-17-dist
+
+mar_17_data <- data %>%
+  filter(date == "Mar 17th") %>%
+  select(date, topic, num_meetings, graduation_year, federal_race, iep, program_504, esl) %>%
+  mutate(
+    num_meetings = as_factor(num_meetings), 
+    graduation_year = as_factor(graduation_year), 
+    federal_race = as_factor(federal_race)
+    ) %>%
+  filter(!is.na(federal_race), !is.na(graduation_year), !is.na(iep), !is.na(program_504), !is.na(esl))
+```
+
+```{r}
+#| label: mar-17-num-meetings
+
+# Graph
+ggplot(data = mar_17_data, mapping = aes(x = num_meetings)) + 
+  geom_bar(color = "azure4", fill = "lightcyan2") + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Number of Meetings Attended", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Number of Meetings Attended", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Number of Meetings Attended for March 17th
+```{r}
+# Table
+mar_17_data %>%
+  select(date, num_meetings) %>%
+  count(num_meetings) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Number of Meetings Attended") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: mar-17-grad-year
+
+# Graph
+mar_17_grad <- ggplot(data = mar_17_data, mapping = aes(x = graduation_year, fill = graduation_year)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Graduation Year", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Graduation Year", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+```{r}
+#| label: mar-17-race
+
+# Graph
+mar_17_race <- ggplot(data = mar_17_data, mapping = aes(x = federal_race, fill = federal_race)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Race", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Federal Race", 
+    y = "Number of Students"
+    ) + 
+  scale_x_discrete(guide = guide_axis(angle = 90)) + 
+  theme_minimal()
+
+mar_17_grad + mar_17_race
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Graduation Race for March 17th
+```{r}
+# Table
+mar_17_data %>%
+  select(date, graduation_year) %>%
+  count(graduation_year) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Graduation Year") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Federal Race for March 17th
+```{r}
+# Table
+mar_17_data %>%
+  select(date, federal_race) %>%
+  count(federal_race) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Federal Race") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: mar-17-extra-charac
+
+mar_17_charac_table <- tibble(
+  characteristic = c("IEP", "IEP", "504 Plan", "504 Plan", "ESL", "ESL"), 
+  applicable = c("Yes", "No", "Yes", "No", "Yes", "No"), 
+  num_students = c(2, 55, 5, 52, 2, 55)
+)
+
+# Graph
+ggplot(data = mar_17_charac_table, mapping = aes(x = applicable, y = num_students, fill = characteristic)) + 
+  geom_col(position = "dodge") + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Extra Characteristics of Attending Students", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "If It Applies to a Student", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Additional Characteristics for March 17th
+```{r}
+# Table
+mar_17_charac_table %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
+  kable_styling()
+```
+:::
+
+## April 14, 2023
+```{r}
+#| label: apr-14-dist
+
+apr_14_data <- data %>%
+  filter(date == "Apr 14th") %>%
+  select(date, topic, num_meetings, graduation_year, federal_race, iep, program_504, esl) %>%
+  mutate(
+    num_meetings = as_factor(num_meetings), 
+    graduation_year = as_factor(graduation_year), 
+    federal_race = as_factor(federal_race)
+    ) %>%
+  filter(!is.na(federal_race), !is.na(graduation_year), !is.na(iep), !is.na(program_504), !is.na(esl))
+```
+
+```{r}
+#| label: apr-14-num-meetings
+
+# Graph
+ggplot(data = apr_14_data, mapping = aes(x = num_meetings)) + 
+  geom_bar(color = "azure4", fill = "lightcyan2") + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Number of Meetings Attended", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Number of Meetings Attended",
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Number of Meetings Attended for April 14th
+```{r}
+# Table
+apr_14_data %>%
+  select(date, num_meetings) %>%
+  count(num_meetings) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Number of Meetings Attended") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: apr-14-grad-year
+
+# Graph
+apr_14_grad <- ggplot(data = apr_14_data, mapping = aes(x = graduation_year, fill = graduation_year)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Graduation Year", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Graduation Year", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+```{r}
+#| label: apr-14-race
+
+# Graph
+apr_14_race <- ggplot(data = apr_14_data, mapping = aes(x = federal_race, fill = federal_race)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Race", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Federal Race", 
+    y = "Number of Students"
+    ) + 
+  scale_x_discrete(guide = guide_axis(angle = 90)) + 
+  theme_minimal()
+
+apr_14_grad + apr_14_race
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Graduation Race for April 14th
+```{r}
+# Table
+apr_14_data %>%
+  select(date, graduation_year) %>%
+  count(graduation_year) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Graduation Year") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Federal Race for April 14th
+```{r}
+# Table
+apr_14_data %>%
+  select(date, federal_race) %>%
+  count(federal_race) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Federal Race") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: apr-14-extra-charac
+
+apr_14_charac_table <- tibble(
+  characteristic = c("IEP", "IEP", "504 Plan", "504 Plan", "ESL", "ESL"), 
+  applicable = c("Yes", "No", "Yes", "No", "Yes", "No"), 
+  num_students = c(2, 38, 4, 36, 2, 38)
+)
+
+# Graph
+ggplot(data = apr_14_charac_table, mapping = aes(x = applicable, y = num_students, fill = characteristic)) + 
+  geom_col(position = "dodge") + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Extra Characteristics of Attending Students", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "If It Applies to a Student", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Additional Characteristics for April 14th
+```{r}
+# Table
+apr_14_charac_table %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
+  kable_styling()
+```
+:::
+
+## April 28, 2023
+```{r}
+#| label: apr-28-dist
+
+apr_28_data <- data %>%
+  filter(date == "Apr 28th") %>%
+  select(date, topic, num_meetings, graduation_year, federal_race, iep, program_504, esl) %>%
+  mutate(
+    num_meetings = as_factor(num_meetings), 
+    graduation_year = as_factor(graduation_year), 
+    federal_race = as_factor(federal_race)
+    ) %>%
+  filter(!is.na(federal_race), !is.na(graduation_year), !is.na(iep), !is.na(program_504), !is.na(esl))
+```
+
+```{r}
+#| label: apr-28-num-meetings
+
+# Graph
+ggplot(data = apr_28_data, mapping = aes(x = num_meetings)) + 
+  geom_bar(color = "azure4", fill = "lightcyan2") + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Number of Meetings Attended", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Number of Meetings Attended", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Number of Meetings Attended for April 28th
+```{r}
+# Table
+apr_28_data %>%
+  select(date, num_meetings) %>%
+  count(num_meetings) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Number of Meetings Attended") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: apr-28-grad-year
+
+# Graph
+apr_28_grad <- ggplot(data = apr_28_data, mapping = aes(x = graduation_year, fill = graduation_year)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Graduation Year", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Graduation Year", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+```{r}
+#| label: apr-28-race
+
+# Graph
+apr_28_race <- ggplot(data = apr_28_data, mapping = aes(x = federal_race, fill = federal_race)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Race", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Federal Race", 
+    y = "Number of Students"
+    ) + 
+  scale_x_discrete(guide = guide_axis(angle = 90)) + 
+  theme_minimal()
+
+apr_28_grad + apr_28_race
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Graduation Race for April 28th
+```{r}
+# Table
+apr_28_data %>%
+  select(date, graduation_year) %>%
+  count(graduation_year) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Graduation Year") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Federal Race for April 28th
+```{r}
+# Table
+apr_28_data %>%
+  select(date, federal_race) %>%
+  count(federal_race) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Federal Race") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: apr-28-extra-charac
+
+apr_28_charac_table <- tibble(
+  characteristic = c("IEP", "IEP", "504 Plan", "504 Plan", "ESL", "ESL"), 
+  applicable = c("Yes", "No", "Yes", "No", "Yes", "No"), 
+  num_students = c(NA, 9, 1, 8, NA, 9)
+)
+
+# Graph
+ggplot(data = apr_28_charac_table, mapping = aes(x = applicable, y = num_students, fill = characteristic)) + 
+  geom_col(position = "dodge") + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Extra Characteristics of Attending Students", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "If It Applies to a Student", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Additional Characteristics for April 28th
+```{r}
+# Table
+apr_28_charac_table %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
+  kable_styling()
+```
+:::
+
+## May 5, 2023
+```{r}
+#| label: may-5-dist
+
+may_5_data <- data %>%
+  filter(date == "May 5th") %>%
+  select(date, topic, num_meetings, graduation_year, federal_race, iep, program_504, esl) %>%
+  mutate(
+    num_meetings = as_factor(num_meetings), 
+    graduation_year = as_factor(graduation_year), 
+    federal_race = as_factor(federal_race)
+    ) %>%
+  filter(!is.na(federal_race), !is.na(graduation_year), !is.na(iep), !is.na(program_504), !is.na(esl))
+```
+
+```{r}
+#| label: may-5-num-meetings
+
+# Graph
+ggplot(data = may_5_data, mapping = aes(x = num_meetings)) + 
+  geom_bar(color = "azure4", fill = "lightcyan2") + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Number of Meetings Attended", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Number of Meetings Attended", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Number of Meetings Attended for May 5th
+```{r}
+# Table
+may_5_data %>%
+  select(date, num_meetings) %>%
+  count(num_meetings) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Number of Meetings Attended") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: may-5-grad-year
+
+# Graph
+may_5_grad <- ggplot(data = may_5_data, mapping = aes(x = graduation_year, fill = graduation_year)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Graduation Year", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Graduation Year", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+```{r}
+#| label: may-5-race
+
+# Graph
+may_5_race <- ggplot(data = may_5_data, mapping = aes(x = federal_race, fill = federal_race)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Race", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Federal Race", 
+    y = "Number of Students"
+    ) + 
+  scale_x_discrete(guide = guide_axis(angle = 90)) + 
+  theme_minimal()
+
+may_5_grad + may_5_race
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Graduation Race for May 5th
+```{r}
+# Table
+may_5_data %>%
+  select(date, graduation_year) %>%
+  count(graduation_year) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Graduation Year") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Federal Race for May 5th
+```{r}
+# Table
+may_5_data %>%
+  select(date, federal_race) %>%
+  count(federal_race) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Federal Race") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: may-5-extra-charac
+
+may_5_charac_table <- tibble(
+  characteristic = c("IEP", "IEP", "504 Plan", "504 Plan", "ESL", "ESL"), 
+  applicable = c("Yes", "No", "Yes", "No", "Yes", "No"), 
+  num_students = c(2, 44, 6, 40, 2, 44)
+)
+
+# Graph
+ggplot(data = may_5_charac_table, mapping = aes(x = applicable, y = num_students, fill = characteristic)) + 
+  geom_col(position = "dodge") + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Extra Characteristics of Attending Students", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "If It Applies to a Student", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Additional Characteristics for May 5th
+```{r}
+# Table
+may_5_charac_table %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
+  kable_styling()
+```
+:::
+
+## May 9, 2023
+```{r}
+#| label: may-9-dist
+
+may_9_data <- data %>%
+  filter(date == "May 9th") %>%
+  select(date, topic, num_meetings, graduation_year, federal_race, iep, program_504, esl) %>%
+  mutate(
+    num_meetings = as_factor(num_meetings), 
+    graduation_year = as_factor(graduation_year), 
+    federal_race = as_factor(federal_race)
+    ) %>%
+  filter(!is.na(federal_race), !is.na(graduation_year), !is.na(iep), !is.na(program_504), !is.na(esl))
+```
+
+```{r}
+#| label: may-9-num-meetings
+
+# Graph
+ggplot(data = may_9_data, mapping = aes(x = num_meetings)) + 
+  geom_bar(color = "azure4", fill = "lightcyan2") + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Number of Meetings Attended", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Number of Meetings Attended", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Number of Meetings Attended for May 9th
+```{r}
+# Table
+may_9_data %>%
+  select(date, num_meetings) %>%
+  count(num_meetings) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Number of Meetings Attended") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: may-9-grad-year
+
+# Graph
+may_9_grad <- ggplot(data = may_9_data, mapping = aes(x = graduation_year, fill = graduation_year)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Graduation Year", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Graduation Year", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+```{r}
+#| label: may-9-race
+
+# Graph
+may_9_race <- ggplot(data = may_9_data, mapping = aes(x = federal_race, fill = federal_race)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Race", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Federal Race", 
+    y = "Number of Students"
+    ) + 
+  scale_x_discrete(guide = guide_axis(angle = 90)) + 
+  theme_minimal()
+
+may_9_grad + may_9_race
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Graduation Race for May 9th
+```{r}
+# Table
+may_9_data %>%
+  select(date, graduation_year) %>%
+  count(graduation_year) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Graduation Year") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Federal Race for May 9th
+```{r}
+# Table
+may_9_data %>%
+  select(date, federal_race) %>%
+  count(federal_race) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Federal Race") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: may-9-extra-charac
+
+may_9_charac_table <- tibble(
+  characteristic = c("IEP", "IEP", "504 Plan", "504 Plan", "ESL", "ESL"), 
+  applicable = c("Yes", "No", "Yes", "No", "Yes", "No"), 
+  num_students = c(2, 44, 6, 40, 2, 44)
+)
+
+# Graph
+ggplot(data = may_9_charac_table, mapping = aes(x = applicable, y = num_students, fill = characteristic)) + 
+  geom_col(position = "dodge") + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Extra Characteristics of Attending Students", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "If It Applies to a Student", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Additional Characteristics for May 9th
+```{r}
+# Table
+may_9_charac_table %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
+  kable_styling()
+```
+:::
+
+## May 12, 2023
+```{r}
+#| label: may-12-dist
+
+may_12_data <- data %>%
+  filter(date == "May 12th") %>%
+  select(date, topic, num_meetings, graduation_year, federal_race, iep, program_504, esl) %>%
+  mutate(
+    num_meetings = as_factor(num_meetings), 
+    graduation_year = as_factor(graduation_year), 
+    federal_race = as_factor(federal_race)
+    ) %>%
+  filter(!is.na(federal_race), !is.na(graduation_year), !is.na(iep), !is.na(program_504), !is.na(esl))
+```
+
+```{r}
+#| label: may-12-num-meetings
+
+# Graph
+ggplot(data = may_12_data, mapping = aes(x = num_meetings)) + 
+  geom_bar(color = "azure4", fill = "lightcyan2") + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Number of Meetings Attended", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Number of Meetings Attended", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Number of Meetings Attended for May 12th
+```{r}
+# Table
+may_12_data %>%
+  select(date, num_meetings) %>%
+  count(num_meetings) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Number of Meetings Attended") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: may-12-grad-year
+
+# Graph
+may_12_grad <- ggplot(data = may_12_data, mapping = aes(x = graduation_year, fill = graduation_year)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Graduation Year", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Graduation Year", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+```{r}
+#| label: may-12-race
+
+# Graph
+may_12_race <- ggplot(data = may_12_data, mapping = aes(x = federal_race, fill = federal_race)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(stat = "count", aes(label = ..count..), position = position_stack(vjust = 0.5)) +  
+  labs(
+    title = "Distribution By Race", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Federal Race", 
+    y = "Number of Students"
+    ) + 
+  scale_x_discrete(guide = guide_axis(angle = 90)) + 
+  theme_minimal()
+
+may_12_grad + may_12_race
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Graduation Race for May 12th
+```{r}
+# Table
+may_12_data %>%
+  select(date, graduation_year) %>%
+  count(graduation_year) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Graduation Year") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Federal Race for May 12th
+```{r}
+# Table
+may_12_data %>%
+  select(date, federal_race) %>%
+  count(federal_race) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution By Federal Race") %>%
+  kable_styling()
+```
+:::
+
+```{r}
+#| label: may-12-extra-charac
+
+may_12_charac_table <- tibble(
+  characteristic = c("IEP", "IEP", "504 Plan", "504 Plan", "ESL", "ESL"), 
+  applicable = c("Yes", "No", "Yes", "No", "Yes", "No"), 
+  num_students = c(2, 44, 6, 40, 2, 44)
+)
+
+# Graph
+ggplot(data = may_12_charac_table, mapping = aes(x = applicable, y = num_students, fill = characteristic)) + 
+  geom_col(position = "dodge") + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Extra Characteristics of Attending Students", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "If It Applies to a Student", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Additional Characteristics for May 12th
+```{r}
+# Table
+may_12_charac_table %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
+  kable_styling()
+```
+:::
+
+# Attendance by Graduation Year
+
+## Total Grade Distribution
+```{r}
+#| label: grade-dist
+
+grade_distribution <- data %>%
+  select(student_id, date, topic, num_meetings, graduation_year, federal_race) %>%
+  filter(!is.na(graduation_year)) %>%
+  mutate(
+    graduation_year = as_factor(graduation_year), 
+    num_meetings = as_factor(num_meetings), 
+    federal_race = as_factor(federal_race)
+    )
+
+# Repeated
+grade_repeat <- grade_distribution %>%
+  count(graduation_year) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  )
+
+## Graph
+grade_repeat_graph <- ggplot(data = grade_repeat, mapping = aes(x = graduation_year, y = num_students, fill = graduation_year)) + 
+  geom_col() + 
+  geom_text(aes(label = num_students), position = position_stack(vjust = 0.5)) + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Graduation Year", 
+    subtitle = "With Repeats",
+    caption = "Source: WiENG 2022-2023",
+    x = "Graduation Year", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+
+# Unique
+grade_unique <- grade_distribution %>%
+  select(student_id, num_meetings, graduation_year, federal_race) %>%
+  unique() %>%
+  count(graduation_year) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  )
+
+## Graph
+grade_unique_graph <- ggplot(data = grade_unique, mapping = aes(x = graduation_year, y = num_students, fill = graduation_year)) + 
+  geom_col() + 
+  geom_text(aes(label = num_students), position = position_stack(vjust = 0.5)) + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Graduation Year", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Graduation Year", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+
+# Combining
+grade_repeat_graph + grade_unique_graph
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Graduation Year of All Students (With Repeats)
+```{r}
+## Table
+grade_repeat %>%
+  kbl(caption = "Graduation Year of All Students (With Repeats)") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Graduation Year of All Students (Unique)
+```{r}
+## Table
+grade_unique %>%
+  kbl(caption = "Graduation Year of All Students (Unique)") %>%
+  kable_styling()
+```
+:::
+
+## Comparing Grade Distributions with ETHS
+```{r}
+#| label: compare-grade-dist
+
+eths_grade <- tibble(
+  graduation_year = c(2026, 2025, 2024, 2023), 
+  num_students = c(914, 995, 876, 905), 
+  prop = num_students / sum(num_students), 
+  percent = prop * 100
+) %>%
+  mutate(program = "eths") %>%
+  select(program, graduation_year, num_students, prop, percent) %>%
+  mutate(graduation_year = as_factor(graduation_year))
+
+wieng_grade <- data %>%
+  select(name, student_id, graduation_year) %>%
+  unique() %>%
+  count(graduation_year) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  mutate(program = "WiENG") %>%
+  select(program, graduation_year, num_students, prop, percent) %>%
+  arrange(desc(graduation_year)) %>%
+  mutate(graduation_year = as_factor(graduation_year))
+
+compare_grade_dist <- full_join(eths_grade, wieng_grade)
+
+# Graphs
+## WiENG
+wieng_grade_dist <- ggplot(data = wieng_grade, mapping = aes(y = graduation_year, x = num_students, fill = graduation_year)) + 
+  geom_col() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(aes(label = sprintf("%.2f%%", percent)), position = position_stack(vjust = 0.5), size = 3) + 
+  labs(
+    title = "WiENG Grade Distribution", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    y = "Graduation Year", 
+    x = "Number of Students"
+    ) + 
+  theme_minimal()
+
+## ETHS
+eths_grade_dist <- ggplot(data = eths_grade, mapping = aes(y = graduation_year, x = num_students, fill = graduation_year)) + 
+  geom_col() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(aes(label = sprintf("%.2f%%", percent)), position = position_stack(vjust = 0.5), size = 3) + 
+  labs(
+    title = "ETHS Grade Distribution", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    y = "Graduation Year", 
+    x = "Number of Students"
+    ) + 
+  theme_minimal()
+
+## Combining
+wieng_grade_dist + eths_grade_dist
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Comparing Grade Distributions Between WiENG and ETHS
+```{r}
+# Table
+compare_grade_dist %>%
+  kbl(caption = "Comparing Grade Distributions (Unique)") %>%
+  kable_styling()
+```
+:::
+
+## Graduation Year and Number of Meetings
+```{r}
+#| label: grade-num-meetings
+
+grade_num_meetings <- grade_distribution %>%
+  select(student_id, num_meetings, graduation_year, federal_race) %>%
+  unique() %>%
+  select(-student_id)
+
+grade_num_meetings_table <- grade_distribution %>%
+  select(student_id, num_meetings, graduation_year, federal_race) %>%
+  unique() %>%
+  select(-student_id, -federal_race) %>%
+  group_by(graduation_year, num_meetings) %>%
+  summarize(num_students = n())
+
+grade_num_meetings_table <- pivot_wider(grade_num_meetings_table, names_from = graduation_year, values_from = num_students)
+
+# Graph
+ggplot(data = grade_num_meetings, mapping = aes(x = num_meetings, fill = graduation_year)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Graduation Year and Number of Meetings",
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "Number of Meetings Attended", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Graduation Year and Number of Meetings Attended
+```{r}
+# Table
+grade_num_meetings_table %>%
+  kbl(caption = "Graduation Year and Number of Meetings Attended (Unique)") %>%
+  kable_styling()
+```
+:::
+
+## Graduation Year and Federal Race
+```{r}
+#| label: grade-federal-race
+
+grade_race <- grade_distribution %>%
+  select(student_id, num_meetings, graduation_year, federal_race) %>%
+  unique() %>%
+  select(-student_id)
+
+grade_race_table <- grade_distribution %>%
+  select(student_id, num_meetings, graduation_year, federal_race) %>%
+  unique() %>%
+  select(-student_id, -num_meetings) %>%
+  group_by(graduation_year, federal_race) %>%
+  summarize(num_students = n()) %>%
+  mutate(num_students = num_students)
+
+# Graph
+ggplot(data = grade_race, mapping = aes(x = federal_race, fill = graduation_year)) + 
+  geom_bar(position = "dodge") + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Graduation Year and Federal Race",
+    subtitle = "By All Federal Race Categories (Unique Students)",
+    caption = "Source: WiENG 2022-2023",
+    x = "Federal Race", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+
+# Only Two Categories
+grade_race_two <- grade_distribution %>%
+  select(student_id, num_meetings, graduation_year, federal_race) %>%
+  unique() %>%
+  select(-student_id)
+
+grade_race_two$federal_race <- recode(grade_race_two$federal_race, "Asian" = "Non-White")
+grade_race_two$federal_race <- recode(grade_race_two$federal_race, "Black" = "Non-White")
+grade_race_two$federal_race <- recode(grade_race_two$federal_race, "LatinX" = "Non-White")
+grade_race_two$federal_race <- recode(grade_race_two$federal_race, "T.M.O." = "Non-White")
+
+grade_race_table_two <- grade_distribution %>%
+  select(student_id, num_meetings, graduation_year, federal_race)
+
+grade_race_table_two$federal_race <- recode(grade_race_table_two$federal_race, "Asian" = "Non-White")
+grade_race_table_two$federal_race <- recode(grade_race_table_two$federal_race, "Black" = "Non-White")
+grade_race_table_two$federal_race <- recode(grade_race_table_two$federal_race, "LatinX" = "Non-White")
+grade_race_table_two$federal_race <- recode(grade_race_table_two$federal_race, "T.M.O." = "Non-White")
+
+grade_race_table_two <- grade_race_table_two %>%
+  unique() %>%
+  select(-student_id, -num_meetings) %>%
+  group_by(graduation_year, federal_race) %>%
+  summarize(num_students = n()) %>%
+  mutate(num_students = num_students)
+
+## Graph
+ggplot(data = grade_race_two, mapping = aes(x = federal_race, fill = graduation_year)) + 
+  geom_bar(position = "dodge") + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Graduation Year and Federal Race",
+    subtitle = "By White and Non-White Students (Unique Students)",
+    caption = "Source: WiENG 2022-2023",
+    x = "Federal Race", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Graduation Year and Federal Race (Simple)
+```{r}
+# Table
+grade_race_table_wider <- pivot_wider(grade_race_table, names_from = federal_race, values_from = num_students) %>%
+  select(graduation_year, White, Black, Asian, LatinX, T.M.O.)
+
+grade_race_table_wider %>%
+  kbl(caption = "Graduation Year and Federal Race (Unique)") %>%
+  kable_styling()
+
+grade_race_table_two_wider <- pivot_wider(grade_race_table_two, names_from = federal_race, values_from = num_students)
+
+grade_race_table_two_wider %>%
+  kbl(caption = "Graduation Year and Federal Race (Unique)") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Graduation Year and Federal Race (By Year)
+
+::: {.callout-note icon=false collapse="true"}
+## Table for 2023 Graduation Year and Federal Race
+```{r}
+# Table
+grade_race_table %>%
+  filter(graduation_year == "2023") %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "2023 Graduation Year and Federal Race (Unique)") %>%
+  kable_styling()
+
+grade_race_table_two %>%
+  filter(graduation_year == "2023") %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "2023 Graduation Year and Federal Race (Unique)") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for 2024 Graduation Year and Federal Race
+```{r}
+# Table
+grade_race_table %>%
+  filter(graduation_year == "2024") %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "2024 Graduation Year and Federal Race (Unique)") %>%
+  kable_styling()
+
+grade_race_table_two %>%
+  filter(graduation_year == "2024") %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "2024 Graduation Year and Federal Race (Unique)") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for 2025 Graduation Year and Federal Race
+```{r}
+# Table
+grade_race_table %>%
+  filter(graduation_year == "2025") %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "2025 Graduation Year and Federal Race (Unique)") %>%
+  kable_styling()
+
+grade_race_table_two %>%
+  filter(graduation_year == "2025") %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "2025 Graduation Year and Federal Race (Unique)") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for 2026 Graduation Year and Federal Race
+```{r}
+# Table
+grade_race_table %>%
+  filter(graduation_year == "2026") %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "2026 Graduation Year and Federal Race (Unique)") %>%
+  kable_styling()
+
+grade_race_table_two %>%
+  filter(graduation_year == "2026") %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "2026 Graduation Year and Federal Race (Unique)") %>%
+  kable_styling()
+```
+:::
+
+:::
+
+## Graduation Year and Topic
+```{r}
+#| label: grade-topic
+
+grade_topic <- grade_distribution %>%
+  group_by(topic, graduation_year) %>%
+  summarize(num_students = n()) %>%
+  select(graduation_year, topic, num_students) %>%
+  mutate(num_students = num_students)
+
+# Graph 
+ggplot(data = grade_topic, mapping = aes(x = topic, y = num_students, fill = graduation_year)) + 
+  geom_col(position = "dodge") + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Graduation Year and Topic",
+    subtitle = "With Repeats",
+    caption = "Source: WiENG 2022-2023",
+    x = "Federal Race", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Graduation Year and Topic (Simple)
+```{r}
+# Table
+grade_topic_table <- pivot_wider(grade_topic, names_from = topic, values_from = num_students)
+
+grade_topic_table %>%
+  kbl(caption = "Graduation Year and Topic (With Repeats)") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Graduation Year and Topic (By Year)
+
+::: {.callout-note icon=false collapse="true"}
+## Table for 2023 Graduation Year and Topic
+```{r}
+# Table
+grade_topic %>%
+  filter(graduation_year == "2023") %>%
+  mutate(
+    prop = num_students / (19 + 1 + 2), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "2023 Graduation Year and Topic (With Repeats)") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for 2024 Graduation Year and Topic
+```{r}
+# Table
+grade_topic %>%
+  filter(graduation_year == "2024") %>%
+  mutate(
+    prop = num_students / (122 + 2 + 8), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "2024 Graduation Year and Topic (With Repeats)") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for 2025 Graduation Year and Topic
+```{r}
+# Table
+grade_topic %>%
+  filter(graduation_year == "2025") %>%
+  mutate(
+    prop = num_students / (54 + 5), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "2025 Graduation Year and Topic (With Repeats)") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for 2026 Graduation Year and Topic
+```{r}
+# Table
+grade_topic %>%
+  filter(graduation_year == "2026") %>%
+  mutate(
+    prop = num_students / (14 + 1 + 1), 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "2026 Graduation Year and Topic (With Repeats)") %>%
+  kable_styling()
+```
+:::
+
+:::
+
+# Attendance by Federal Race
+
+## Total Race Distribution
+
+```{r}
+#| label: total-race-dist
+
+race_dist_unique <- data %>%
+  select(federal_race, student_id, num_meetings) %>%
+  unique() %>%
+  select(-student_id) %>%
+  count(federal_race) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  )
+
+# Graph
+ggplot(data = race_dist_unique, mapping = aes(x = federal_race, y = num_students, fill = federal_race)) +
+  geom_col() + 
+  scale_fill_manual(values = unique_colors) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), position = position_stack(vjust = 0.5)) + 
+  labs(
+    title = "Federal Race Distribution", 
+    subtitle = "By All Federal Race Categories (Unique Students)",
+    caption = "Source: WiENG 2022-2023",
+    x = "Federal Race", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+
+# Only Two Categories
+race_dist_unique_two <- data %>%
+  select(federal_race, student_id, num_meetings) %>%
+  unique() %>%
+  select(-student_id)
+
+race_dist_unique_two$federal_race <- recode(race_dist_unique_two$federal_race, "Asian" = "Non-White")
+race_dist_unique_two$federal_race <- recode(race_dist_unique_two$federal_race, "Black" = "Non-White")
+race_dist_unique_two$federal_race <- recode(race_dist_unique_two$federal_race, "LatinX" = "Non-White")
+race_dist_unique_two$federal_race <- recode(race_dist_unique_two$federal_race, "T.M.O." = "Non-White")
+  
+race_dist_unique_two <- race_dist_unique_two %>%
+  count(federal_race) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  )
+
+## Graph
+ggplot(data = race_dist_unique_two, mapping = aes(x = federal_race, y = num_students, fill = federal_race)) +
+  geom_col() + 
+  scale_fill_manual(values = unique_colors) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), position = position_stack(vjust = 0.5)) + 
+  labs(
+    title = "Federal Race Distribution", 
+    subtitle = "By White and Non-White Students (Unique Students)",
+    caption = "Source: WiENG 2022-2023",
+    x = "Federal Race", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Total Race Distribution
+```{r}
+# Table
+race_dist_unique %>%
+  kbl(caption = "Federal Race Distribution (Unique)") %>%
+  kable_styling()
+
+race_dist_unique_two %>%
+  kbl(caption = "Federal Race Distribution With Only White and Non-White (Unique)") %>%
+  kable_styling()
+```
+:::
+
+## Comparing Race Distributions with ETHS
+```{r}
+#| label: compare-race-dist
+
+eths_race <- tibble(
+  federal_race = c("White", "Asian", "Black", "LatinX", "T.M.O."),
+  num_students = c(1640, 198, 902, 724, 154), 
+  prop = num_students / sum(num_students), 
+  percent = prop * 100
+) %>%
+  mutate(program = "eths") %>%
+  select(program, federal_race, num_students, prop, percent)
+
+wieng_race <- data %>%
+  select(name, student_id, federal_race) %>%
+  unique() %>%
+  count(federal_race) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  mutate(program = "WiENG") %>%
+  select(program, federal_race, num_students, prop, percent) %>%
+  arrange(desc(federal_race))
+
+compare_race_dist <- full_join(eths_race, wieng_race)
+
+# Graphs
+## WiENG
+wieng_race_dist <- ggplot(data = wieng_race, mapping = aes(x = federal_race, y = num_students, fill = federal_race)) + 
+  geom_col() + 
+  scale_fill_manual(values = unique_colors) + 
+  scale_x_discrete(guide = guide_axis(angle = 90)) + 
+  labs(
+    title = "WiENG Race Distribution", 
+    subtitle = "By All Federal Race Categories (Unique Students)",
+    caption = "Source: WiENG 2022-2023",
+    x = "Federal Race", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+
+## ETHS
+eths_race_dist <- ggplot(data = eths_race, mapping = aes(x = federal_race, y = num_students, fill = federal_race)) + 
+  geom_col() + 
+  scale_fill_manual(values = unique_colors) + 
+  scale_x_discrete(guide = guide_axis(angle = 90)) + 
+  labs(title = "ETHS Race Distribution", 
+       subtitle = "By All Federal Race Categories (Unique Students)",
+    caption = "Source: WiENG 2022-2023",
+       x = "Federal Race", 
+       y = "Number of Students"
+       ) + 
+  theme_minimal()
+
+## Combining
+wieng_race_dist + eths_race_dist
+```
+
+```{r}
+#| label: compare-race-dist-two-cat
+
+eths_race_two <- tibble(
+  federal_race = c("White", "Non-White"),
+  num_students = c(1640, 1978), 
+  prop = num_students / sum(num_students), 
+  percent = prop * 100
+) %>%
+  mutate(program = "eths") %>%
+  select(program, federal_race, num_students, prop, percent)
+
+WiENG_race_two <- data %>%
+  select(name, student_id, federal_race) %>%
+  unique() 
+
+WiENG_race_two$federal_race <- recode(WiENG_race_two$federal_race, "Asian" = "Non-White")
+WiENG_race_two$federal_race <- recode(WiENG_race_two$federal_race, "Black" = "Non-White")
+WiENG_race_two$federal_race <- recode(WiENG_race_two$federal_race, "LatinX" = "Non-White")
+WiENG_race_two$federal_race <- recode(WiENG_race_two$federal_race, "T.M.O." = "Non-White")
+
+WiENG_race_two <- WiENG_race_two %>%
+  count(federal_race) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  ) %>%
+  mutate(program = "WiENG") %>%
+  select(program, federal_race, num_students, prop, percent) %>%
+  arrange(desc(federal_race))
+
+compare_race_dist_two <- full_join(eths_race_two, WiENG_race_two)
+
+# Graphs
+## WiENG
+WiENG_race_dist_two <- ggplot(data = WiENG_race_two, mapping = aes(x = federal_race, y = num_students, fill = federal_race)) + 
+  geom_col() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(aes(label = sprintf("%.2f%%", percent)), position = position_stack(vjust = 0.5)) + 
+  labs(
+    title = "WiENG Race Distribution", 
+    subtitle = "By White and Non-White Students (Unique Students)",
+    caption = "Source: WiENG 2022-2023",
+    x = "Federal Race", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+
+## ETHS
+eths_race_dist_two <- ggplot(data = eths_race_two, mapping = aes(x = federal_race, y = num_students, fill = federal_race)) + 
+  geom_col() + 
+  scale_fill_manual(values = unique_colors) + 
+  geom_text(aes(label = sprintf("%.2f%%", percent)), position = position_stack(vjust = 0.5)) + 
+  labs(title = "ETHS Race Distribution", 
+       subtitle = "By White and Non-White Students (Unique Students)",
+       caption = "Source: WiENG 2022-2023",
+       x = "Federal Race", 
+       y = "Number of Students"
+       ) + 
+  theme_minimal()
+
+## Combining
+WiENG_race_dist_two / eths_race_dist_two
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Comparing Race Distributions Between WiENG and ETHS (All Categories)
+```{r}
+# Table
+compare_race_dist %>%
+  kbl(caption = "Comparing Race Distributions (All Federal Race Categories) (Unique)") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Comparing Race Distributions Between WiENG and ETHS (White and Non-White)
+```{r}
+# Table
+compare_race_dist_two %>%
+  kbl(caption = "Comparing Race Distributions (White and Non-White) (Unique)") %>%
+  kable_styling()
+```
+:::
+
+## Race and Number of Meetings
+```{r}
+#| label: race-and-num-meetings
+
+race_distribution <- data %>%
+  select(student_id, date, topic, num_meetings, graduation_year, federal_race) %>%
+  mutate(
+    graduation_year = as_factor(graduation_year), 
+    num_meetings = as_factor(num_meetings), 
+    federal_race = as_factor(federal_race)
+    )
+
+race_num_meetings <- race_distribution %>%
+  select(student_id, num_meetings, graduation_year, federal_race) %>%
+  unique() %>%
+  select(-student_id, -graduation_year)
+
+race_num_meetings_table <- race_num_meetings %>%
+  group_by(federal_race, num_meetings) %>%
+  summarize(num_students = n())
+
+# Graph
+race_num_meetings_graph <- ggplot(data = race_num_meetings, mapping = aes(x = num_meetings, fill = federal_race)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Federal Race and Number of Meetings",
+    subtitle = "By All Federal Race Categories (Unique Students)",
+    caption = "Source: WiENG 2022-2023",
+    x = "Number of Meetings Attended", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+
+## Only Two Categories
+race_num_meetings_two <- race_num_meetings
+
+race_num_meetings_two$federal_race <- recode(race_num_meetings_two$federal_race, "Asian" = "Non-White")
+race_num_meetings_two$federal_race <- recode(race_num_meetings_two$federal_race, "Black" = "Non-White")
+race_num_meetings_two$federal_race <- recode(race_num_meetings_two$federal_race, "LatinX" = "Non-White")
+race_num_meetings_two$federal_race <- recode(race_num_meetings_two$federal_race, "T.M.O." = "Non-White")
+
+race_num_meetings_table_two <- race_num_meetings_two %>%
+  group_by(federal_race, num_meetings) %>%
+  summarize(num_students = n())
+
+race_num_meetings_graph_two <- ggplot(data = race_num_meetings_two, mapping = aes(x = num_meetings, fill = federal_race)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Federal Race and Number of Meetings",
+    subtitle = "By White and Non-White (Unique Students)",
+    caption = "Source: WiENG 2022-2023",
+    x = "Number of Meetings Attended", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+
+race_num_meetings_graph
+race_num_meetings_graph_two
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Federal Race and Number of Meeings Attended (All Categories)
+```{r}
+# Table
+race_num_meetings_table %>%
+  kbl(caption = "Race and Number of Meetings Attended (All Federal Race Categories) (Unique)") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Federal Race and Number of Meeings Attended (White and Non-White)
+```{r}
+# Table
+race_num_meetings_table_two %>%
+  kbl(caption = "Race and Number of Meetings Attended (White and Non-White) (Unique)") %>%
+  kable_styling()
+```
+:::
+
+## Race and Topic
+```{r}
+#| label: race-and-topic
+
+race_topic <- race_distribution %>%
+  select(federal_race, topic)
+
+race_topic_table <- race_topic %>%
+  group_by(federal_race, topic) %>%
+  summarize(num_students = n())
+
+# Graph
+race_topic_graph <- ggplot(data = race_topic, mapping = aes(x = topic, fill = federal_race)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Federal Race and Topic",
+    subtitle = "By All Federal Race Categories (With Repeats)",
+    caption = "Source: WiENG 2022-2023",
+    x = "Topic", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+
+## Only Two Categories
+race_topic_two <- race_topic
+
+race_topic_two$federal_race <- recode(race_topic_two$federal_race, "Asian" = "Non-White")
+race_topic_two$federal_race <- recode(race_topic_two$federal_race, "Black" = "Non-White")
+race_topic_two$federal_race <- recode(race_topic_two$federal_race, "LatinX" = "Non-White")
+race_topic_two$federal_race <- recode(race_topic_two$federal_race, "T.M.O." = "Non-White")
+
+race_topic_table_two <- race_topic_two %>%
+  group_by(federal_race, topic) %>%
+  summarize(num_students = n())
+
+race_topic_graph_two <- ggplot(data = race_topic_two, mapping = aes(x = topic, fill = federal_race)) + 
+  geom_bar() + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Federal Race and Topic",
+    subtitle = "By White and Non-White (With Repeats)",
+    caption = "Source: WiENG 2022-2023",
+    x = "Topic", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+
+race_topic_graph
+race_topic_graph_two
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Federal Race and Topic (All Categories)
+```{r}
+# Table
+race_topic_table %>%
+  kbl(caption = "Race and Topic (All Federal Race Categories) (Unique)") %>%
+  kable_styling()
+```
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Federal Race and Topic (White and Non-White)
+```{r}
+# Table
+race_topic_table_two %>%
+  kbl(caption = "Race and Topic (White and Non-White) (Unique)") %>%
+  kable_styling()
+```
+:::
+
+# Attendance by Additional Characteristics
+
+## Of All Unique Students
+```{r}
+#| label: total-extra-charac
+
+total_charac_table <- tibble(
+  characteristic = c("IEP", "IEP", "504 Plan", "504 Plan", "ESL", "ESL"), 
+  applicable = c("Yes", "No", "Yes", "No", "Yes", "No"), 
+  num_students = c(1, 31, 5, 27, 3, 29)
+)
+
+# Graph
+ggplot(data = total_charac_table, mapping = aes(x = applicable, y = num_students, fill = characteristic)) + 
+  geom_col(position = "dodge") + 
+  scale_fill_manual(values = unique_colors) + 
+  labs(
+    title = "Extra Characteristics of Attending Students", 
+    subtitle = "Unique Students",
+    caption = "Source: WiENG 2022-2023",
+    x = "If It Applies to a Student", 
+    y = "Number of Students"
+    ) + 
+  theme_minimal()
+```
+
+::: {.callout-note icon=false collapse="true"}
+## Table for Additional Characteristics of All Unique Students
+```{r}
+# Table
+total_charac_table %>%
+  mutate(
+    prop = num_students / 32, 
+    percent = prop * 100
+  ) %>%
+  kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
+  kable_styling()
+```
+:::

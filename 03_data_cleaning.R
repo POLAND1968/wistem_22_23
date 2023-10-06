@@ -18,6 +18,25 @@ data <- data %>%
   janitor::clean_names() %>%
   select(date, name, student_id)
 
+## Adding topic
+exit_slip <- read_csv(file = "data/processed/wieng_exit_slips_clean.csv") %>%
+  select(date, topic) %>%
+  unique()
+data <- full_join(data, exit_slip) %>%
+  filter(date != "Jan 13th", date != "Activity")
+
+data <- data %>%
+  mutate(topic = ifelse(date == "Feb 17th", "Activity", topic))
+
+data <- data %>%
+  mutate(topic = ifelse(date == "Mar 17th", "Activity", topic))
+
+data <- data %>%
+  mutate(topic = ifelse(date == "Apr 21st", "Outside of School Activity", topic))
+
+data <- data %>%
+  mutate(topic = ifelse(date == "May 9th", "Outside of School Activity", topic))
+
 # Save Clean Data Set
 write_csv(data, file = "data/processed/wieng_attendance_clean.csv")
 data <- read_csv(file = "data/processed/wieng_attendance_clean.csv")
