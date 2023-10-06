@@ -41,6 +41,43 @@ data$date <- factor(data$date, levels = c("May 12th", "Apr 28th", "Apr 14th", "M
 
 **WiSTEM:** In total, there were 17 overall WiSTEM meetings held throughout the 2022-2023 academic school year. However, there were 13 meetings with attendance data and 13 meetings with exit slip data. Some of these overlap in missing both attendance and exit slip data. 
 
+## Students Also in WiENG
+
+```{r}
+#| label: overlap-students
+
+# Load Data
+wieng_data <- read_csv(file = "data/processed/wieng_attendance_clean.csv")
+wistem_data <- read_csv(file = "data/processed/wistem_attendance_clean.csv")
+
+# WiENG 
+wieng_names <- wieng_data %>% # 32 unique students
+  select(name, student_id) %>%
+  unique()
+
+wieng_unique_students <- wieng_names %>%
+  nrow()
+
+# WiSTEM
+wistem_names <- wistem_data %>% # 138 unique students
+  select(name, student_id) %>%
+  unique()
+
+wistem_unique_students <- wistem_names %>%
+  nrow()
+
+# Overlapping
+overalping_students <- dplyr::semi_join(wieng_names, wistem_names, "student_id")
+num_overlap_student <- overalping_students %>%
+  nrow()
+
+## Percentage
+wieng_overlap_percent <- round((num_overlap_student / wieng_unique_students) * 100, 2)
+wistem_overlap_percent <- round((num_overlap_student / wistem_unique_students) * 100, 2)
+```
+
+WiENG was a program created after the start of WiSTEM with a focus on engineering. Therefore, some students started to go to both WiSTEM and WiENG meetings. Overall, in the 2022 - 2023 academic school year, `r num_overlap_student` unique students attended both meetings. There were `r wieng_unique_students` total unique WiENG students, meaning `r wieng_overlap_percent` percent of the total population. Meanwhile, there were `r wistem_unique_students` total unique WiENG students, meaning `r wistem_overlap_percent` percent of the total population.
+
 ## Attendance Per Meeting
  
 ```{r}
@@ -788,7 +825,7 @@ ggplot(data = oct_14_charac_table, mapping = aes(x = applicable, y = num_student
 # Table
 oct_14_charac_table %>%
   mutate(
-    prop = num_students / 34, 
+    prop = num_students / sum(num_students), 
     percent = prop * 100
   ) %>%
   kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
@@ -947,7 +984,7 @@ ggplot(data = oct_28_charac_table, mapping = aes(x = applicable, y = num_student
 # Table
 oct_28_charac_table %>%
   mutate(
-    prop = num_students / 37, 
+    prop = num_students / sum(num_students), 
     percent = prop * 100
   ) %>%
   kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
@@ -1106,7 +1143,7 @@ ggplot(data = nov_18_charac_table, mapping = aes(x = applicable, y = num_student
 # Table
 nov_18_charac_table %>%
   mutate(
-    prop = num_students / 51, 
+    prop = num_students / sum(num_students), 
     percent = prop * 100
   ) %>%
   kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
@@ -1265,7 +1302,7 @@ ggplot(data = dec_2_charac_table, mapping = aes(x = applicable, y = num_students
 # Table
 dec_2_charac_table %>%
   mutate(
-    prop = num_students / 48, 
+    prop = num_students / sum(num_students), 
     percent = prop * 100
   ) %>%
   kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
@@ -1424,7 +1461,7 @@ ggplot(data = jan_27_charac_table, mapping = aes(x = applicable, y = num_student
 # Table
 jan_27_charac_table %>%
   mutate(
-    prop = num_students / 44, 
+    prop = num_students / sum(num_students), 
     percent = prop * 100
   ) %>%
   kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
@@ -1583,7 +1620,7 @@ ggplot(data = feb_10_charac_table, mapping = aes(x = applicable, y = num_student
 # Table
 feb_10_charac_table %>%
   mutate(
-    prop = num_students / 51, 
+    prop = num_students / sum(num_students), 
     percent = prop * 100
   ) %>%
   kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
@@ -1742,7 +1779,7 @@ ggplot(data = feb_24_charac_table, mapping = aes(x = applicable, y = num_student
 # Table
 feb_24_charac_table %>%
   mutate(
-    prop = num_students / 48, 
+    prop = num_students / sum(num_students), 
     percent = prop * 100
   ) %>%
   kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
@@ -1901,7 +1938,7 @@ ggplot(data = mar_31_charac_table, mapping = aes(x = applicable, y = num_student
 # Table
 mar_31_charac_table %>%
   mutate(
-    prop = num_students / 57, 
+    prop = num_students / sum(num_students), 
     percent = prop * 100
   ) %>%
   kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
@@ -2060,7 +2097,7 @@ ggplot(data = apr_14_charac_table, mapping = aes(x = applicable, y = num_student
 # Table
 apr_14_charac_table %>%
   mutate(
-    prop = num_students / 40, 
+    prop = num_students / sum(num_students), 
     percent = prop * 100
   ) %>%
   kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
@@ -2219,7 +2256,7 @@ ggplot(data = apr_28_charac_table, mapping = aes(x = applicable, y = num_student
 # Table
 apr_28_charac_table %>%
   mutate(
-    prop = num_students / 9, 
+    prop = num_students / sum(num_students), 
     percent = prop * 100
   ) %>%
   kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
@@ -2378,7 +2415,7 @@ ggplot(data = may_12_charac_table, mapping = aes(x = applicable, y = num_student
 # Table
 may_12_charac_table %>%
   mutate(
-    prop = num_students / 46, 
+    prop = num_students / sum(num_students), 
     percent = prop * 100
   ) %>%
   kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
@@ -3264,37 +3301,24 @@ race_topic_table_two %>%
 
 # Attendance by Additional Characteristics
 
-## IEP
+## Of All Unique Students
 ```{r}
-#| label: iep-dist
+#| label: total-extra-charac
 
-charac_distribution <- data %>%
-  select(iep, program_504, esl, student_id, date, topic, num_meetings, graduation_year, federal_race) %>%
-  mutate(
-    graduation_year = as_factor(graduation_year), 
-    num_meetings = as_factor(num_meetings), 
-    federal_race = as_factor(federal_race)
-    )
-
-iep_dist <- charac_distribution %>%
-  select(student_id, iep, num_meetings, graduation_year, federal_race) %>%
-  unique() %>%
-  count(iep) %>%
-  rename(num_students = n) %>%
-  mutate(
-    prop = num_students / sum(num_students), 
-    percent = prop * 100
-  )
+total_charac_table <- tibble(
+  characteristic = c("IEP", "IEP", "504 Plan", "504 Plan", "ESL", "ESL"), 
+  applicable = c("Yes", "No", "Yes", "No", "Yes", "No"), 
+  num_students = c(6, 132, 20, 118, 6, 132)
+)
 
 # Graph
-ggplot(data = iep_dist, mapping = aes(x = iep, y = num_students, fill = iep)) + 
-  geom_col() + 
+ggplot(data = total_charac_table, mapping = aes(x = applicable, y = num_students, fill = characteristic)) + 
+  geom_col(position = "dodge") + 
   scale_fill_manual(values = unique_colors) + 
-  geom_text(aes(label = num_students), position = position_stack(vjust = 0.5)) + 
   labs(
-    title = "Distribution of Students Having an IEP or Not",
+    title = "Extra Characteristics of Attending Students", 
     subtitle = "Unique Students",
-    caption = "Source: WiSTEM 2022-2023",
+    caption = "Source: WiENG 2022-2023",
     x = "If It Applies to a Student", 
     y = "Number of Students"
     ) + 
@@ -3302,89 +3326,15 @@ ggplot(data = iep_dist, mapping = aes(x = iep, y = num_students, fill = iep)) +
 ```
 
 ::: {.callout-note icon=false collapse="true"}
-## Table for Students Having an IEP or Not
+## Table for Additional Characteristics of All Unique Students
 ```{r}
 # Table
-iep_dist %>%
-  kbl(caption = "Distribution of Students Having an IEP or Not (Unique)") %>%
-  kable_styling()
-```
-:::
-
-## 504 Plan
-```{r}
-#| label: 504-dist
-
-program_504_dist <- charac_distribution %>%
-  select(student_id, program_504, num_meetings, graduation_year, federal_race) %>%
-  unique() %>%
-  count(program_504) %>%
-  rename(num_students = n) %>%
+total_charac_table %>%
   mutate(
-    prop = num_students / sum(num_students), 
+    prop = num_students / 138, 
     percent = prop * 100
-  )
-
-# Graph
-ggplot(data = program_504_dist, mapping = aes(x = program_504, y = num_students, fill = program_504)) + 
-  geom_col() + 
-  scale_fill_manual(values = unique_colors) + 
-  geom_text(aes(label = num_students), position = position_stack(vjust = 0.5)) + 
-  labs(
-    title = "Distribution of Students Having a 504 Plan or Not",
-    subtitle = "Unique Students",
-    caption = "Source: WiSTEM 2022-2023",
-    x = "If It Applies to a Student", 
-    y = "Number of Students"
-    ) + 
-  theme_minimal()
-```
-
-::: {.callout-note icon=false collapse="true"}
-## Table for Students Having an 504 Plan or Not
-```{r}
-# Table
-program_504_dist %>%
-  kbl(caption = "Distribution of Students Having an IEP or Not (Unique)") %>%
-  kable_styling()
-```
-:::
-
-## ESL
-```{r}
-#| label: esl-dist
-
-esl_dist <- charac_distribution %>%
-  select(student_id, esl, num_meetings, graduation_year, federal_race) %>%
-  unique() %>%
-  count(esl) %>%
-  rename(num_students = n) %>%
-  mutate(
-    prop = num_students / sum(num_students), 
-    percent = prop * 100
-  )
-
-# Graph
-ggplot(data = esl_dist, mapping = aes(x = esl, y = num_students, fill = esl)) + 
-  geom_col() + 
-  scale_fill_manual(values = unique_colors) + 
-  geom_text(aes(label = num_students), position = position_stack(vjust = 0.5)) + 
-  labs(
-    title = "Distribution of Students Having ESL or Not",
-    subtitle = "Unique Students",
-    caption = "Source: WiSTEM 2022-2023",
-    x = "If It Applies to a Student", 
-    y = "Number of Students"
-    ) + 
-  theme_minimal()
-```
-
-::: {.callout-note icon=false collapse="true"}
-## Table for Students Having ESL or Not
-```{r}
-# Table
-esl_dist %>%
-  kbl(caption = "Distribution of Students Having an IEP or Not (Unique)") %>%
+  ) %>%
+  kbl(caption = "Attendance Distribution by Additional Characteristics") %>%
   kable_styling()
 ```
 :::
