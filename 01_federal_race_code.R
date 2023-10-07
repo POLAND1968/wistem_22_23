@@ -128,9 +128,7 @@ race_without_one <- data %>%
   filter(num_meetings != 1) %>%
   select(federal_race, student_id, num_meetings) %>%
   unique() %>%
-  select(-student_id)
-
-race_without_one <- race_without_one %>%
+  select(-student_id) %>%
   count(federal_race) %>%
   rename(num_students = n) %>%
   mutate(
@@ -139,21 +137,59 @@ race_without_one <- race_without_one %>%
   )
 
 ### Graph ----
-ggplot(data = race_dist_unique_two, mapping = aes(x = federal_race, y = num_students, fill = federal_race)) +
+ggplot(data = race_without_one, mapping = aes(x = federal_race, y = num_students, fill = federal_race)) +
   geom_col() + 
   scale_fill_manual(values = unique_colors) +
   geom_text(aes(label = paste0(round(percent, 1), "%")), position = position_stack(vjust = 0.5)) + 
   labs(
-    title = "Federal Race Distribution (Unique)", 
-    subtitle = "By White and Non-White Students",
+    title = "Federal Race Distribution (Without One-Timers)", 
+    subtitle = "By All Federal Race Categories (Unique Students)",
     x = "Federal Race", 
     y = "Number of Students"
   ) + 
   theme_minimal()
 
 ### Table ----
-race_dist_unique_two %>%
-  kbl(caption = "Federal Race Distribution With Only White and Non-White (Unique)") %>%
+race_without_one %>%
+  kbl(caption = "Federal Race Distribution Without One-Timers (Unique)") %>%
+  kable_styling()
+
+## Only Two Categories ----
+race_without_one_two <- data %>%
+  filter(num_meetings != 1) %>%
+  select(federal_race, student_id, num_meetings) %>%
+  unique() %>%
+  select(-student_id)
+
+race_without_one_two$federal_race <- recode(race_without_one_two$federal_race, "Asian" = "Non-White")
+race_without_one_two$federal_race <- recode(race_without_one_two$federal_race, "Black" = "Non-White")
+race_without_one_two$federal_race <- recode(race_without_one_two$federal_race, "LatinX" = "Non-White")
+race_without_one_two$federal_race <- recode(race_without_one_two$federal_race, "T.M.O." = "Non-White")
+
+race_without_one_two <- race_without_one_two %>%
+  count(federal_race) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  )
+
+### Graph ----
+ggplot(data = race_without_one_two, mapping = aes(x = federal_race, y = num_students, fill = federal_race)) +
+  geom_col() + 
+  scale_fill_manual(values = unique_colors) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), position = position_stack(vjust = 0.5)) + 
+  labs(
+    title = "Federal Race Distribution (Without One-Timers)", 
+    subtitle = "By White and Non-White Students (Unique Students)",
+    x = "Federal Race", 
+    y = "Number of Students"
+  ) + 
+  theme_minimal()
+
+### Table ----
+race_without_one_two %>%
+  kbl(caption = "Federal Race Distribution Without One-Timers (Only White and Non-White; Unique)") %>%
   kable_styling()
 
 # Comparing ETHS with WiSTEM ----
