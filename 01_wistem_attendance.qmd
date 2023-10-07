@@ -3021,6 +3021,7 @@ ggplot(data = race_without_one, mapping = aes(x = federal_race, y = num_students
   labs(
     title = "Federal Race Distribution (Without One-Timers)", 
     subtitle = "By All Federal Race Categories (Unique Students)",
+    caption = "Source: WiSTEM 2022-2023",
     x = "Federal Race", 
     y = "Number of Students"
   ) + 
@@ -3054,6 +3055,7 @@ ggplot(data = race_without_one_two, mapping = aes(x = federal_race, y = num_stud
   labs(
     title = "Federal Race Distribution (Without One-Timers)", 
     subtitle = "By White and Non-White Students (Unique Students)",
+    caption = "Source: WiSTEM 2022-2023",
     x = "Federal Race", 
     y = "Number of Students"
   ) + 
