@@ -118,8 +118,40 @@ ggplot(data = race_dist_unique_two, mapping = aes(x = federal_race, y = num_stud
   ) + 
   theme_minimal()
 
-### ----
-# Table
+### Table ----
+race_dist_unique_two %>%
+  kbl(caption = "Federal Race Distribution With Only White and Non-White (Unique)") %>%
+  kable_styling()
+
+# Race Distribution Without One Timers ----
+race_without_one <- data %>%
+  filter(num_meetings != 1) %>%
+  select(federal_race, student_id, num_meetings) %>%
+  unique() %>%
+  select(-student_id)
+
+race_without_one <- race_without_one %>%
+  count(federal_race) %>%
+  rename(num_students = n) %>%
+  mutate(
+    prop = num_students / sum(num_students), 
+    percent = prop * 100
+  )
+
+### Graph ----
+ggplot(data = race_dist_unique_two, mapping = aes(x = federal_race, y = num_students, fill = federal_race)) +
+  geom_col() + 
+  scale_fill_manual(values = unique_colors) +
+  geom_text(aes(label = paste0(round(percent, 1), "%")), position = position_stack(vjust = 0.5)) + 
+  labs(
+    title = "Federal Race Distribution (Unique)", 
+    subtitle = "By White and Non-White Students",
+    x = "Federal Race", 
+    y = "Number of Students"
+  ) + 
+  theme_minimal()
+
+### Table ----
 race_dist_unique_two %>%
   kbl(caption = "Federal Race Distribution With Only White and Non-White (Unique)") %>%
   kable_styling()
