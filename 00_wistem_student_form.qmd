@@ -1,7 +1,6 @@
 ---
 title: "WiSTEM 2022 - 2023"
 subtitle: "Student Form Pre and Post Analyses"
-
 format:
   html:
     toc: true
@@ -11,11 +10,12 @@ format:
 execute:
   warning: false
   message: false
-
 from: markdown+emoji  
 editor: 
   markdown: 
     wrap: 72
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r}
@@ -65,6 +65,12 @@ data %>%
     percent = proportion * 100
   ) %>%
   arrange(desc(n)) %>%
+  rename(
+    `Number of Forms` = n, 
+    `Survey Type` = survey_type, 
+    Proportion = proportion, 
+    Percent = percent
+  ) %>%
   kbl(caption = "Distribution of Pre and Post Forms") %>%
   kable_styling()
 ```
@@ -83,7 +89,14 @@ pre_career_amount_plot <- ggplot(data = pre_data, mapping = aes(x = career_amoun
   geom_density() + 
   geom_rug() + 
   theme_minimal() + 
-  labs(title = "Pre Test")
+  labs(
+    x = "Number of Careers", 
+    y = "Density", 
+    title = "Pre Test", 
+    subtitle = "Unique Students", 
+    caption = "Source: WiSTEM 2022-2023"
+    ) + 
+  theme(plot.title = element_text(face = "bold"))
 
 pre_career_amount_table <- pre_data %>%
   count(career_amount) %>%
@@ -103,7 +116,14 @@ post_career_amount_plot <- ggplot(data = post_data, mapping = aes(x = career_amo
   geom_density() + 
   geom_rug() + 
   theme_minimal() + 
-  labs(title = "Post Test")
+  labs(
+    x = "Number of Careers", 
+    y = "Density", 
+    title = "Post Test", 
+    subtitle = "Unique Students", 
+    caption = "Source: WiSTEM 2022-2023"
+    ) + 
+  theme(plot.title = element_text(face = "bold"))
 
 post_career_amount_table <- post_data %>%
   count(career_amount) %>%
@@ -121,16 +141,28 @@ post_career_amount_table <- post_data %>%
 # Compare 
 ## Plot
 pre_career_amount_plot + post_career_amount_plot
+```
 
-## Table
+::: {.callout-note icon=false collapse="true"}
+## Tables for Career Amount Analysis
+```{r}
+# Table 1 (Statistical Analysis)
 career_amount_table <- pre_career_amount_table %>%
-  bind_rows(post_career_amount_table)
+  bind_rows(post_career_amount_table) %>%
+  rename(
+    Type = test, 
+    Min = min, 
+    Median = median, 
+    Mean = mean, 
+    `Standard Dev` = std_dev, 
+    Max = max
+  )
 
 career_amount_table %>%
   kbl(caption = "Comparing Statistical Summaries of Career Amounts") %>%
   kable_styling()
 
-# 0 and 10 Amounts
+# Table 2 (0 and 10 Career Amount Analysis)
 ## Pre Test
 pre_0_10_career_amount <- pre_data %>%
   count(career_amount) %>%
@@ -155,13 +187,21 @@ post_0_10_career_amount <- post_data %>%
 
 ## Compare
 career_amount_0_10_table <- pre_0_10_career_amount %>%
-  bind_rows(post_0_10_career_amount)
+  bind_rows(post_0_10_career_amount) %>%
+  rename(
+    Type = test, 
+    `Number of Careers` = career_amount, 
+    Proportion = proportion, 
+    Percent = percent
+  )
 
 career_amount_0_10_table %>%
-  arrange(career_amount) %>%
+  arrange(`Number of Careers`) %>%
   kbl(caption = "Comparing 0 and 10 Career Amounts") %>%
   kable_styling()
 ```
+
+:::
 
 ## Most and Least Popular Careers
 
@@ -195,6 +235,13 @@ pre_career <- pre_data_longer %>%
 pre_most_career <- pre_career %>%
   arrange(desc(count)) %>%
   head(10) %>%
+  rename(
+    Type = test, 
+    Career = career, 
+    Count = count, 
+    Proportion = proportion, 
+    Percent = percent
+  ) %>%
   kbl(caption = "Most Common Career Chosen in Pre Test") %>%
   kable_styling()
 pre_most_career
@@ -254,6 +301,13 @@ post_career <- post_data_longer %>%
 post_most_career <- post_career %>%
   arrange(desc(count)) %>%
   head(10) %>%
+  rename(
+    Type = test, 
+    Career = career, 
+    Count = count, 
+    Proportion = proportion, 
+    Percent = percent
+  ) %>%
   kbl(caption = "Most Common Career Chosen in Post Test") %>%
   kable_styling()
 post_most_career
@@ -322,7 +376,7 @@ same_careers
 
 ## Career Major Categories
 
-**Distribution:** It is known that students collaborated at this question at times so that's why some careers appear more often than others. However, in this section, every career option was considered only once, no matter how many students. actually wrote it down either on the Pre-Test or Post-Test. The table below groups all of the careers students wrote down by what major they would relate to in college. Out of all the 77 unique careers seen in the Pre-Test and the 56 found in the Post-Test, most careers would fall under "Medical" or "Pre-Med" majors in undergrad. 
+**Distribution:** It is known that students collaborated on this question at times so that's why some careers appear more often than others. However, in this section, every career option was considered only once, no matter how many students. actually wrote it down either on the Pre-Test or Post-Test. The table below groups all of the careers students wrote down by what major they would relate to in college. Out of all the 77 unique careers seen in the Pre-Test and the 56 found in the Post-Test, most careers would fall under "Medical" or "Pre-Med" majors in undergrad. 
 ```{r}
 #| label: major-cat-compare
 
@@ -345,7 +399,14 @@ post_major_career <- data.frame (
 # Compare
 major_career <- full_join(pre_major_career, post_major_career) %>%
   select(category, pre_count, post_count, pre_percent, post_percent) %>%
-  kbl(caption = "Careers Grouped by Major Type") %>%
+  rename(
+    Category = category, 
+    `Count (Pre)` = pre_count, 
+    `Count (Post)` = post_count, 
+    `Percent (Pre)` = pre_percent, 
+    `Precent (Post)` = post_percent
+  ) %>%
+  kbl(caption = "Careers Grouped by Major Category") %>%
   kable_styling()
 major_career
 ```
@@ -359,42 +420,61 @@ major_career
 # Pre
 pre_stem_cat_career <- data.frame (
   category  = c("Science", "Technology", "Engineering", "Arts", "Mathematics"),
-  pre_count = c(47, 6, 13, 3, 8)
+  pre = c(47, 6, 13, 3, 8)
 ) %>%
-  arrange(desc(pre_count)) %>%
-  mutate(pre_percent = (pre_count / sum(pre_count)) * 100)
+  arrange(desc(pre))
 
 # Post
 post_stem_cat_career <- data.frame (
   category  = c("Science", "Technology", "Engineering", "Arts", "Mathematics"),
-  post_count = c(30, 5, 15, 0, 6)
+  post = c(30, 5, 15, 0, 6)
 ) %>%
-  arrange(desc(post_count)) %>%
-  mutate(post_percent = (post_count / sum(post_count)) * 100)
+  arrange(desc(post))
+
+## Combine
+stem_cat_career_all <- full_join(pre_stem_cat_career, post_stem_cat_career) %>% 
+  pivot_longer(cols = c(pre, post), names_to = "Type", values_to = "Count") %>%
+  group_by(Type) %>%
+  mutate(percentage = Count / sum(Count) * 100) %>%
+  head(9) %>%
+  rename(
+    Percentage = percentage, 
+    Category = category
+      )
+
+stem_cat_career_all$Category <- factor(stem_cat_career_all$Category, levels = c("Science", "Technology", "Engineering", "Arts", "Mathematics"))
+stem_cat_career_all$Type <- factor(stem_cat_career_all$Type, levels = c("pre", "post"))
 
 # Compare
 ## Graph
-pre_stem_cat_career$category <- factor(pre_stem_cat_career$category, levels = c("Mathematics", "Arts", "Engineering", "Technology", "Science"))
-pre_stem_graph <- ggplot(data = pre_stem_cat_career, mapping = aes(y = category, x = pre_count)) + 
-  geom_col(fill = "gainsboro", color = "azure4") + 
-  geom_text(aes(label = paste0(round(pre_percent, 1), "%")), vjust = -0.5, size = 3) +  
-  labs(title = "Pre Test", x = "Count", y = "STEM Category")
+colors <- c("steelblue1", "tomato")
 
-post_stem_cat_career$category <- factor(post_stem_cat_career$category, levels = c("Mathematics", "Arts", "Engineering", "Technology", "Science"))
-post_stem_graph <- ggplot(data = post_stem_cat_career, mapping = aes(y = category, x = post_count)) + 
-  geom_col(fill = "gainsboro", color = "azure4") + 
-  geom_text(aes(label = paste0(round(post_percent, 1), "%")), vjust = -0.5, size = 3) +
-  labs(title = "Post Test", x = "Count", y = "STEM Category")
+stem_cat_plot <- ggplot(data = stem_cat_career_all, mapping = aes(x = Category, y = Percentage, fill = Type)) + 
+  geom_col(position = 'dodge') + 
+  geom_text(data = stem_cat_career_all, mapping = aes(x = Category, y = Percentage, label = sprintf("%.2f%%", Percentage)), position = position_dodge(width = 0.9), vjust = -0.5, size = 3) + 
+  scale_fill_manual(labels = c("Pre", "Post"), values = colors) + 
+  labs(
+    x = "Career Category", 
+    y = "Percentage", 
+    title = "Careers Grouped by Their STEM Category", 
+    subtitle = "Per Survey Type", 
+    caption = "Source: WiSTEM 2022-2023"
+  ) + 
+  theme(plot.title = element_text(face = "bold"))
+stem_cat_plot
+```
 
-pre_stem_graph + post_stem_graph
-
+::: {.callout-note icon=false collapse="true"}
+## Table for Careers Grouped by STEM Type
+```{r}
 ## Table
-stem_cat_career <- full_join(pre_stem_cat_career, post_stem_cat_career) %>%
-  select(category, pre_count, post_count, pre_percent, post_percent) %>%
-  kbl(caption = "Careers Grouped by STEM Type") %>%
+stem_cat_career <- stem_cat_career_all %>%
+  kbl(caption = "Careers Grouped by STEM Type Per Survey Type") %>%
   kable_styling()
 stem_cat_career
 ```
+
+:::
 
 # Likert Scale Questions
 ## Question 1
@@ -407,7 +487,7 @@ stem_cat_career
 # Pre
 pre_wh_order <- read_csv(file = "data/processed/wistem_pre_data.csv") %>%
   filter(!is.na(work_hard))
-pre_wh_order$work_hard <- factor(pre_wh_order$work_hard, levels = c("Strongly disagree", "Disagree", "Neutral", "Agree", "Strongly agree"))
+pre_wh_order$survey_type <- factor(pre_wh_order$survey_type, levels = c("Strongly disagree", "Disagree", "Neutral", "Agree", "Strongly agree"))
 
 pre_wh_table <- pre_wh_order %>%
   count(work_hard) %>%
@@ -416,11 +496,6 @@ pre_wh_table <- pre_wh_order %>%
     percent = proportion * 100, 
     test = "pre"
   )
-
-pre_wh_plot <- ggplot(data = pre_wh_table, mapping = aes(y = work_hard, x = percent)) + 
-  geom_col(color = "azure4", fill = "gainsboro") + 
-  geom_text(aes(label = paste0(round(percent, 1), "%")), vjust = -0.5, size = 3) +  
-  labs(title = "Pre Test")
 
 # Post
 post_wh_order <- read_csv(file = "data/processed/wistem_post_data.csv") %>%
@@ -435,29 +510,34 @@ post_wh_table <- post_wh_order %>%
     test = "post"
   )
 
-post_wh_plot <- ggplot(data = post_wh_table, mapping = aes(y = work_hard, x = percent)) + 
-  geom_col(color = "azure4", fill = "gainsboro") + 
-  geom_text(aes(label = paste0(round(percent, 1), "%")), vjust = -0.5, size = 3) +
-  labs(title = "Post Test")
-
 # Compare 
 ## Plot
-p <- ggplot(data = data, mapping = aes(x = work_hard, fill = survey_type)) + 
-  geom_bar(position = 'dodge')
-
 percentage_data <- data %>%
   group_by(survey_type, work_hard) %>%
   summarise(count = n()) %>%
   group_by(survey_type) %>%
   mutate(percentage = count / sum(count) * 100)
+percentage_data$survey_type <- factor(percentage_data$survey_type, levels = c("Pre", "Post"))
 
-one_wh_plot <- p + geom_text(data = percentage_data,
-              aes(x = work_hard, y = count, label = sprintf("%.2f%%", percentage)),
-              position = position_dodge(width = 0.9),
-              vjust = -0.5)
+one_wh_plot <- ggplot(data = percentage_data, mapping = aes(x = work_hard, y = percentage, fill = survey_type)) + 
+  geom_col(position = 'dodge') + 
+  geom_text(mapping = aes(x = work_hard, y = percentage, label = sprintf("%.2f%%", percentage)), position = position_dodge(width = 0.9), vjust = -0.5, size = 3) + 
+  scale_fill_manual(labels = c("Pre", "Post"), values = colors) + 
+  labs(
+    x = "Work Hard Response", 
+    y = "Percentage", 
+    title = "I'll Find the Answer if I Work Hard", 
+    subtitle = "Per Survey Type", 
+    caption = "Source: WiSTEM 2022-2023"
+  ) + 
+  theme(plot.title = element_text(face = "bold"))
 
 one_wh_plot
+```
 
+::: {.callout-note icon=false collapse="true"}
+## Table for Work Hard
+```{r}
 ## Table
 wh_table_percent <- pre_wh_table %>%
   bind_rows(post_wh_table) %>%
@@ -467,6 +547,8 @@ wh_table_percent <- pre_wh_table %>%
   kable_styling()
 wh_table_percent
 ```
+
+:::
 
 ## Question 2
 **Question:** I am confident in my ability to apply prior knowledge to succeed in new projects. 
@@ -488,11 +570,6 @@ pre_know_table <- pre_know_order %>%
     test = "pre"
   )
 
-pre_know_plot <- ggplot(data = pre_know_table, mapping = aes(y = knowledge, x = percent)) + 
-  geom_col(color = "azure4", fill = "gainsboro") + 
-  geom_text(aes(label = paste0(round(percent, 1), "%")), vjust = -0.5, size = 3) +  
-  labs(title = "Pre Test", x = "Percent (%)") 
-
 # Post
 post_know_order <- read_csv(file = "data/processed/wistem_post_data.csv") %>%
   filter(!is.na(knowledge))
@@ -506,29 +583,32 @@ post_know_table <- post_know_order %>%
     test = "post"
   )
 
-post_know_plot <- ggplot(data = post_know_table, mapping = aes(y = knowledge, x = percent)) + 
-  geom_col(color = "azure4", fill = "gainsboro") + 
-  geom_text(aes(label = paste0(round(percent, 1), "%")), vjust = -0.5, size = 3) +  
-  labs(title = "Post Test", x = "Percent (%)")
-
 # Compare 
 ## Plot
-p <- ggplot(data = data, mapping = aes(x = knowledge, fill = survey_type)) + 
-  geom_bar(position = 'dodge')
-
 percentage_data <- data %>%
   group_by(survey_type, knowledge) %>%
   summarise(count = n()) %>%
   group_by(survey_type) %>%
   mutate(percentage = count / sum(count) * 100)
 
-one_know_plot <- p + geom_text(data = percentage_data,
-              aes(x = knowledge, y = count, label = sprintf("%.2f%%", percentage)),
-              position = position_dodge(width = 0.9),
-              vjust = -0.5)
-
+one_know_plot <- ggplot(data = percentage_data, mapping = aes(x = knowledge, y = percentage, fill = survey_type)) + 
+  geom_col(position = 'dodge') + 
+  geom_text(mapping = aes(x = knowledge, y = percentage, label = sprintf("%.2f%%", percentage)), position = position_dodge(width = 0.9), vjust = -0.5, size = 3) + 
+  scale_fill_manual(labels = c("Pre", "Post"), values = colors) + 
+  labs(
+    x = "Knowledge Response", 
+    y = "Percentage", 
+    title = "Confident in Applying Prior Knowledge to New Projects", 
+    subtitle = "Per Survey Type", 
+    caption = "Source: WiSTEM 2022-2023"
+  ) + 
+  theme(plot.title = element_text(face = "bold"))
 one_know_plot
+```
 
+::: {.callout-note icon=false collapse="true"}
+## Table for Knowledge
+```{r}
 ## Table
 know_table_percent <- pre_know_table %>%
   bind_rows(post_know_table) %>%
@@ -538,6 +618,8 @@ know_table_percent <- pre_know_table %>%
   kable_styling()
 know_table_percent
 ```
+
+:::
 
 ## Question 3
 **Question:** I feel confident in my ability to do well in STE(A)M courses. 
@@ -559,11 +641,6 @@ pre_course_table <- pre_course_order %>%
     test = "pre"
   )
 
-pre_course_plot <- ggplot(data = pre_course_table, mapping = aes(y = courses, x = percent)) + 
-  geom_col(color = "azure4", fill = "gainsboro") + 
-  geom_text(aes(label = paste0(round(percent, 1), "%")), vjust = -0.5, size = 3) +  
-  labs(title = "Pre Test", x = "Percent (%)")
-
 # Post
 post_course_order <- read_csv(file = "data/processed/wistem_post_data.csv") %>%
   filter(!is.na(courses))
@@ -577,29 +654,32 @@ post_course_table <- post_course_order %>%
     test = "post"
   )
 
-post_course_plot <- ggplot(data = post_course_table, mapping = aes(y = courses, x = percent)) + 
-  geom_col(color = "azure4", fill = "gainsboro") + 
-  geom_text(aes(label = paste0(round(percent, 1), "%")), vjust = -0.5, size = 3) +  
-  labs(title = "Post Test", x = "Percent (%)")
-
 # Compare
 ## Plot
-p <- ggplot(data = data, mapping = aes(x = courses, fill = survey_type)) + 
-  geom_bar(position = 'dodge')
-
 percentage_data <- data %>%
   group_by(survey_type, courses) %>%
   summarise(count = n()) %>%
   group_by(survey_type) %>%
   mutate(percentage = count / sum(count) * 100)
 
-one_course_plot <- p + geom_text(data = percentage_data,
-              aes(x = courses, y = count, label = sprintf("%.2f%%", percentage)),
-              position = position_dodge(width = 0.9),
-              vjust = -0.5)
-
+one_course_plot <- ggplot(data = percentage_data, mapping = aes(x = courses, y = percentage, fill = survey_type)) + 
+  geom_col(position = 'dodge') + 
+  geom_text(mapping = aes(x = courses, y = percentage, label = sprintf("%.2f%%", percentage)), position = position_dodge(width = 0.9), vjust = -0.5, size = 3) + 
+  scale_fill_manual(labels = c("Pre", "Post"), values = colors) + 
+  labs(
+    x = "Courses Response", 
+    y = "Percentage", 
+    title = "Confident in My Ability to do Well in STE(A)M Courses", 
+    subtitle = "Per Survey Type", 
+    caption = "Source: WiSTEM 2022-2023"
+  ) + 
+  theme(plot.title = element_text(face = "bold"))
 one_course_plot
+```
 
+::: {.callout-note icon=false collapse="true"}
+## Table for Courses
+```{r}
 ## Table
 course_table_percent <- pre_course_table %>%
   bind_rows(post_course_table) %>%
@@ -609,6 +689,8 @@ course_table_percent <- pre_course_table %>%
   kable_styling()
 course_table_percent
 ```
+
+:::
 
 ## Question 4
 **Question:** I think I could be successful in a STE(A)M career. 
@@ -630,11 +712,6 @@ pre_succ_table <- pre_succ_order %>%
     test = "pre"
   )
 
-pre_succ_plot <- ggplot(data = pre_succ_table, mapping = aes(y = succesful, x = percent)) + 
-  geom_col(color = "azure4", fill = "gainsboro") + 
-  geom_text(aes(label = paste0(round(percent, 1), "%")), vjust = -0.5, size = 3) +  
-  labs(title = "Pre Test", x = "Percent (%)")
-
 # Post
 post_succ_order <- read_csv(file = "data/processed/wistem_post_data.csv") %>%
   filter(!is.na(succesful))
@@ -647,16 +724,9 @@ post_succ_table <- post_succ_order %>%
     percent = proportion * 100, 
     test = "post"
   )
-post_succ_plot <- ggplot(data = post_succ_table, mapping = aes(y = succesful, x = percent)) + 
-  geom_col(color = "azure4", fill = "gainsboro") + 
-  geom_text(aes(label = paste0(round(percent, 1), "%")), vjust = -0.5, size = 3) +  
-  labs(title = "Post Test", x = "Percent (%)")
 
 # Compare
 ## Plot
-p <- ggplot(data = data %>% filter(!is.na(succesful)), mapping = aes(x = succesful, fill = survey_type)) + 
-  geom_bar(position = 'dodge')
-
 percentage_data <- data %>%
   filter(!is.na(succesful)) %>%
   group_by(survey_type, succesful) %>%
@@ -664,13 +734,25 @@ percentage_data <- data %>%
   group_by(survey_type) %>%
   mutate(percentage = count / sum(count) * 100)
 
-one_succ_plot <- p + geom_text(data = percentage_data,
-              aes(x = succesful, y = count, label = sprintf("%.2f%%", percentage)),
-              position = position_dodge(width = 0.9),
-              vjust = -0.5)
+one_succ_plot <- ggplot(data = percentage_data, mapping = aes(x = succesful, y = percentage, fill = survey_type)) + 
+  geom_col(position = 'dodge') + 
+  geom_text(mapping = aes(x = succesful, y = percentage, label = sprintf("%.2f%%", percentage)), position = position_dodge(width = 0.9), vjust = -0.5, size = 3) + 
+  scale_fill_manual(labels = c("Pre", "Post"), values = colors) + 
+  labs(
+    x = "Successful Response", 
+    y = "Percentage", 
+    title = "I Could be Successful in a STE(A)M Career", 
+    subtitle = "Per Survey Type", 
+    caption = "Source: WiSTEM 2022-2023"
+  ) + 
+  theme(plot.title = element_text(face = "bold"))
 
 one_succ_plot
+```
 
+::: {.callout-note icon=false collapse="true"}
+## Table for Successful
+```{r}
 ## Table
 succ_table_percent <- pre_succ_table %>%
   bind_rows(post_succ_table) %>%
@@ -680,6 +762,8 @@ succ_table_percent <- pre_succ_table %>%
   kable_styling()
 succ_table_percent
 ```
+
+:::
 
 ## Question 5
 **Question:** People who work in a STE(A)M field can solve important problems. 
@@ -701,11 +785,6 @@ pre_imp_table <- pre_imp_order %>%
     test = "pre"
   )
 
-pre_imp_plot <- ggplot(data = pre_imp_table, mapping = aes(y = important, x = percent)) + 
-  geom_col(color = "azure4", fill = "gainsboro") + 
-  geom_text(aes(label = paste0(round(percent, 1), "%")), vjust = -0.5, size = 3) +  
-  labs(title = "Pre Test", x = "Percent (%)")
-
 # Post
 post_imp_order <- read_csv(file = "data/processed/wistem_post_data.csv") %>%
   filter(!is.na(important))
@@ -719,16 +798,8 @@ post_imp_table <- post_imp_order %>%
     test = "post"
   )
 
-post_imp_plot <- ggplot(data = post_imp_table, mapping = aes(y = important, x = percent)) + 
-  geom_col(color = "azure4", fill = "gainsboro") + 
-  geom_text(aes(label = paste0(round(percent, 1), "%")), vjust = -0.5, size = 3) +  
-  labs(title = "Post Test", x = "Percent (%)")
-
 # Compare
 ## Plot
-p <- ggplot(data = data %>% filter(!is.na(important)), mapping = aes(x = important, fill = survey_type)) + 
-  geom_bar(position = 'dodge')
-
 percentage_data <- data %>%
   filter(!is.na(important)) %>%
   group_by(survey_type, important) %>%
@@ -736,13 +807,24 @@ percentage_data <- data %>%
   group_by(survey_type) %>%
   mutate(percentage = count / sum(count) * 100)
 
-one_imp_plot <- p + geom_text(data = percentage_data,
-              aes(x = important, y = count, label = sprintf("%.2f%%", percentage)),
-              position = position_dodge(width = 0.9),
-              vjust = -0.5)
-
+one_imp_plot <- ggplot(data = percentage_data, mapping = aes(x = important, y = percentage, fill = survey_type)) + 
+  geom_col(position = 'dodge') + 
+  geom_text(mapping = aes(x = important, y = percentage, label = sprintf("%.2f%%", percentage)), position = position_dodge(width = 0.9), vjust = -0.5, size = 3) + 
+  scale_fill_manual(labels = c("Pre", "Post"), values = colors) + 
+  labs(
+    x = "Important Response", 
+    y = "Percentage", 
+    title = "STE(A)M People Solve Important Problems", 
+    subtitle = "Per Survey Type", 
+    caption = "Source: WiSTEM 2022-2023"
+  ) + 
+  theme(plot.title = element_text(face = "bold"))
 one_imp_plot
+```
 
+::: {.callout-note icon=false collapse="true"}
+## Table for Important
+```{r}
 ## Table
 imp_table_percent <- pre_imp_table %>%
   bind_rows(post_imp_table) %>%
@@ -752,6 +834,8 @@ imp_table_percent <- pre_imp_table %>%
   kable_styling()
 imp_table_percent
 ```
+
+:::
 
 ## Question 6
 **Question:** I am a member of a STE(A)M community. 
@@ -773,11 +857,6 @@ pre_mem_table <- pre_mem_order %>%
     test = "pre"
   )
 
-pre_mem_plot <- ggplot(data = pre_mem_table, mapping = aes(y = member, x = percent)) + 
-  geom_col(color = "azure4", fill = "gainsboro") + 
-  geom_text(aes(label = paste0(round(percent, 1), "%")), vjust = -0.5, size = 3) +  
-  labs(title = "Pre Test", x = "Percent (%)")
-
 # Post
 post_mem_order <- read_csv(file = "data/processed/wistem_post_data.csv") %>%
   filter(!is.na(member))
@@ -791,16 +870,8 @@ post_mem_table <- post_mem_order %>%
     test = "post"
   )
 
-post_mem_plot <- ggplot(data = post_mem_table, mapping = aes(y = member, x = percent)) + 
-  geom_col(color = "azure4", fill = "gainsboro") + 
-  geom_text(aes(label = paste0(round(percent, 1), "%")), vjust = -0.5, size = 3) +  
-  labs(title = "Post Test", x = "Percent (%)")
-
 # Compare 
 ## Plot
-p <- ggplot(data = data %>% filter(!is.na(member)), mapping = aes(x = member, fill = survey_type)) + 
-  geom_bar(position = 'dodge')
-
 percentage_data <- data %>%
   filter(!is.na(member)) %>%
   group_by(survey_type, member) %>%
@@ -808,13 +879,24 @@ percentage_data <- data %>%
   group_by(survey_type) %>%
   mutate(percentage = count / sum(count) * 100)
 
-one_mem_plot <- p + geom_text(data = percentage_data,
-              aes(x = member, y = count, label = sprintf("%.2f%%", percentage)),
-              position = position_dodge(width = 0.9),
-              vjust = -0.5)
-
+one_mem_plot <- ggplot(data = percentage_data, mapping = aes(x = member, y = percentage, fill = survey_type)) + 
+  geom_col(position = 'dodge') + 
+  geom_text(mapping = aes(x = member, y = percentage, label = sprintf("%.2f%%", percentage)), position = position_dodge(width = 0.9), vjust = -0.5, size = 3) + 
+  scale_fill_manual(labels = c("Pre", "Post"), values = colors) + 
+  labs(
+    x = "Member Response", 
+    y = "Percentage", 
+    title = "I'm a Member of a STE(A)M Community", 
+    subtitle = "Per Survey Type", 
+    caption = "Source: WiSTEM 2022-2023"
+  ) + 
+  theme(plot.title = element_text(face = "bold"))
 one_mem_plot
+```
 
+::: {.callout-note icon=false collapse="true"}
+## Table for Member
+```{r}
 ## Table
 mem_table_percent <- pre_mem_table %>%
   bind_rows(post_mem_table) %>%
@@ -824,6 +906,8 @@ mem_table_percent <- pre_mem_table %>%
   kable_styling()
 mem_table_percent
 ```
+
+:::
 
 ## Question 7
 **Question:** I think a career in STE(A)M may be a good fit for me. 
@@ -845,11 +929,6 @@ pre_car_table <- pre_car_order %>%
     test = "pre"
   )
 
-pre_car_plot <- ggplot(data = pre_car_table, mapping = aes(y = career, x = percent)) + 
-  geom_col(color = "azure4", fill = "gainsboro") + 
-  geom_text(aes(label = paste0(round(percent, 1), "%")), vjust = -0.5, size = 3) +  
-  labs(title = "Pre Test", x = "Percent (%)")
-
 # Post
 post_car_order <- read_csv(file = "data/processed/wistem_post_data.csv") %>%
   filter(!is.na(career))
@@ -863,16 +942,8 @@ post_car_table <- post_car_order %>%
     test = "post"
   )
 
-post_car_plot <- ggplot(data = post_car_table, mapping = aes(y = career, x = percent)) + 
-  geom_col(color = "azure4", fill = "gainsboro") + 
-  geom_text(aes(label = paste0(round(percent, 1), "%")), vjust = -0.5, size = 3) +  
-  labs(title = "Post Test", x = "Percent (%)")
-
 # Compare 
 ## Plot
-p <- ggplot(data = data %>% filter(!is.na(career)), mapping = aes(x = career, fill = survey_type)) + 
-  geom_bar(position = 'dodge')
-
 percentage_data <- data %>%
   filter(!is.na(career)) %>%
   group_by(survey_type, career) %>%
@@ -880,13 +951,24 @@ percentage_data <- data %>%
   group_by(survey_type) %>%
   mutate(percentage = count / sum(count) * 100)
 
-one_car_plot <- p + geom_text(data = percentage_data,
-              aes(x = career, y = count, label = sprintf("%.2f%%", percentage)),
-              position = position_dodge(width = 0.9),
-              vjust = -0.5)
-
+one_car_plot <- ggplot(data = percentage_data, mapping = aes(x = career, y = percentage, fill = survey_type)) + 
+  geom_col(position = 'dodge') + 
+  geom_text(mapping = aes(x = career, y = percentage, label = sprintf("%.2f%%", percentage)), position = position_dodge(width = 0.9), vjust = -0.5, size = 3) + 
+  scale_fill_manual(labels = c("Pre", "Post"), values = colors) + 
+  labs(
+    x = "Career Response", 
+    y = "Percentage", 
+    title = "A STE(A)M Career is a Good Fit for Me", 
+    subtitle = "Per Survey Type", 
+    caption = "Source: WiSTEM 2022-2023"
+  ) + 
+  theme(plot.title = element_text(face = "bold"))
 one_car_plot
+```
 
+::: {.callout-note icon=false collapse="true"}
+## Table for Career
+```{r}
 ## Table
 car_table_percent <- pre_car_table %>%
   bind_rows(post_car_table) %>%
@@ -896,6 +978,8 @@ car_table_percent <- pre_car_table %>%
   kable_styling()
 car_table_percent
 ```
+
+:::
 
 ## Question 8
 **Question:** “Future STE(A)M professional” as part of my identity is important to me. 
@@ -917,11 +1001,6 @@ pre_iden_table <- pre_iden_order %>%
     test = "pre"
   )
 
-pre_iden_plot <- ggplot(data = pre_iden_table, mapping = aes(y = identity, x = percent)) + 
-  geom_col(color = "azure4", fill = "gainsboro") + 
-  geom_text(aes(label = paste0(round(percent, 1), "%")), vjust = -0.5, size = 3) +  
-  labs(title = "Pre Test", x = "Percent (%)")
-
 # Post
 post_iden_order <- read_csv(file = "data/processed/wistem_post_data.csv") %>%
   filter(!is.na(identity))
@@ -935,16 +1014,8 @@ post_iden_table <- post_iden_order %>%
     test = "post"
   )
 
-post_iden_plot <- ggplot(data = post_iden_table, mapping = aes(y = identity, x = percent)) + 
-  geom_col(color = "azure4", fill = "gainsboro") + 
-  geom_text(aes(label = paste0(round(percent, 1), "%")), vjust = -0.5, size = 3) +  
-  labs(title = "Post Test", x = "Percent (%)")
-
 # Compare 
 ## Plot
-p <- ggplot(data = data %>% filter(!is.na(identity)), mapping = aes(x = identity, fill = survey_type)) + 
-  geom_bar(position = 'dodge')
-
 percentage_data <- data %>%
   filter(!is.na(identity)) %>%
   group_by(survey_type, identity) %>%
@@ -952,13 +1023,24 @@ percentage_data <- data %>%
   group_by(survey_type) %>%
   mutate(percentage = count / sum(count) * 100)
 
-one_iden_plot <- p + geom_text(data = percentage_data,
-              aes(x = identity, y = count, label = sprintf("%.2f%%", percentage)),
-              position = position_dodge(width = 0.9),
-              vjust = -0.5)
-
+one_iden_plot <- ggplot(data = percentage_data, mapping = aes(x = identity, y = percentage, fill = survey_type)) + 
+  geom_col(position = 'dodge') + 
+  geom_text(mapping = aes(x = identity, y = percentage, label = sprintf("%.2f%%", percentage)), position = position_dodge(width = 0.9), vjust = -0.5, size = 3) + 
+  scale_fill_manual(labels = c("Pre", "Post"), values = colors) + 
+  labs(
+    x = "Identity Response", 
+    y = "Percentage", 
+    title = "`Future STE(A)M Professional` is a Part of My Identity", 
+    subtitle = "Per Survey Type", 
+    caption = "Source: WiSTEM 2022-2023"
+  ) + 
+  theme(plot.title = element_text(face = "bold"))
 one_iden_plot
+```
 
+::: {.callout-note icon=false collapse="true"}
+## Table for Identity
+```{r}
 ## Table
 iden_table_percent <- pre_iden_table %>%
   bind_rows(post_iden_table) %>%
@@ -968,6 +1050,8 @@ iden_table_percent <- pre_iden_table %>%
   kable_styling()
 iden_table_percent
 ```
+
+:::
 
 ## Question 9
 **Question:** If I entered a STE(A)M career, I could make a meaningful contribution to society. 
@@ -989,11 +1073,6 @@ pre_mean_table <- pre_mean_order %>%
     test = "pre"
   )
 
-pre_mean_plot <- ggplot(data = pre_mean_table, mapping = aes(y = meaningful, x = percent)) + 
-  geom_col(color = "azure4", fill = "gainsboro") + 
-  geom_text(aes(label = paste0(round(percent, 1), "%")), vjust = -0.5, size = 3) +  
-  labs(title = "Pre Test", x = "Percent (%)")
-
 # Post 
 post_mean_order <- read_csv(file = "data/processed/wistem_post_data.csv") %>%
   filter(!is.na(meaningful))
@@ -1007,16 +1086,8 @@ post_mean_table <- post_mean_order %>%
     test = "post"
   )
 
-post_mean_plot <- ggplot(data = post_mean_table, mapping = aes(y = meaningful, x = percent)) + 
-  geom_col(color = "azure4", fill = "gainsboro") + 
-  geom_text(aes(label = paste0(round(percent, 1), "%")), vjust = -0.5, size = 3) +  
-  labs(title = "Post Test", x = "Percent (%)")
-
 # Compare 
 ## Plot
-p <- ggplot(data = data %>% filter(!is.na(meaningful)), mapping = aes(x = meaningful, fill = survey_type)) + 
-  geom_bar(position = 'dodge')
-
 percentage_data <- data %>%
   filter(!is.na(meaningful)) %>%
   group_by(survey_type, meaningful) %>%
@@ -1024,13 +1095,24 @@ percentage_data <- data %>%
   group_by(survey_type) %>%
   mutate(percentage = count / sum(count) * 100)
 
-one_mean_plot <- p + geom_text(data = percentage_data,
-              aes(x = meaningful, y = count, label = sprintf("%.2f%%", percentage)),
-              position = position_dodge(width = 0.9),
-              vjust = -0.5)
-
+one_mean_plot <- ggplot(data = percentage_data, mapping = aes(x = meaningful, y = percentage, fill = survey_type)) + 
+  geom_col(position = 'dodge') + 
+  geom_text(mapping = aes(x = meaningful, y = percentage, label = sprintf("%.2f%%", percentage)), position = position_dodge(width = 0.9), vjust = -0.5, size = 3) + 
+  scale_fill_manual(labels = c("Pre", "Post"), values = colors) + 
+  labs(
+    x = "Meaningful Response", 
+    y = "Percentage", 
+    title = "I Would Make Meaningful Contribution in STE(A)M",
+    subtitle = "Per Survey Type", 
+    caption = "Source: WiSTEM 2022-2023"
+  ) + 
+  theme(plot.title = element_text(face = "bold"))
 one_mean_plot
+```
 
+::: {.callout-note icon=false collapse="true"}
+## Table for Meaningful
+```{r}
 ## Table
 mean_table_percent <- pre_mean_table %>%
   bind_rows(post_mean_table) %>%
@@ -1041,6 +1123,7 @@ mean_table_percent <- pre_mean_table %>%
 mean_table_percent
 ```
 
+:::
 ## Question 10
 **Question:** I understand what everyday STE(A)M work is like. 
 
@@ -1061,11 +1144,6 @@ pre_every_table <- pre_every_order %>%
     test = "pre"
   )
 
-pre_every_plot <- ggplot(data = pre_every_table, mapping = aes(y = everyday, x = percent)) + 
-  geom_col(color = "azure4", fill = "gainsboro") + 
-  geom_text(aes(label = paste0(round(percent, 1), "%")), vjust = -0.5, size = 3) +  
-  labs(title = "Pre Test", x = "Percent (%)")
-
 # Post
 post_every_order <- read_csv(file = "data/processed/wistem_post_data.csv") %>%
   filter(!is.na(everyday))
@@ -1079,16 +1157,8 @@ post_every_table <- post_every_order %>%
     test = "post"
   )
 
-post_every_plot <- ggplot(data = post_every_table, mapping = aes(y = everyday, x = percent)) + 
-  geom_col(color = "azure4", fill = "gainsboro") + 
-  geom_text(aes(label = paste0(round(percent, 1), "%")), vjust = -0.5, size = 3) +  
-  labs(title = "Post Test", x = "Percent (%)")
-
 # Compare 
 ## Plot
-p <- ggplot(data = data %>% filter(!is.na(everyday)), mapping = aes(x = everyday, fill = survey_type)) + 
-  geom_bar(position = 'dodge')
-
 percentage_data <- data %>%
   filter(!is.na(everyday)) %>%
   group_by(survey_type, everyday) %>%
@@ -1096,13 +1166,24 @@ percentage_data <- data %>%
   group_by(survey_type) %>%
   mutate(percentage = count / sum(count) * 100)
 
-one_every_plot <- p + geom_text(data = percentage_data,
-              aes(x = everyday, y = count, label = sprintf("%.2f%%", percentage)),
-              position = position_dodge(width = 0.9),
-              vjust = -0.5)
-
+one_every_plot <- ggplot(data = percentage_data, mapping = aes(x = everyday, y = percentage, fill = survey_type)) + 
+  geom_col(position = 'dodge') + 
+  geom_text(mapping = aes(x = everyday, y = percentage, label = sprintf("%.2f%%", percentage)), position = position_dodge(width = 0.9), vjust = -0.5, size = 3) + 
+  scale_fill_manual(labels = c("Pre", "Post"), values = colors) + 
+  labs(
+    x = "Everday Response", 
+    y = "Percentage", 
+    title = "I Understand Everyday STE(A)M Work", 
+    subtitle = "Per Survey Type", 
+    caption = "Source: WiSTEM 2022-2023"
+  ) + 
+  theme(plot.title = element_text(face = "bold"))
 one_every_plot
+```
 
+::: {.callout-note icon=false collapse="true"}
+## Table for Everyday
+```{r}
 ## Table
 every_table_percent <- pre_every_table %>%
   bind_rows(post_every_table) %>%
@@ -1112,3 +1193,5 @@ every_table_percent <- pre_every_table %>%
   kable_styling()
 every_table_percent
 ```
+
+:::
