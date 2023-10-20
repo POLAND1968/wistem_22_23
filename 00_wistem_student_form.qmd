@@ -96,6 +96,7 @@ pre_career_amount_plot <- ggplot(data = pre_data, mapping = aes(x = career_amoun
     subtitle = "Unique Students", 
     caption = "Source: WiSTEM 2022-2023"
     ) + 
+  theme_minimal() + 
   theme(plot.title = element_text(face = "bold"))
 
 pre_career_amount_table <- pre_data %>%
@@ -123,6 +124,7 @@ post_career_amount_plot <- ggplot(data = post_data, mapping = aes(x = career_amo
     subtitle = "Unique Students", 
     caption = "Source: WiSTEM 2022-2023"
     ) + 
+  theme_minimal() + 
   theme(plot.title = element_text(face = "bold"))
 
 post_career_amount_table <- post_data %>%
@@ -460,6 +462,7 @@ stem_cat_plot <- ggplot(data = stem_cat_career_all, mapping = aes(x = Category, 
     subtitle = "Per Survey Type", 
     caption = "Source: WiSTEM 2022-2023"
   ) + 
+  theme_minimal() + 
   theme(plot.title = element_text(face = "bold"))
 stem_cat_plot
 ```
@@ -530,6 +533,7 @@ one_wh_plot <- ggplot(data = percentage_data, mapping = aes(x = work_hard, y = p
     subtitle = "Per Survey Type", 
     caption = "Source: WiSTEM 2022-2023"
   ) + 
+  theme_minimal() + 
   theme(plot.title = element_text(face = "bold"))
 
 one_wh_plot
@@ -602,6 +606,7 @@ one_know_plot <- ggplot(data = percentage_data, mapping = aes(x = knowledge, y =
     subtitle = "Per Survey Type", 
     caption = "Source: WiSTEM 2022-2023"
   ) + 
+  theme_minimal() + 
   theme(plot.title = element_text(face = "bold"))
 one_know_plot
 ```
@@ -673,6 +678,7 @@ one_course_plot <- ggplot(data = percentage_data, mapping = aes(x = courses, y =
     subtitle = "Per Survey Type", 
     caption = "Source: WiSTEM 2022-2023"
   ) + 
+  theme_minimal() + 
   theme(plot.title = element_text(face = "bold"))
 one_course_plot
 ```
@@ -745,6 +751,7 @@ one_succ_plot <- ggplot(data = percentage_data, mapping = aes(x = succesful, y =
     subtitle = "Per Survey Type", 
     caption = "Source: WiSTEM 2022-2023"
   ) + 
+  theme_minimal() + 
   theme(plot.title = element_text(face = "bold"))
 
 one_succ_plot
@@ -818,6 +825,7 @@ one_imp_plot <- ggplot(data = percentage_data, mapping = aes(x = important, y = 
     subtitle = "Per Survey Type", 
     caption = "Source: WiSTEM 2022-2023"
   ) + 
+  theme_minimal() + 
   theme(plot.title = element_text(face = "bold"))
 one_imp_plot
 ```
@@ -890,6 +898,7 @@ one_mem_plot <- ggplot(data = percentage_data, mapping = aes(x = member, y = per
     subtitle = "Per Survey Type", 
     caption = "Source: WiSTEM 2022-2023"
   ) + 
+  theme_minimal() + 
   theme(plot.title = element_text(face = "bold"))
 one_mem_plot
 ```
@@ -962,6 +971,7 @@ one_car_plot <- ggplot(data = percentage_data, mapping = aes(x = career, y = per
     subtitle = "Per Survey Type", 
     caption = "Source: WiSTEM 2022-2023"
   ) + 
+  theme_minimal() + 
   theme(plot.title = element_text(face = "bold"))
 one_car_plot
 ```
@@ -1034,6 +1044,7 @@ one_iden_plot <- ggplot(data = percentage_data, mapping = aes(x = identity, y = 
     subtitle = "Per Survey Type", 
     caption = "Source: WiSTEM 2022-2023"
   ) + 
+  theme_minimal() + 
   theme(plot.title = element_text(face = "bold"))
 one_iden_plot
 ```
@@ -1106,6 +1117,7 @@ one_mean_plot <- ggplot(data = percentage_data, mapping = aes(x = meaningful, y 
     subtitle = "Per Survey Type", 
     caption = "Source: WiSTEM 2022-2023"
   ) + 
+  theme_minimal() + 
   theme(plot.title = element_text(face = "bold"))
 one_mean_plot
 ```
@@ -1177,6 +1189,7 @@ one_every_plot <- ggplot(data = percentage_data, mapping = aes(x = everyday, y =
     subtitle = "Per Survey Type", 
     caption = "Source: WiSTEM 2022-2023"
   ) + 
+  theme_minimal() + 
   theme(plot.title = element_text(face = "bold"))
 one_every_plot
 ```
