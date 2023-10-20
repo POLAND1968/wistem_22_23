@@ -94,7 +94,8 @@ ggplot(data = data, mapping = aes(y = date)) +
     x = "Number of Students", 
     y = "Meeting Date"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -132,10 +133,12 @@ ggplot(data = data_split_date, mapping = aes(y = month)) +
   labs(
     title = "Number of Attendance In Each Month", 
     subtitle = "With Repeats",
+    caption = "Source: WiSTEM 2022-2023",
     x = "Number of Students", 
     y = "Month"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -171,7 +174,8 @@ ggplot(data = data, mapping = aes(x = topic)) +
     y = "Number of Students"
     ) + 
   scale_x_discrete(guide = guide_axis(angle = 90)) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -222,7 +226,8 @@ ggplot(data = avg_topic_data, mapping = aes(x = topic, y = meeting_avg)) +
   geom_hline(yintercept = 630 / 14) +
   geom_text(aes(label = meeting_avg), position = position_stack(vjust = 0.5)) +
   scale_x_discrete(guide = guide_axis(angle = 90)) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -275,12 +280,13 @@ ggplot(data = cat_indiv_atten, mapping = aes(x = num_meetings, y = num_students)
   geom_text(aes(label = num_students), position = position_stack(vjust = 0.5)) +  
   labs(
     title = "Number of Meetings Attended by Unique Students", 
-    subtitle = "Unique",
+    subtitle = "Unique Students",
     caption = "Source: WiSTEM 2022-2023",
     x = "Number of Meetings Attended", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 
 # Average Number
 indiv_atten %>%
@@ -335,7 +341,8 @@ ggplot(data = meeting_one_attend, mapping = aes(x = date, y = num_students)) +
     ) + 
   geom_text(aes(label = num_students), position = position_stack(vjust = 0.5)) +
   scale_x_discrete(guide = guide_axis(angle = 90)) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -374,12 +381,13 @@ ggplot(data = one_meeting_fed_race, mapping = aes(x = federal_race, y = num_stud
   scale_x_discrete(guide = guide_axis(angle = 90)) + 
   labs(
     title = "Number of Students Per Meeting Who Attended One Meeting", 
-    subtitle = "By All Federal Race Categories (Unique Students)",
+    subtitle = "By All Federal Races (Unique Students)",
     caption = "Source: WiSTEM 2022-2023",
     x = "Federal Race", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 
 # Considering White and Non-White
 one_meeting_fed_race_two <- data %>%
@@ -412,7 +420,8 @@ ggplot(data = one_meeting_fed_race_two, mapping = aes(x = federal_race, y = num_
     x = "Federal Race", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -457,7 +466,8 @@ ggplot(data = one_meeting_grad_year, mapping = aes(x = graduation_year, y = num_
     x = "Graduation Year", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -499,7 +509,8 @@ ggplot(data = one_meeting_topic, mapping = aes(x = topic, y = num_students, fill
     x = "Topic", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -542,7 +553,8 @@ ggplot(data = sep_30_data, mapping = aes(x = num_meetings)) +
     x = "Number of Meetings Attended", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -578,7 +590,8 @@ sep_30_grad <- ggplot(data = sep_30_data, mapping = aes(x = graduation_year, fil
     y = "Number of Students"
     ) + 
   scale_x_discrete(guide = guide_axis(angle = 90)) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ```{r}
@@ -597,7 +610,8 @@ sep_30_race <- ggplot(data = sep_30_data, mapping = aes(x = federal_race, fill =
     y = "Number of Students"
     ) + 
   scale_x_discrete(guide = guide_axis(angle = 90)) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 
 sep_30_grad + sep_30_race
 ```
@@ -656,7 +670,8 @@ ggplot(data = sep_30_charac_table, mapping = aes(x = applicable, y = num_student
     x = "If It Applies to a Student", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -702,7 +717,8 @@ ggplot(data = oct_14_data, mapping = aes(x = num_meetings)) +
     x = "Number of Meetings Attended", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -738,7 +754,8 @@ oct_14_grad <- ggplot(data = oct_14_data, mapping = aes(x = graduation_year, fil
     y = "Number of Students"
     ) + 
   scale_x_discrete(guide = guide_axis(angle = 90)) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ```{r}
@@ -757,7 +774,8 @@ oct_14_race <- ggplot(data = oct_14_data, mapping = aes(x = federal_race, fill =
     y = "Number of Students"
     ) + 
   scale_x_discrete(guide = guide_axis(angle = 90)) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 
 oct_14_grad + oct_14_race
 ```
@@ -816,7 +834,8 @@ ggplot(data = oct_14_charac_table, mapping = aes(x = applicable, y = num_student
     x = "If It Applies to a Student", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -862,7 +881,8 @@ ggplot(data = oct_28_data, mapping = aes(x = num_meetings)) +
     x = "Number of Meetings Attended", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -897,7 +917,8 @@ oct_28_grad <- ggplot(data = oct_28_data, mapping = aes(x = graduation_year, fil
     x = "Graduation Year", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ```{r}
@@ -916,7 +937,8 @@ oct_28_race <- ggplot(data = oct_28_data, mapping = aes(x = federal_race, fill =
     y = "Number of Students"
     ) + 
   scale_x_discrete(guide = guide_axis(angle = 90)) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 
 oct_28_grad + oct_28_race
 ```
@@ -975,7 +997,8 @@ ggplot(data = oct_28_charac_table, mapping = aes(x = applicable, y = num_student
     x = "If It Applies to a Student", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -1021,7 +1044,8 @@ ggplot(data = nov_18_data, mapping = aes(x = num_meetings)) +
     x = "Number of Meetings Attended", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -1056,7 +1080,8 @@ nov_18_grad <- ggplot(data = nov_18_data, mapping = aes(x = graduation_year, fil
     x = "Graduation Year", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ```{r}
@@ -1075,7 +1100,8 @@ nov_18_race <- ggplot(data = nov_18_data, mapping = aes(x = federal_race, fill =
     y = "Number of Students"
     ) + 
   scale_x_discrete(guide = guide_axis(angle = 90)) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 
 nov_18_grad + nov_18_race
 ```
@@ -1134,7 +1160,8 @@ ggplot(data = nov_18_charac_table, mapping = aes(x = applicable, y = num_student
     x = "If It Applies to a Student", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -1180,7 +1207,8 @@ ggplot(data = dec_2_data, mapping = aes(x = num_meetings)) +
     x = "Number of Meetings Attended", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -1215,7 +1243,8 @@ dec_2_grad <- ggplot(data = dec_2_data, mapping = aes(x = graduation_year, fill 
     x = "Graduation Year", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ```{r}
@@ -1234,7 +1263,8 @@ dec_2_race <- ggplot(data = dec_2_data, mapping = aes(x = federal_race, fill = f
     y = "Number of Students"
     ) + 
   scale_x_discrete(guide = guide_axis(angle = 90)) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 
 dec_2_grad + dec_2_race
 ```
@@ -1293,7 +1323,8 @@ ggplot(data = dec_2_charac_table, mapping = aes(x = applicable, y = num_students
     x = "If It Applies to a Student", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -1339,7 +1370,8 @@ ggplot(data = jan_27_data, mapping = aes(x = num_meetings)) +
     x = "Number of Meetings Attended", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -1374,7 +1406,8 @@ jan_27_grad <- ggplot(data = jan_27_data, mapping = aes(x = graduation_year, fil
     x = "Graduation Year", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ```{r}
@@ -1393,7 +1426,8 @@ jan_27_race <- ggplot(data = jan_27_data, mapping = aes(x = federal_race, fill =
     y = "Number of Students"
     ) + 
   scale_x_discrete(guide = guide_axis(angle = 90)) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 
 jan_27_grad + jan_27_race
 ```
@@ -1452,7 +1486,8 @@ ggplot(data = jan_27_charac_table, mapping = aes(x = applicable, y = num_student
     x = "If It Applies to a Student", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -1498,7 +1533,8 @@ ggplot(data = feb_10_data, mapping = aes(x = num_meetings)) +
     x = "Number of Meetings Attended", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -1533,7 +1569,8 @@ feb_10_grad <- ggplot(data = feb_10_data, mapping = aes(x = graduation_year, fil
     x = "Graduation Year", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ```{r}
@@ -1552,7 +1589,8 @@ feb_10_race <- ggplot(data = feb_10_data, mapping = aes(x = federal_race, fill =
     y = "Number of Students"
     ) + 
   scale_x_discrete(guide = guide_axis(angle = 90)) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 
 feb_10_grad + feb_10_race
 ```
@@ -1611,7 +1649,8 @@ ggplot(data = feb_10_charac_table, mapping = aes(x = applicable, y = num_student
     x = "If It Applies to a Student", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -1657,7 +1696,8 @@ ggplot(data = feb_24_data, mapping = aes(x = num_meetings)) +
     x = "Number of Meetings Attended", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -1692,7 +1732,8 @@ feb_24_grad <- ggplot(data = feb_24_data, mapping = aes(x = graduation_year, fil
     x = "Graduation Year", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ```{r}
@@ -1711,7 +1752,8 @@ feb_24_race <- ggplot(data = feb_24_data, mapping = aes(x = federal_race, fill =
     y = "Number of Students"
     ) + 
   scale_x_discrete(guide = guide_axis(angle = 90)) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 
 feb_24_grad + feb_24_race
 ```
@@ -1770,7 +1812,8 @@ ggplot(data = feb_24_charac_table, mapping = aes(x = applicable, y = num_student
     x = "If It Applies to a Student", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -1816,7 +1859,8 @@ ggplot(data = mar_31_data, mapping = aes(x = num_meetings)) +
     x = "Number of Meetings Attended", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -1851,7 +1895,8 @@ mar_31_grad <- ggplot(data = mar_31_data, mapping = aes(x = graduation_year, fil
     x = "Graduation Year", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ```{r}
@@ -1870,7 +1915,8 @@ mar_31_race <- ggplot(data = mar_31_data, mapping = aes(x = federal_race, fill =
     y = "Number of Students"
     ) + 
   scale_x_discrete(guide = guide_axis(angle = 90)) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 
 mar_31_grad + mar_31_race
 ```
@@ -1929,7 +1975,8 @@ ggplot(data = mar_31_charac_table, mapping = aes(x = applicable, y = num_student
     x = "If It Applies to a Student", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -1975,7 +2022,8 @@ ggplot(data = apr_14_data, mapping = aes(x = num_meetings)) +
     x = "Number of Meetings Attended",
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -2010,7 +2058,8 @@ apr_14_grad <- ggplot(data = apr_14_data, mapping = aes(x = graduation_year, fil
     x = "Graduation Year", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ```{r}
@@ -2029,7 +2078,8 @@ apr_14_race <- ggplot(data = apr_14_data, mapping = aes(x = federal_race, fill =
     y = "Number of Students"
     ) + 
   scale_x_discrete(guide = guide_axis(angle = 90)) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 
 apr_14_grad + apr_14_race
 ```
@@ -2088,7 +2138,8 @@ ggplot(data = apr_14_charac_table, mapping = aes(x = applicable, y = num_student
     x = "If It Applies to a Student", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -2134,7 +2185,8 @@ ggplot(data = apr_28_data, mapping = aes(x = num_meetings)) +
     x = "Number of Meetings Attended", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -2169,7 +2221,8 @@ apr_28_grad <- ggplot(data = apr_28_data, mapping = aes(x = graduation_year, fil
     x = "Graduation Year", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ```{r}
@@ -2188,7 +2241,8 @@ apr_28_race <- ggplot(data = apr_28_data, mapping = aes(x = federal_race, fill =
     y = "Number of Students"
     ) + 
   scale_x_discrete(guide = guide_axis(angle = 90)) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 
 apr_28_grad + apr_28_race
 ```
@@ -2247,7 +2301,8 @@ ggplot(data = apr_28_charac_table, mapping = aes(x = applicable, y = num_student
     x = "If It Applies to a Student", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -2293,7 +2348,8 @@ ggplot(data = may_12_data, mapping = aes(x = num_meetings)) +
     x = "Number of Meetings Attended", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -2328,7 +2384,8 @@ may_12_grad <- ggplot(data = may_12_data, mapping = aes(x = graduation_year, fil
     x = "Graduation Year", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ```{r}
@@ -2347,7 +2404,8 @@ may_12_race <- ggplot(data = may_12_data, mapping = aes(x = federal_race, fill =
     y = "Number of Students"
     ) + 
   scale_x_discrete(guide = guide_axis(angle = 90)) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 
 may_12_grad + may_12_race
 ```
@@ -2406,7 +2464,8 @@ ggplot(data = may_12_charac_table, mapping = aes(x = applicable, y = num_student
     x = "If It Applies to a Student", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -2459,7 +2518,8 @@ grade_repeat_graph <- ggplot(data = grade_repeat, mapping = aes(x = graduation_y
     x = "Graduation Year", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 
 # Unique
 grade_unique <- grade_distribution %>%
@@ -2484,7 +2544,8 @@ grade_unique_graph <- ggplot(data = grade_unique, mapping = aes(x = graduation_y
     x = "Graduation Year", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 
 # Combining
 grade_repeat_graph + grade_unique_graph
@@ -2553,7 +2614,8 @@ wistem_grade_dist <- ggplot(data = wistem_grade, mapping = aes(y = graduation_ye
     y = "Graduation Year", 
     x = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 
 ## ETHS
 eths_grade_dist <- ggplot(data = eths_grade, mapping = aes(y = graduation_year, x = num_students, fill = graduation_year)) + 
@@ -2567,7 +2629,8 @@ eths_grade_dist <- ggplot(data = eths_grade, mapping = aes(y = graduation_year, 
     y = "Graduation Year", 
     x = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 
 ## Combining
 wistem_grade_dist + eths_grade_dist
@@ -2612,7 +2675,8 @@ ggplot(data = grade_num_meetings, mapping = aes(x = num_meetings, fill = graduat
     x = "Number of Meetings Attended", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -2648,12 +2712,13 @@ ggplot(data = grade_race, mapping = aes(x = federal_race, fill = graduation_year
   scale_fill_manual(values = unique_colors) + 
   labs(
     title = "Graduation Year and Federal Race",
-    subtitle = "By All Federal Race Categories (Unique Students)",
+    subtitle = "By All Federal Races (Unique Students)",
     caption = "Source: WiSTEM 2022-2023",
     x = "Federal Race", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 
 # Only Two Categories
 grade_race_two <- grade_distribution %>%
@@ -2692,7 +2757,8 @@ ggplot(data = grade_race_two, mapping = aes(x = federal_race, fill = graduation_
     x = "Federal Race", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -2837,7 +2903,8 @@ ggplot(data = grade_topic, mapping = aes(x = topic, y = num_students, fill = gra
     y = "Number of Students"
     ) + 
   scale_x_discrete(guide = guide_axis(angle = 90)) +
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -2942,12 +3009,13 @@ ggplot(data = race_dist_unique, mapping = aes(x = federal_race, y = num_students
   geom_text(aes(label = paste0(round(percent, 1), "%")), position = position_stack(vjust = 0.5)) + 
   labs(
     title = "Federal Race Distribution", 
-    subtitle = "By All Federal Race Categories (Unique Students)",
+    subtitle = "By All Federal Races (Unique Students)",
     caption = "Source: WiSTEM 2022-2023",
     x = "Federal Race", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 
 # Only Two Categories
 race_dist_unique_two <- data %>%
@@ -2980,7 +3048,8 @@ ggplot(data = race_dist_unique_two, mapping = aes(x = federal_race, y = num_stud
     x = "Federal Race", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -3020,12 +3089,13 @@ ggplot(data = race_without_one, mapping = aes(x = federal_race, y = num_students
   geom_text(aes(label = paste0(round(percent, 1), "%")), position = position_stack(vjust = 0.5)) + 
   labs(
     title = "Federal Race Distribution (Without One-Timers)", 
-    subtitle = "By All Federal Race Categories (Unique Students)",
+    subtitle = "By All Federal Races (Unique Students)",
     caption = "Source: WiSTEM 2022-2023",
     x = "Federal Race", 
     y = "Number of Students"
   ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 
 # Only Two Categories
 race_without_one_two <- data %>%
@@ -3059,7 +3129,8 @@ ggplot(data = race_without_one_two, mapping = aes(x = federal_race, y = num_stud
     x = "Federal Race", 
     y = "Number of Students"
   ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
@@ -3112,12 +3183,13 @@ wistem_race_dist <- ggplot(data = wistem_race, mapping = aes(x = federal_race, y
   scale_x_discrete(guide = guide_axis(angle = 90)) + 
   labs(
     title = "WiSTEM Race Distribution", 
-    subtitle = "By All Federal Race Categories (Unique Students)",
+    subtitle = "By All Federal Races (Unique Students)",
     caption = "Source: WiSTEM 2022-2023",
     x = "Federal Race", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 
 ## ETHS
 eths_race_dist <- ggplot(data = eths_race, mapping = aes(x = federal_race, y = num_students, fill = federal_race)) + 
@@ -3125,12 +3197,13 @@ eths_race_dist <- ggplot(data = eths_race, mapping = aes(x = federal_race, y = n
   scale_fill_manual(values = unique_colors) + 
   scale_x_discrete(guide = guide_axis(angle = 90)) + 
   labs(title = "ETHS Race Distribution", 
-       subtitle = "By All Federal Race Categories (Unique Students)",
+       subtitle = "By All Federal Races (Unique Students)",
     caption = "Source: WiSTEM 2022-2023",
        x = "Federal Race", 
        y = "Number of Students"
        ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 
 ## Combining
 wistem_race_dist + eths_race_dist
@@ -3183,7 +3256,8 @@ wistem_race_dist_two <- ggplot(data = wistem_race_two, mapping = aes(x = federal
     x = "Federal Race", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 
 ## ETHS
 eths_race_dist_two <- ggplot(data = eths_race_two, mapping = aes(x = federal_race, y = num_students, fill = federal_race)) + 
@@ -3196,7 +3270,8 @@ eths_race_dist_two <- ggplot(data = eths_race_two, mapping = aes(x = federal_rac
        x = "Federal Race", 
        y = "Number of Students"
        ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 
 ## Combining
 wistem_race_dist_two / eths_race_dist_two
@@ -3249,12 +3324,13 @@ race_num_meetings_graph <- ggplot(data = race_num_meetings, mapping = aes(x = nu
   scale_fill_manual(values = unique_colors) + 
   labs(
     title = "Federal Race and Number of Meetings",
-    subtitle = "By All Federal Race Categories (Unique Students)",
+    subtitle = "By All Federal Races (Unique Students)",
     caption = "Source: WiSTEM 2022-2023",
     x = "Number of Meetings Attended", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 
 ## Only Two Categories
 race_num_meetings_two <- race_num_meetings
@@ -3278,7 +3354,8 @@ race_num_meetings_graph_two <- ggplot(data = race_num_meetings_two, mapping = ae
     x = "Number of Meetings Attended", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 
 race_num_meetings_graph
 race_num_meetings_graph_two
@@ -3322,12 +3399,13 @@ race_topic_graph <- ggplot(data = race_topic, mapping = aes(x = topic, fill = fe
   scale_x_discrete(guide = guide_axis(angle = 90)) +
   labs(
     title = "Federal Race and Topic",
-    subtitle = "By All Federal Race Categories (With Repeats)",
+    subtitle = "By All Federal Races (With Repeats)",
     caption = "Source: WiSTEM 2022-2023",
     x = "Topic", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 
 ## Only Two Categories
 race_topic_two <- race_topic
@@ -3352,7 +3430,8 @@ race_topic_graph_two <- ggplot(data = race_topic_two, mapping = aes(x = topic, f
     x = "Topic", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 
 race_topic_graph
 race_topic_graph_two
@@ -3401,7 +3480,8 @@ ggplot(data = total_charac_table, mapping = aes(x = applicable, y = num_students
     x = "If It Applies to a Student", 
     y = "Number of Students"
     ) + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(face = "bold"))
 ```
 
 ::: {.callout-note icon=false collapse="true"}
