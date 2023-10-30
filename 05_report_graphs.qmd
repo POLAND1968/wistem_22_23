@@ -1,0 +1,42 @@
+---
+title: "WiSTEM 2022 - 2023"
+subtitle: "Graphs for Reports"
+format:
+  html:
+    toc: true
+    embed-resources: true
+    echo: false
+    link-external-newwindow: true
+execute:
+  warning: false
+  message: false
+from: markdown+emoji  
+editor: 
+  markdown: 
+    wrap: 72
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(readr)
+
+set.seed(1968)
+
+load(file = "data/processed/pre_post_report_graphs.rda")
+
+# Plots
+wh_plot
+know_plot
+course_plot
+succ_plot
+imp_plot
+mem_plot
+career_plot
+iden_plot
+mean_plot
+every_plot
+```
+
